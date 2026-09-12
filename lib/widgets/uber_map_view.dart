@@ -318,7 +318,6 @@ class _UberMapViewState extends State<UberMapView>
   String get _tileUrlTemplate {
     switch (_currentMapStyle) {
       case MapStyle.uberMinimal:
-        return 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png';
       case MapStyle.googleMaps:
         return 'https://mt{s}.google.com/vt/lyrs=m&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
       case MapStyle.googleTerrain:
@@ -328,16 +327,7 @@ class _UberMapViewState extends State<UberMapView>
     }
   }
 
-  List<String> get _tileSubdomains {
-    switch (_currentMapStyle) {
-      case MapStyle.uberMinimal:
-        return const ['a', 'b', 'c', 'd'];
-      case MapStyle.googleMaps:
-      case MapStyle.googleTerrain:
-      case MapStyle.googleHybrid:
-        return const ['0', '1', '2', '3'];
-    }
-  }
+  List<String> get _tileSubdomains => const ['0', '1', '2', '3'];
 
   @override
   Widget build(BuildContext context) {
@@ -450,51 +440,7 @@ class _UberMapViewState extends State<UberMapView>
           },
         ),
 
-        // ── 2. FLOATING RE-CENTER BANNER (WHEN USER PAN AWAY) ──
-        if (_userInteracted)
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 68,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: GestureDetector(
-                onTap: _recenter,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: AppColors.uberBlack,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.20),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.my_location_rounded,
-                          size: 14, color: Colors.white),
-                      SizedBox(width: 6),
-                      Text(
-                        'Re-center View',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-        // ── 3. SLEEK FLOATING RE-CENTER BUTTON (UBER / SWIGGY STYLE) ──
+        // ── 2. SLEEK FLOATING RE-CENTER BUTTON (UBER / SWIGGY STYLE) ──
         Positioned(
           right: 18,
           top: MediaQuery.of(context).padding.top + 68,

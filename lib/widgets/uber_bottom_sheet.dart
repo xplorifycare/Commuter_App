@@ -46,10 +46,10 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       initialChildSize: _getInitialChildSize(),
-      minChildSize: 0.20,
+      minChildSize: 0.22,
       maxChildSize: 0.88,
       snap: true,
-      snapSizes: const [0.20, 0.48, 0.88],
+      snapSizes: const [0.22, 0.58, 0.88],
       builder: (context, scrollController) {
         return ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -111,11 +111,11 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   double _getInitialChildSize() {
     switch (widget.currentState) {
       case UberSheetState.discovery:
-        return 0.46;
+        return 0.58;
       case UberSheetState.busSelection:
-        return 0.60;
+        return 0.64;
       case UberSheetState.activeTracking:
-        return 0.62;
+        return 0.66;
     }
   }
 
@@ -160,7 +160,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         _buildLiveCorridorFeed(),
 
         // Bottom clearance for floating island navbar
-        const SizedBox(height: 96),
+        const SizedBox(height: 110),
       ],
     );
   }
