@@ -11,17 +11,18 @@ class NearbyStopsScreen extends StatefulWidget {
   State<NearbyStopsScreen> createState() => _NearbyStopsScreenState();
 }
 
-class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTickerProviderStateMixin {
+class _NearbyStopsScreenState extends State<NearbyStopsScreen>
+    with SingleTickerProviderStateMixin {
   late final MapController _mapController;
   late final AnimationController _pulseController;
-  
+
   String _selectedStop = 'Mayyanad Junction';
   String _selectedFilter = 'All Stops';
 
   final List<Map<String, dynamic>> _stopsData = [
     {
       'name': 'Mayyanad Junction',
-      'point': const LatLng(10.0220, 76.3080),
+      'point': const LatLng(8.835489, 76.643381),
       'distance': '120 m',
       'walkTime': '2 min walk',
       'busesPerHour': '14 buses/hr',
@@ -31,7 +32,7 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
     },
     {
       'name': 'Kottiyam Junction',
-      'point': const LatLng(10.1004, 76.3569),
+      'point': const LatLng(8.8660, 76.6709),
       'distance': '1.8 km',
       'walkTime': '6 min transit',
       'busesPerHour': '22 buses/hr',
@@ -41,7 +42,7 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
     },
     {
       'name': 'Chathannoor Stand',
-      'point': const LatLng(10.1963, 76.3869),
+      'point': const LatLng(8.8576, 76.7235),
       'distance': '4.2 km',
       'walkTime': '12 min transit',
       'busesPerHour': '18 buses/hr',
@@ -50,7 +51,7 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
     },
     {
       'name': 'Parippally Junction',
-      'point': const LatLng(10.3000, 76.3344),
+      'point': const LatLng(8.8091, 76.7628),
       'distance': '8.5 km',
       'walkTime': 'Express stop',
       'busesPerHour': '16 buses/hr',
@@ -99,7 +100,8 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
               ),
               children: [
                 TileLayer(
-                  urlTemplate: 'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                  urlTemplate:
+                      'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
                   subdomains: const ['0', '1', '2', '3'],
                   userAgentPackageName: 'in.getmybus.app',
                   maxZoom: 20,
@@ -117,12 +119,17 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: isSelected ? AppColors.uberBlack : Colors.white,
+                                color: isSelected
+                                    ? AppColors.uberBlack
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: isSelected ? AppColors.primary : AppColors.border,
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : AppColors.border,
                                   width: isSelected ? 1.5 : 1,
                                 ),
                                 boxShadow: [
@@ -145,12 +152,18 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  Text(
-                                    stop['name'] as String,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                      color: isSelected ? Colors.white : AppColors.textPrimary,
+                                  Flexible(
+                                    child: Text(
+                                      stop['name'] as String,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : AppColors.textPrimary,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -158,7 +171,9 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                             ),
                             Icon(
                               Icons.arrow_drop_down,
-                              color: isSelected ? AppColors.uberBlack : Colors.white,
+                              color: isSelected
+                                  ? AppColors.uberBlack
+                                  : Colors.white,
                               size: 16,
                             ),
                           ],
@@ -232,7 +247,8 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 3),
                             decoration: BoxDecoration(
                               color: AppColors.statusLive.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(6),
@@ -257,23 +273,35 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: ['All Stops', 'Closest First', 'Major Hubs', 'EV Stops'].map((f) {
+                          children: [
+                            'All Stops',
+                            'Closest First',
+                            'Major Hubs',
+                            'EV Stops'
+                          ].map((f) {
                             final isSel = _selectedFilter == f;
                             return GestureDetector(
                               onTap: () => setState(() => _selectedFilter = f),
                               child: Container(
                                 margin: const EdgeInsets.only(right: 6),
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
-                                  color: isSel ? AppColors.uberBlack : AppColors.surfaceSecondary,
+                                  color: isSel
+                                      ? AppColors.uberBlack
+                                      : AppColors.surfaceSecondary,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   f,
                                   style: TextStyle(
                                     fontSize: 11,
-                                    fontWeight: isSel ? FontWeight.w600 : FontWeight.w500,
-                                    color: isSel ? Colors.white : AppColors.textSecondary,
+                                    fontWeight: isSel
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                    color: isSel
+                                        ? Colors.white
+                                        : AppColors.textSecondary,
                                   ),
                                 ),
                               ),
@@ -371,7 +399,8 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                     color: AppColors.surfaceSecondary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.location_on_rounded, size: 18, color: AppColors.primary),
+                  child: const Icon(Icons.location_on_rounded,
+                      size: 18, color: AppColors.primary),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -380,11 +409,15 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                     children: [
                       Text(
                         stop['name'],
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary),
                       ),
                       Text(
                         '${stop['distance']} • ${stop['walkTime']} • ${stop['busesPerHour']}',
-                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -403,27 +436,40 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.asset(
-                          'assets/images/bus_3d.jpg',
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.asset(
+                            'assets/images/bus_3d.jpg',
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        stop['nextBus'],
-                        style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                      ),
-                    ],
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            stop['nextBus'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Text(
                     'Arrives in ${stop['nextEta']}',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.statusLive),
+                    style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.statusLive),
                   ),
                 ],
               ),
@@ -440,7 +486,8 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                     destination: 'Technopark TVM',
                   ),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: Size.zero,
                   ),
                   child: const Row(
@@ -448,10 +495,14 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen> with SingleTicker
                     children: [
                       Text(
                         'Board From Here',
-                        style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 12),
+                        style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12),
                       ),
                       SizedBox(width: 4),
-                      Icon(Icons.arrow_forward_rounded, size: 13, color: AppColors.primary),
+                      Icon(Icons.arrow_forward_rounded,
+                          size: 13, color: AppColors.primary),
                     ],
                   ),
                 ),

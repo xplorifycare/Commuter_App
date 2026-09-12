@@ -59,34 +59,44 @@ class _TripsScreenState extends State<TripsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/gmb_logo_color.png',
-                            height: 22,
-                            fit: BoxFit.contain,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      const Text(
-                        'NH66 highway private bus network',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/gmb_logo_color.png',
+                              height: 22,
+                              fit: BoxFit.contain,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        const Text(
+                          'NH66 highway private bus network',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 12, color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: AppColors.primaryLight,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
                       'NH66 PILOT',
-                      style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                      style: TextStyle(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary),
                     ),
                   ),
                 ],
@@ -152,8 +162,11 @@ class _TripsScreenState extends State<TripsScreen> {
                     segments[index],
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected
+                          ? AppColors.textPrimary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -201,20 +214,27 @@ class _TripsScreenState extends State<TripsScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: routeColor,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         route['code'],
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 11),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 11),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       route['type'],
-                      style: TextStyle(color: routeColor, fontWeight: FontWeight.w600, fontSize: 11.5),
+                      style: TextStyle(
+                          color: routeColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.5),
                     ),
                   ],
                 ),
@@ -231,7 +251,10 @@ class _TripsScreenState extends State<TripsScreen> {
                     const SizedBox(width: 5),
                     Text(
                       '${route['activeBuses']} live buses',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.statusLive),
+                      style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.statusLive),
                     ),
                   ],
                 ),
@@ -288,7 +311,8 @@ class _TripsScreenState extends State<TripsScreen> {
 
                 // Meta footer
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceSecondary,
                     borderRadius: BorderRadius.circular(8),
@@ -298,17 +322,22 @@ class _TripsScreenState extends State<TripsScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.schedule_rounded, size: 13, color: AppColors.textSecondary),
+                          const Icon(Icons.schedule_rounded,
+                              size: 13, color: AppColors.textSecondary),
                           const SizedBox(width: 4),
                           Text(
                             route['frequency'],
-                            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                            style: const TextStyle(
+                                fontSize: 11, color: AppColors.textSecondary),
                           ),
                         ],
                       ),
                       Text(
                         route['fare'],
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary),
                       ),
                     ],
                   ),
@@ -325,7 +354,8 @@ class _TripsScreenState extends State<TripsScreen> {
                         destination: 'Technopark TVM',
                       ),
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         minimumSize: Size.zero,
                       ),
                       child: const Row(
@@ -333,10 +363,14 @@ class _TripsScreenState extends State<TripsScreen> {
                         children: [
                           Text(
                             'Book on this Route',
-                            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 12),
+                            style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12),
                           ),
                           SizedBox(width: 4),
-                          Icon(Icons.arrow_forward_rounded, size: 13, color: AppColors.primary),
+                          Icon(Icons.arrow_forward_rounded,
+                              size: 13, color: AppColors.primary),
                         ],
                       ),
                     ),

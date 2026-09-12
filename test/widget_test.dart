@@ -95,8 +95,8 @@ void main() {
       ),
     );
 
-    // Verify brand wordmark renders
-    expect(find.text('GetMyBus'), findsOneWidget);
+    // Verify conversational greeting renders
+    expect(find.text('Hello, Jassim 👋'), findsOneWidget);
     // Verify Uber-style 'Where to?' input renders
     expect(find.text('Where to?'), findsOneWidget);
   });
@@ -118,7 +118,7 @@ void main() {
     expect(find.text('Mayyanad Stop • Pickup'), findsOneWidget);
 
     // Verify NH66 corridor telemetry pill rendered
-    expect(find.text('NH66 Live Corridor'), findsOneWidget);
+    expect(find.text('NH66 live'), findsOneWidget);
 
     // Verify map control buttons exist
     expect(find.byTooltip('Switch Map Style'), findsOneWidget);

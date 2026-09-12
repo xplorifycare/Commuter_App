@@ -10,7 +10,8 @@ class TicketsScreen extends StatefulWidget {
   State<TicketsScreen> createState() => _TicketsScreenState();
 }
 
-class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProviderStateMixin {
+class _TicketsScreenState extends State<TicketsScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedSegment = 0; // 0 = Active, 1 = Passes, 2 = Past Receipts
   late AnimationController _qrPulseController;
   late Animation<double> _qrScaleAnimation;
@@ -71,25 +72,30 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  'assets/images/gmb_logo_color.png',
-                  height: 22,
-                  fit: BoxFit.contain,
-                ),
-              ],
-            ),
-            const SizedBox(height: 3),
-            const Text(
-              'Dynamic QR tickets & contactless ETM passes',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Image.asset(
+                    'assets/images/gmb_logo_color.png',
+                    height: 22,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 3),
+              const Text(
+                'Dynamic QR tickets & contactless ETM passes',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(width: 12),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
           decoration: BoxDecoration(
@@ -102,7 +108,10 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
               SizedBox(width: 4),
               Text(
                 'ETM TAP READY',
-                style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                style: TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary),
               ),
             ],
           ),
@@ -147,8 +156,11 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                     segments[index],
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected
+                          ? AppColors.textPrimary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -219,19 +231,26 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                           const SizedBox(width: 8),
                           const Text(
                             '• Venad Fast',
-                            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 12),
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12),
                           ),
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 7, vertical: 3),
                         decoration: BoxDecoration(
                           color: AppColors.statusLive.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Text(
                           'BOARDING NOW',
-                          style: TextStyle(color: AppColors.statusLive, fontWeight: FontWeight.w700, fontSize: 9.5),
+                          style: TextStyle(
+                              color: AppColors.statusLive,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 9.5),
                         ),
                       ),
                     ],
@@ -248,8 +267,10 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildStationCol('FROM', 'Mayyanad Jn', '08:42 AM'),
-                          const Icon(Icons.arrow_forward_rounded, color: AppColors.textMuted, size: 18),
-                          _buildStationCol('TO', 'Technopark TVM', '09:14 AM', isRight: true),
+                          const Icon(Icons.arrow_forward_rounded,
+                              color: AppColors.textMuted, size: 18),
+                          _buildStationCol('TO', 'Technopark TVM', '09:14 AM',
+                              isRight: true),
                         ],
                       ),
                       const SizedBox(height: 18),
@@ -261,7 +282,9 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                           (index) => Expanded(
                             child: Container(
                               height: 1.5,
-                              color: index.isEven ? AppColors.border : Colors.transparent,
+                              color: index.isEven
+                                  ? AppColors.border
+                                  : Colors.transparent,
                             ),
                           ),
                         ),
@@ -289,12 +312,17 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                             data: 'GETMYBUS-ETM-KL02BB4521-TKT8921-VALID-2026',
                             version: QrVersions.auto,
                             size: 170.0,
-                            embeddedImage: const AssetImage('assets/images/gmb_icon_pin.png'),
+                            embeddedImage: const AssetImage(
+                                'assets/images/gmb_icon_pin.png'),
                             embeddedImageStyle: const QrEmbeddedImageStyle(
                               size: Size(34, 34),
                             ),
-                            eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: AppColors.uberBlack),
-                            dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: AppColors.uberBlack),
+                            eyeStyle: const QrEyeStyle(
+                                eyeShape: QrEyeShape.square,
+                                color: AppColors.uberBlack),
+                            dataModuleStyle: const QrDataModuleStyle(
+                                dataModuleShape: QrDataModuleShape.square,
+                                color: AppColors.uberBlack),
                           ),
                         ),
                       ),
@@ -306,10 +334,14 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                         children: [
                           const Text(
                             'Scan PIN: ',
-                            style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: 12.5,
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.w500),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
                               color: AppColors.surfaceSecondary,
                               borderRadius: BorderRadius.circular(6),
@@ -330,7 +362,8 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                       const SizedBox(height: 6),
                       const Text(
                         'Auto-refreshes every 30 seconds for fraud prevention',
-                        style: TextStyle(fontSize: 10.5, color: AppColors.textMuted),
+                        style: TextStyle(
+                            fontSize: 10.5, color: AppColors.textMuted),
                       ),
                     ],
                   ),
@@ -353,7 +386,8 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.uberBlack,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
               child: const Row(
@@ -361,7 +395,9 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                 children: [
                   Icon(Icons.add_rounded, size: 18),
                   SizedBox(width: 8),
-                  Text('Book Another Ticket', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text('Book Another Ticket',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 ],
               ),
             ),
@@ -371,22 +407,34 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildStationCol(String tag, String station, String time, {bool isRight = false}) {
+  Widget _buildStationCol(String tag, String station, String time,
+      {bool isRight = false}) {
     return Column(
-      crossAxisAlignment: isRight ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isRight ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(
           tag,
-          style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.5),
+          style: const TextStyle(
+              fontSize: 9.5,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textMuted,
+              letterSpacing: 0.5),
         ),
         const SizedBox(height: 2),
         Text(
           station,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+          style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary),
         ),
         Text(
           time,
-          style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500, color: AppColors.primary),
+          style: const TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w500,
+              color: AppColors.primary),
         ),
       ],
     );
@@ -419,17 +467,25 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
                 children: [
                   const Text(
                     'KERALA COMMUTER PASS',
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 0.6),
+                    style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white70,
+                        letterSpacing: 0.6),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Text(
                       'ACTIVE',
-                      style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w700, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                   ),
                 ],
@@ -437,7 +493,10 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
               const SizedBox(height: 12),
               const Text(
                 'Kollam ↔ Technopark',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
               ),
               const Text(
                 'Unlimited rides on all private express buses',
@@ -447,8 +506,13 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Holder: Jassim', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12.5)),
-                  Text('Expires: 30 Sep 2026', style: TextStyle(color: Colors.white70, fontSize: 11.5)),
+                  Text('Holder: Jassim',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12.5)),
+                  Text('Expires: 30 Sep 2026',
+                      style: TextStyle(color: Colors.white70, fontSize: 11.5)),
                 ],
               ),
             ],
@@ -461,9 +525,27 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
   // ── Tab 2: Receipts ──
   Widget _buildReceiptsTab() {
     final receipts = [
-      {'bus': 'Venad Fast Passenger', 'route': 'Mayyanad → Technopark', 'fare': '₹22', 'date': 'Today, 08:42 AM', 'id': '#GMB-9821'},
-      {'bus': 'Royal King Electric AC', 'route': 'Technopark → Mayyanad', 'fare': '₹35', 'date': 'Yesterday, 06:15 PM', 'id': '#GMB-9754'},
-      {'bus': 'St. Jude Superfast', 'route': 'Mayyanad → Chathannoor', 'fare': '₹14', 'date': '10 Sep, 09:30 AM', 'id': '#GMB-9642'},
+      {
+        'bus': 'Venad Fast Passenger',
+        'route': 'Mayyanad → Technopark',
+        'fare': '₹22',
+        'date': 'Today, 08:42 AM',
+        'id': '#GMB-9821'
+      },
+      {
+        'bus': 'Royal King Electric AC',
+        'route': 'Technopark → Mayyanad',
+        'fare': '₹35',
+        'date': 'Yesterday, 06:15 PM',
+        'id': '#GMB-9754'
+      },
+      {
+        'bus': 'St. Jude Superfast',
+        'route': 'Mayyanad → Chathannoor',
+        'fare': '₹14',
+        'date': '10 Sep, 09:30 AM',
+        'id': '#GMB-9642'
+      },
     ];
 
     return ListView.builder(
@@ -483,34 +565,54 @@ class _TicketsScreenState extends State<TicketsScreen> with SingleTickerProvider
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    r['bus']!,
-                    style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                  ),
-                  Text(
-                    r['route']!,
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${r['date']} • ${r['id']}',
-                    style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      r['bus']!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary),
+                    ),
+                    Text(
+                      r['route']!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 11.5, color: AppColors.textSecondary),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${r['date']} • ${r['id']}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 10, color: AppColors.textMuted),
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     r['fare']!,
-                    style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                    style: const TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary),
                   ),
                   const Text(
                     'Paid via UPI',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.statusLive),
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.statusLive),
                   ),
                 ],
               ),

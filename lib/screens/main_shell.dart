@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import 'home_screen.dart';
@@ -49,64 +51,106 @@ class _MainShellState extends State<MainShell> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: screens,
-      ),
-
-      // ── CLEAN DOCKED BOTTOM NAVIGATION (UBER / SWIGGY STYLE) ──
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: AppColors.border, width: 0.8),
-          ),
-        ),
-        child: SafeArea(
-          top: false,
-          child: SizedBox(
-            height: 58,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, Icons.directions_bus_rounded, 'Ride'),
-                _buildNavItem(1, Icons.alt_route_rounded, 'Routes'),
-                _buildNavItem(2, Icons.near_me_rounded, 'Stops'),
-                _buildNavItem(3, Icons.confirmation_number_rounded, 'Tickets'),
-                _buildNavItem(4, Icons.person_rounded, 'Account'),
-              ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: screens,
             ),
           ),
-        ),
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).padding.bottom + 14,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 390),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(36),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: Container(
+                      height: 64,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.92),
+                        borderRadius: BorderRadius.circular(36),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.90),
+                          width: 1.2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.12),
+                            blurRadius: 28,
+                            offset: const Offset(0, 10),
+                          ),
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.08),
+                            blurRadius: 14,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildNavItem(0, Icons.directions_bus_rounded, 'Ride'),
+                          _buildNavItem(1, Icons.alt_route_rounded, 'Routes'),
+                          _buildNavItem(2, Icons.near_me_rounded, 'Stops'),
+                          _buildNavItem(3, Icons.confirmation_number_rounded, 'Tickets'),
+                          _buildNavItem(4, Icons.person_rounded, 'Account'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isSelected = _currentIndex == index;
-    return Expanded(
-      child: InkWell(
-        onTap: () => _onTabTapped(index),
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return GestureDetector(
+      onTap: () => _onTabTapped(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 14 : 10,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.uberBlack : Colors.transparent,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              size: 22,
-              color: isSelected ? AppColors.uberBlack : AppColors.textMuted,
+              size: 19,
+              color: isSelected ? Colors.white : const Color(0xFF64748B),
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10.5,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? AppColors.uberBlack : AppColors.textMuted,
+            if (isSelected) ...[
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  letterSpacing: -0.2,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -141,7 +185,8 @@ class AccountScreen extends StatelessWidget {
               const SizedBox(height: 2),
               const Text(
                 'Manage travel passes, UPI autopay & transit preferences',
-                style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                style:
+                    TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
               ),
               const SizedBox(height: 20),
 
@@ -187,21 +232,29 @@ class AccountScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Jassim',
-                            style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                            style: TextStyle(
+                                fontSize: 16.5,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary),
                           ),
                           SizedBox(height: 2),
                           Text(
                             '+91 98470 12345 • Daily Commuter',
-                            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            style: TextStyle(
+                                fontSize: 12, color: AppColors.textSecondary),
                           ),
                           SizedBox(height: 4),
                           Row(
                             children: [
-                              Icon(Icons.verified_rounded, size: 14, color: AppColors.statusLive),
+                              Icon(Icons.verified_rounded,
+                                  size: 14, color: AppColors.statusLive),
                               SizedBox(width: 4),
                               Text(
                                 'NH66 Corridor Pass Active',
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.statusLive),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.statusLive),
                               ),
                             ],
                           ),
@@ -253,14 +306,18 @@ class AccountScreen extends StatelessWidget {
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 3),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Text(
                             'AUTO-RELOAD',
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white),
                           ),
                         ),
                       ],
@@ -285,9 +342,11 @@ class AccountScreen extends StatelessWidget {
                               foregroundColor: AppColors.primary,
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
-                            child: const Text('Top Up via UPI', style: TextStyle(fontWeight: FontWeight.w600)),
+                            child: const Text('Top Up via UPI',
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -298,9 +357,11 @@ class AccountScreen extends StatelessWidget {
                               foregroundColor: Colors.white,
                               side: const BorderSide(color: Colors.white70),
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                             ),
-                            child: const Text('View Passes', style: TextStyle(fontWeight: FontWeight.w600)),
+                            child: const Text('View Passes',
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                           ),
                         ),
                       ],
@@ -313,7 +374,11 @@ class AccountScreen extends StatelessWidget {
               // Settings List
               const Text(
                 'COMMUTER PREFERENCES',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textMuted, letterSpacing: 0.6),
+                style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textMuted,
+                    letterSpacing: 0.6),
               ),
               const SizedBox(height: 10),
 
@@ -341,13 +406,15 @@ class AccountScreen extends StatelessWidget {
                 icon: Icons.language_rounded,
                 title: 'Language',
                 subtitle: 'English / മലയാളം',
-                trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                trailing: const Icon(Icons.chevron_right_rounded,
+                    color: AppColors.textMuted),
               ),
               _buildSettingsRow(
                 icon: Icons.support_agent_rounded,
                 title: 'Helpline & Feedback',
                 subtitle: 'admin@getmybus.in • 24x7 Transit Desk',
-                trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                trailing: const Icon(Icons.chevron_right_rounded,
+                    color: AppColors.textMuted),
               ),
               const SizedBox(height: 24),
 
@@ -363,12 +430,16 @@ class AccountScreen extends StatelessWidget {
                     const SizedBox(height: 6),
                     const Text(
                       'v2.4.0 • Kerala Private Bus Telematics',
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.textMuted),
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textMuted),
                     ),
                     const SizedBox(height: 2),
                     const Text(
                       '© 2026 GetMyBus Technologies Pvt Ltd',
-                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                      style:
+                          TextStyle(fontSize: 10, color: AppColors.textMuted),
                     ),
                   ],
                 ),
@@ -413,11 +484,15 @@ class AccountScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                  style: const TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary),
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                      fontSize: 11, color: AppColors.textSecondary),
                 ),
               ],
             ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
@@ -7,10 +9,10 @@ import '../models/bus.dart';
 import 'uber_bottom_sheet.dart';
 
 enum MapStyle {
-  uberMinimal,    // Sleek Uber-style desaturated retina canvas
-  googleMaps,     // Official Google Maps Standard Retina
-  googleTerrain,  // Official Google Maps Terrain Retina
-  googleHybrid,   // Official Google Maps Satellite Hybrid Retina
+  uberMinimal, // Sleek Uber-style desaturated retina canvas
+  googleMaps, // Official Google Maps Standard Retina
+  googleTerrain, // Official Google Maps Terrain Retina
+  googleHybrid, // Official Google Maps Satellite Hybrid Retina
 }
 
 class UberMapView extends StatefulWidget {
@@ -35,7 +37,8 @@ class UberMapView extends StatefulWidget {
   State<UberMapView> createState() => _UberMapViewState();
 }
 
-class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin {
+class _UberMapViewState extends State<UberMapView>
+    with TickerProviderStateMixin {
   late final MapController _mapController;
   late final AnimationController _pulseController;
   late final AnimationController _simController;
@@ -50,13 +53,41 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
 
   // Major corridor stops along Kerala Commuter Route
   final List<Map<String, dynamic>> _corridorStops = [
-    {'name': 'Kollam Stand', 'point': const LatLng(8.8932, 76.6141), 'isTerminal': true},
-    {'name': 'Mayyanad Stop', 'point': const LatLng(8.835489, 76.643381), 'isUserStop': true},
-    {'name': 'Kottiyam Jn', 'point': const LatLng(8.8660, 76.6709), 'isTerminal': false},
-    {'name': 'Chathannoor Stand', 'point': const LatLng(8.8576, 76.7235), 'isTerminal': false},
-    {'name': 'Parippally Jn', 'point': const LatLng(8.8091, 76.7628), 'isTerminal': false},
-    {'name': 'Attingal Stand', 'point': const LatLng(8.6965, 76.8143), 'isTerminal': false},
-    {'name': 'Technopark TVM', 'point': const LatLng(8.5686, 76.8731), 'isTerminal': true},
+    {
+      'name': 'Kollam Stand',
+      'point': const LatLng(8.8932, 76.6141),
+      'isTerminal': true
+    },
+    {
+      'name': 'Mayyanad Stop',
+      'point': const LatLng(8.835489, 76.643381),
+      'isUserStop': true
+    },
+    {
+      'name': 'Kottiyam Jn',
+      'point': const LatLng(8.8660, 76.6709),
+      'isTerminal': false
+    },
+    {
+      'name': 'Chathannoor Stand',
+      'point': const LatLng(8.8576, 76.7235),
+      'isTerminal': false
+    },
+    {
+      'name': 'Parippally Jn',
+      'point': const LatLng(8.8091, 76.7628),
+      'isTerminal': false
+    },
+    {
+      'name': 'Attingal Stand',
+      'point': const LatLng(8.6965, 76.8143),
+      'isTerminal': false
+    },
+    {
+      'name': 'Technopark TVM',
+      'point': const LatLng(8.5686, 76.8731),
+      'isTerminal': true
+    },
   ];
 
   // Default commuter stop (Mayyanad Junction, Kollam - snapped to road network)
@@ -65,10 +96,26 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
 
   // Uber clean desaturation matrix: softens aggressive saturated roads & labels into sleek airy tones
   static const List<double> _uberMinimalColorMatrix = <double>[
-    0.65, 0.25, 0.10, 0, 14,
-    0.20, 0.70, 0.10, 0, 14,
-    0.12, 0.22, 0.66, 0, 18,
-    0,    0,    0,    1, 0,
+    0.65,
+    0.25,
+    0.10,
+    0,
+    14,
+    0.20,
+    0.70,
+    0.10,
+    0,
+    14,
+    0.12,
+    0.22,
+    0.66,
+    0,
+    18,
+    0,
+    0,
+    0,
+    1,
+    0,
   ];
 
   @override
@@ -132,14 +179,17 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
     final startCenter = _mapController.camera.center;
     final startZoom = _mapController.camera.zoom;
 
-    final latTween = Tween<double>(begin: startCenter.latitude, end: destCenter.latitude);
-    final lngTween = Tween<double>(begin: startCenter.longitude, end: destCenter.longitude);
+    final latTween =
+        Tween<double>(begin: startCenter.latitude, end: destCenter.latitude);
+    final lngTween =
+        Tween<double>(begin: startCenter.longitude, end: destCenter.longitude);
     final zoomTween = Tween<double>(begin: startZoom, end: destZoom);
 
     final controller = AnimationController(vsync: this, duration: duration);
     _cameraAnimController = controller;
 
-    final curved = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    final curved =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
       _mapController.move(
@@ -149,7 +199,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
     });
 
     controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
         controller.dispose();
         if (_cameraAnimController == controller) {
           _cameraAnimController = null;
@@ -204,10 +255,12 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
           BusLocation? targetBus;
           if (widget.selectedBusName != null) {
             targetBus = buses.cast<BusLocation?>().firstWhere(
-              (b) => b != null && (b.busNumber == widget.selectedBusName ||
-                  widget.selectedBusName!.contains(b.busNumber)),
-              orElse: () => buses.isNotEmpty ? buses.first : null,
-            );
+                  (b) =>
+                      b != null &&
+                      (b.busNumber == widget.selectedBusName ||
+                          widget.selectedBusName!.contains(b.busNumber)),
+                  orElse: () => buses.isNotEmpty ? buses.first : null,
+                );
           } else if (buses.isNotEmpty) {
             targetBus = buses.first;
           }
@@ -226,7 +279,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
             ).fit(cam);
 
             if (animated) {
-              _animatedCameraMove(destCenter: fitted.center, destZoom: fitted.zoom);
+              _animatedCameraMove(
+                  destCenter: fitted.center, destZoom: fitted.zoom);
             } else {
               _mapController.move(fitted.center, fitted.zoom);
             }
@@ -241,7 +295,7 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
             _commuterStop,
             const LatLng(8.8091, 76.7628), // Parippally
             const LatLng(8.6965, 76.8143), // Attingal
-            _destinationStop,             // Technopark TVM
+            _destinationStop, // Technopark TVM
           ];
 
           final fitted = CameraFit.coordinates(
@@ -252,7 +306,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
           ).fit(cam);
 
           if (animated) {
-            _animatedCameraMove(destCenter: fitted.center, destZoom: fitted.zoom);
+            _animatedCameraMove(
+                destCenter: fitted.center, destZoom: fitted.zoom);
           } else {
             _mapController.move(fitted.center, fitted.zoom);
           }
@@ -288,12 +343,14 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
 
   void _zoomIn() {
     final currentZoom = _mapController.camera.zoom;
-    _mapController.move(_mapController.camera.center, (currentZoom + 1).clamp(6.0, 19.0));
+    _mapController.move(
+        _mapController.camera.center, (currentZoom + 1).clamp(6.0, 19.0));
   }
 
   void _zoomOut() {
     final currentZoom = _mapController.camera.zoom;
-    _mapController.move(_mapController.camera.center, (currentZoom - 1).clamp(6.0, 19.0));
+    _mapController.move(
+        _mapController.camera.center, (currentZoom - 1).clamp(6.0, 19.0));
   }
 
   void _fitFullRoute() {
@@ -304,7 +361,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
 
       final fitted = CameraFit.coordinates(
         coordinates: _routePoints,
-        padding: EdgeInsets.fromLTRB(36, topBarHeight + 10, 36, bottomSheetHeight + 20),
+        padding: EdgeInsets.fromLTRB(
+            36, topBarHeight + 10, 36, bottomSheetHeight + 20),
         maxZoom: 13.0,
         minZoom: 9.0,
       ).fit(_mapController.camera);
@@ -403,7 +461,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
                   maxZoom: 20,
                   tileBuilder: _currentMapStyle == MapStyle.uberMinimal
                       ? (context, tileWidget, tile) => ColorFiltered(
-                            colorFilter: const ColorFilter.matrix(_uberMinimalColorMatrix),
+                            colorFilter: const ColorFilter.matrix(
+                                _uberMinimalColorMatrix),
                             child: tileWidget,
                           )
                       : null,
@@ -415,32 +474,22 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
                     // Layer 1: Ambient Under-Glow (Luminous Soft Spread)
                     Polyline(
                       points: _routePoints,
-                      strokeWidth: 10.5,
-                      color: const Color(0x35088395),
+                      strokeWidth: 8,
+                      color: AppColors.primary.withOpacity(0.12),
                       strokeCap: StrokeCap.round,
                       strokeJoin: StrokeJoin.round,
                     ),
-                    // Layer 2: Deep Dark Outer Casing (Uber Border Contrast)
                     Polyline(
                       points: _routePoints,
-                      strokeWidth: 6.5,
-                      color: const Color(0xFF07273F),
+                      strokeWidth: 4.8,
+                      color: AppColors.primaryDark.withOpacity(0.88),
                       strokeCap: StrokeCap.round,
                       strokeJoin: StrokeJoin.round,
                     ),
-                    // Layer 3: Vibrant Core Brand Teal
                     Polyline(
                       points: _routePoints,
-                      strokeWidth: 4.2,
-                      color: AppColors.primary,
-                      strokeCap: StrokeCap.round,
-                      strokeJoin: StrokeJoin.round,
-                    ),
-                    // Layer 4: Electric Cyan Inner Core Highlight
-                    Polyline(
-                      points: _routePoints,
-                      strokeWidth: 1.8,
-                      color: const Color(0xFF00F5D4),
+                      strokeWidth: 2,
+                      color: AppColors.accent.withOpacity(0.95),
                       strokeCap: StrokeCap.round,
                       strokeJoin: StrokeJoin.round,
                     ),
@@ -454,13 +503,16 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
                     ..._corridorStops.map((stop) {
                       final isUser = stop['isUserStop'] == true;
                       final isTerminal = stop['isTerminal'] == true;
-                      if (isUser) return null; // Handled separately with pulsing radar
+                      if (isUser) {
+                        return null; // Handled separately with pulsing radar
+                      }
 
                       return Marker(
                         point: stop['point'] as LatLng,
                         width: 140,
                         height: 38,
-                        child: _buildCorridorStopDot(stop['name'] as String, isTerminal),
+                        child: _buildCorridorStopDot(
+                            stop['name'] as String, isTerminal),
                       );
                     }).whereType<Marker>(),
 
@@ -492,18 +544,18 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
         // ── 2. TOP TELEMETRY STATUS PILL (UBER STYLE) ──
         Positioned(
           top: MediaQuery.of(context).padding.top + 62,
-          left: 16,
+          left: 18,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.95),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
+              color: Colors.white.withOpacity(0.82),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.white.withOpacity(0.9)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
+                  color: AppColors.primaryDark.withOpacity(0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
@@ -520,11 +572,11 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
                 ),
                 const SizedBox(width: 6),
                 const Text(
-                  'NH66 Live Corridor',
+                  'NH66 live',
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ],
@@ -542,7 +594,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
               child: GestureDetector(
                 onTap: _recenter,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.uberBlack,
                     borderRadius: BorderRadius.circular(20),
@@ -557,7 +610,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.my_location_rounded, size: 14, color: Colors.white),
+                      Icon(Icons.my_location_rounded,
+                          size: 14, color: Colors.white),
                       SizedBox(width: 6),
                       Text(
                         'Re-center View',
@@ -576,7 +630,7 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
 
         // ── 4. FLOATING MAP ACTION BUTTONS (UBER / SWIGGY STYLE) ──
         Positioned(
-          right: 16,
+          right: 18,
           top: MediaQuery.of(context).padding.top + 70,
           child: Column(
             children: [
@@ -831,7 +885,8 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
       final bus = buses[i];
       final isSelected = widget.selectedBusName != null &&
           (widget.selectedBusName!.contains(bus.busNumber) ||
-           widget.selectedBusName!.toLowerCase().contains('venad') && i == 0);
+              widget.selectedBusName!.toLowerCase().contains('venad') &&
+                  i == 0);
 
       final etaMins = i == 0 ? 3 : (i == 1 ? 7 : 12);
 
@@ -998,29 +1053,35 @@ class _UberMapViewState extends State<UberMapView> with TickerProviderStateMixin
       message: tooltip,
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isPrimary ? AppColors.primary.withOpacity(0.35) : AppColors.border,
-              width: isPrimary ? 1.5 : 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isPrimary
+                    ? AppColors.primary.withOpacity(0.94)
+                    : Colors.white.withOpacity(0.82),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.white.withOpacity(0.9)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryDark
+                        .withOpacity(isPrimary ? 0.16 : 0.08),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Center(
-            child: Icon(
-              icon,
-              size: 19,
-              color: isPrimary ? AppColors.primary : AppColors.textPrimary,
+              child: Center(
+                child: Icon(
+                  icon,
+                  size: 19,
+                  color: isPrimary ? Colors.white : AppColors.textPrimary,
+                ),
+              ),
             ),
           ),
         ),
