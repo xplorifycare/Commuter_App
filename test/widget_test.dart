@@ -95,10 +95,10 @@ void main() {
       ),
     );
 
-    // Verify GetMyBus brand header renders
-    expect(find.text('GetMyBus'), findsOneWidget);
-    // Verify route destination selector renders
-    expect(find.textContaining('Where to?'), findsOneWidget);
+    // Verify conversational greeting renders
+    expect(find.text('Hello, Jassim 👋'), findsOneWidget);
+    // Verify Uber-style 'Where to?' input renders
+    expect(find.text('Where to?'), findsOneWidget);
   });
 
   testWidgets('UberMapView state changes and controls test', (WidgetTester tester) async {
@@ -117,20 +117,11 @@ void main() {
     // Verify Commuter pickup marker rendered
     expect(find.text('Mayyanad Stop • Pickup'), findsOneWidget);
 
-    // Verify NH66 corridor telemetry pill rendered
-    expect(find.text('NH66 live'), findsOneWidget);
-
-    // Verify map control buttons exist
-    expect(find.byTooltip('Switch Map Style'), findsOneWidget);
-    expect(find.byTooltip('Re-center Focus'), findsOneWidget);
-    expect(find.byTooltip('Fit Full Route'), findsOneWidget);
-
-    // Tap map style switcher
-    await tester.tap(find.byTooltip('Switch Map Style'));
-    await tester.pump(const Duration(milliseconds: 100));
+    // Verify Re-center button exists
+    expect(find.byIcon(Icons.my_location_rounded), findsOneWidget);
 
     // Tap Re-center button
-    await tester.tap(find.byTooltip('Re-center Focus'));
+    await tester.tap(find.byIcon(Icons.my_location_rounded));
     await tester.pump(const Duration(milliseconds: 100));
   });
 }

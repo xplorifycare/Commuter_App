@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
@@ -44,7 +42,7 @@ class _UberMapViewState extends State<UberMapView>
   late final AnimationController _simController;
   AnimationController? _cameraAnimController;
 
-  MapStyle _currentMapStyle = MapStyle.uberMinimal;
+  final MapStyle _currentMapStyle = MapStyle.uberMinimal;
   bool _userInteracted = false;
   bool _initialFramed = false;
 
@@ -60,7 +58,7 @@ class _UberMapViewState extends State<UberMapView>
     },
     {
       'name': 'Mayyanad Stop',
-      'point': const LatLng(8.835489, 76.643381),
+      'point': const LatLng(8.838954, 76.643485),
       'isUserStop': true
     },
     {
@@ -90,33 +88,9 @@ class _UberMapViewState extends State<UberMapView>
     },
   ];
 
-  // Default commuter stop (Mayyanad Junction, Kollam - snapped to road network)
-  final LatLng _commuterStop = const LatLng(8.835489, 76.643381);
+  // Default commuter stop (Mayyanad Junction, Kollam - snapped to main road network)
+  final LatLng _commuterStop = const LatLng(8.838954, 76.643485);
   final LatLng _destinationStop = const LatLng(8.5686, 76.8731);
-
-  // Uber clean desaturation matrix: softens aggressive saturated roads & labels into sleek airy tones
-  static const List<double> _uberMinimalColorMatrix = <double>[
-    0.65,
-    0.25,
-    0.10,
-    0,
-    14,
-    0.20,
-    0.70,
-    0.10,
-    0,
-    14,
-    0.12,
-    0.22,
-    0.66,
-    0,
-    18,
-    0,
-    0,
-    0,
-    1,
-    0,
-  ];
 
   @override
   void initState() {
@@ -341,87 +315,29 @@ class _UberMapViewState extends State<UberMapView>
     widget.onRecenter?.call();
   }
 
-  void _zoomIn() {
-    final currentZoom = _mapController.camera.zoom;
-    _mapController.move(
-        _mapController.camera.center, (currentZoom + 1).clamp(6.0, 19.0));
-  }
-
-  void _zoomOut() {
-    final currentZoom = _mapController.camera.zoom;
-    _mapController.move(
-        _mapController.camera.center, (currentZoom - 1).clamp(6.0, 19.0));
-  }
-
-  void _fitFullRoute() {
-    if (_routePoints.isNotEmpty) {
-      final size = MediaQuery.of(context).size;
-      final bottomSheetHeight = size.height * 0.46;
-      final topBarHeight = MediaQuery.of(context).padding.top + 76.0;
-
-      final fitted = CameraFit.coordinates(
-        coordinates: _routePoints,
-        padding: EdgeInsets.fromLTRB(
-            36, topBarHeight + 10, 36, bottomSheetHeight + 20),
-        maxZoom: 13.0,
-        minZoom: 9.0,
-      ).fit(_mapController.camera);
-
-      setState(() {
-        _userInteracted = true;
-      });
-      _animatedCameraMove(destCenter: fitted.center, destZoom: fitted.zoom);
-    }
-  }
-
-  void _cycleMapStyle() {
-    setState(() {
-      switch (_currentMapStyle) {
-        case MapStyle.uberMinimal:
-          _currentMapStyle = MapStyle.googleMaps;
-          break;
-        case MapStyle.googleMaps:
-          _currentMapStyle = MapStyle.googleTerrain;
-          break;
-        case MapStyle.googleTerrain:
-          _currentMapStyle = MapStyle.googleHybrid;
-          break;
-        case MapStyle.googleHybrid:
-          _currentMapStyle = MapStyle.uberMinimal;
-          break;
-      }
-    });
-
-    final name = switch (_currentMapStyle) {
-      MapStyle.uberMinimal => 'Uber Minimalist (Crisp Vector Canvas)',
-      MapStyle.googleMaps => 'Google Maps (Standard Retina)',
-      MapStyle.googleTerrain => 'Google Maps (Terrain Retina)',
-      MapStyle.googleHybrid => 'Google Satellite (Hybrid Retina)',
-    };
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Map Style: $name'),
-        duration: const Duration(milliseconds: 1400),
-        backgroundColor: AppColors.uberBlack,
-      ),
-    );
-  }
-
   String get _tileUrlTemplate {
     switch (_currentMapStyle) {
       case MapStyle.uberMinimal:
+        return 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png';
       case MapStyle.googleMaps:
-        return 'https://mt{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&scale=2';
+        return 'https://mt{s}.google.com/vt/lyrs=m&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
       case MapStyle.googleTerrain:
-        return 'https://mt{s}.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z}&scale=2';
+        return 'https://mt{s}.google.com/vt/lyrs=p&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
       case MapStyle.googleHybrid:
-        return 'https://mt{s}.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}&scale=2';
+        return 'https://mt{s}.google.com/vt/lyrs=y&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
     }
   }
 
-  List<String> get _tileSubdomains => const ['0', '1', '2', '3'];
+  List<String> get _tileSubdomains {
+    switch (_currentMapStyle) {
+      case MapStyle.uberMinimal:
+        return const ['a', 'b', 'c', 'd'];
+      case MapStyle.googleMaps:
+      case MapStyle.googleTerrain:
+      case MapStyle.googleHybrid:
+        return const ['0', '1', '2', '3'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -452,20 +368,13 @@ class _UberMapViewState extends State<UberMapView>
                 },
               ),
               children: [
-                // Crisp 512x512 Retina Tiles with optional Uber Minimal Desaturation
+                // Crisp 512x512 Retina Tiles (CartoDB Positron / Google Maps Retina)
                 TileLayer(
                   key: ValueKey(_currentMapStyle),
                   urlTemplate: _tileUrlTemplate,
                   subdomains: _tileSubdomains,
                   userAgentPackageName: 'in.getmybus.app',
                   maxZoom: 20,
-                  tileBuilder: _currentMapStyle == MapStyle.uberMinimal
-                      ? (context, tileWidget, tile) => ColorFiltered(
-                            colorFilter: const ColorFilter.matrix(
-                                _uberMinimalColorMatrix),
-                            child: tileWidget,
-                          )
-                      : null,
                 ),
 
                 // ── Google Maps / Uber Elevated Navigation Route Ribbon ──
@@ -541,53 +450,10 @@ class _UberMapViewState extends State<UberMapView>
           },
         ),
 
-        // ── 2. TOP TELEMETRY STATUS PILL (UBER STYLE) ──
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 62,
-          left: 18,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.82),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.white.withOpacity(0.9)),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryDark.withOpacity(0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 6.5,
-                  height: 6.5,
-                  decoration: const BoxDecoration(
-                    color: AppColors.statusLive,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                const Text(
-                  'NH66 live',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // ── 3. FLOATING RE-CENTER BANNER (WHEN USER PAN AWAY) ──
+        // ── 2. FLOATING RE-CENTER BANNER (WHEN USER PAN AWAY) ──
         if (_userInteracted)
           Positioned(
-            top: MediaQuery.of(context).padding.top + 62,
+            top: MediaQuery.of(context).padding.top + 68,
             left: 0,
             right: 0,
             child: Center(
@@ -595,15 +461,15 @@ class _UberMapViewState extends State<UberMapView>
                 onTap: _recenter,
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                   decoration: BoxDecoration(
                     color: AppColors.uberBlack,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.20),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -618,7 +484,7 @@ class _UberMapViewState extends State<UberMapView>
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
@@ -628,52 +494,30 @@ class _UberMapViewState extends State<UberMapView>
             ),
           ),
 
-        // ── 4. FLOATING MAP ACTION BUTTONS (UBER / SWIGGY STYLE) ──
+        // ── 3. SLEEK FLOATING RE-CENTER BUTTON (UBER / SWIGGY STYLE) ──
         Positioned(
           right: 18,
-          top: MediaQuery.of(context).padding.top + 70,
-          child: Column(
-            children: [
-              // Map Style Switcher (Uber Minimal ⟷ GMap ⟷ Terrain ⟷ Satellite)
-              _buildFloatingButton(
-                icon: Icons.layers_rounded,
-                tooltip: 'Switch Map Style',
-                onTap: _cycleMapStyle,
+          top: MediaQuery.of(context).padding.top + 68,
+          child: GestureDetector(
+            onTap: _recenter,
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withOpacity(0.9)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryDark.withOpacity(0.12),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-
-              // Re-center on commuter stop / tracking focus
-              _buildFloatingButton(
-                icon: Icons.my_location_rounded,
-                tooltip: 'Re-center Focus',
-                onTap: _recenter,
-                isPrimary: true,
-              ),
-              const SizedBox(height: 8),
-
-              // Fit whole corridor route
-              _buildFloatingButton(
-                icon: Icons.alt_route_rounded,
-                tooltip: 'Fit Full Route',
-                onTap: _fitFullRoute,
-              ),
-              const SizedBox(height: 8),
-
-              // Zoom In
-              _buildFloatingButton(
-                icon: Icons.add_rounded,
-                tooltip: 'Zoom In',
-                onTap: _zoomIn,
-              ),
-              const SizedBox(height: 8),
-
-              // Zoom Out
-              _buildFloatingButton(
-                icon: Icons.remove_rounded,
-                tooltip: 'Zoom Out',
-                onTap: _zoomOut,
-              ),
-            ],
+              child: const Icon(Icons.my_location_rounded,
+                  size: 20, color: AppColors.primary),
+            ),
           ),
         ),
       ],
@@ -1041,51 +885,5 @@ class _UberMapViewState extends State<UberMapView>
         timestamp: DateTime.now().millisecondsSinceEpoch,
       ),
     ];
-  }
-
-  Widget _buildFloatingButton({
-    required IconData icon,
-    required String tooltip,
-    required VoidCallback onTap,
-    bool isPrimary = false,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: GestureDetector(
-        onTap: onTap,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: isPrimary
-                    ? AppColors.primary.withOpacity(0.94)
-                    : Colors.white.withOpacity(0.82),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.white.withOpacity(0.9)),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primaryDark
-                        .withOpacity(isPrimary ? 0.16 : 0.08),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Icon(
-                  icon,
-                  size: 19,
-                  color: isPrimary ? Colors.white : AppColors.textPrimary,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
