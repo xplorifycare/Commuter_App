@@ -206,12 +206,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildMoreWaysToTravelSection(),
           const SizedBox(height: 20),
 
-          // ── D2. VECTOR TRANSIT CORRIDOR SCHEMATIC GRAPHIC (NH-66 Live Route) ──
-          TransitCorridorGraphic(
-            onViewFullRoute: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
-          ),
-          const SizedBox(height: 24),
-
           // ── E. SAFETY BANNER (Image 1: Travel safe, stay secure!) ──
           _buildSafetyBanner(),
           const SizedBox(height: 24),
@@ -645,16 +639,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 10),
 
-            // 2. Fast Passenger (Limited Stop Highway Express - 3D Commute Express Bus)
+            // 2. Express Bus (Limited Stop Highway Express - 3D Commute Express Bus)
             Expanded(
               child: FloatingBounce(
                 delayFraction: 0.33,
                 maxOffset: 4.0,
                 duration: const Duration(milliseconds: 2600),
                 child: _buildServiceCard(
-                  title: 'Fast Passenger',
+                  title: 'Express Bus',
                   imageAsset: 'assets/images/bus_3d.jpg',
-                  badgeText: '*EXPRESS*',
+                  badgeText: '*FAST*',
                   badgeColor: const Color(0xFFEA580C),
                   onTap: () => _openFullMap(busName: 'Royal King Electric AC'),
                 ),
