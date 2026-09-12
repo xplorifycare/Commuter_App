@@ -566,11 +566,10 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.border),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 12,
               offset: const Offset(0, 3),
             ),
           ],
@@ -697,11 +696,10 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: AppColors.borderLight),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primaryDark.withOpacity(0.04),
-                        blurRadius: 10,
+                        blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
                     ],
@@ -1072,7 +1070,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
             color: AppColors.primaryDark.withOpacity(0.06),
