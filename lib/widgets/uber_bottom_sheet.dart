@@ -614,36 +614,40 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     );
   }
 
-  /// 4. "Places Viewed" Horizontal Carousel (Image 5 style)
+  /// 4. "Places Viewed" Horizontal Carousel (Image 5 & reference design style)
   Widget _buildPlacesViewedCarousel() {
     final places = [
       {
-        'tag': 'IT CORRIDOR',
-        'title': 'Technopark Kazhakkoottam',
-        'sub': 'Phase 1 & 3 • 32 min',
+        'title': 'Technopark Campus',
+        'location': 'Kazhakkoottam',
+        'sub': 'Aug 21 • 05:37 PM',
         'destination': 'Technopark Kazhakkoottam',
         'bus': 'Venad Fast Passenger',
+        'image': 'assets/images/place_technopark.jpg',
       },
       {
-        'tag': 'CENTRAL STAND',
-        'title': 'Kollam Chinnakkada Stand',
-        'sub': 'Clock Tower • 18 min',
+        'title': 'Clock Tower Square',
+        'location': 'Chinnakkada, Kollam',
+        'sub': 'Aug 20 • 03:15 PM',
         'destination': 'Kollam Chinnakkada Stand',
         'bus': 'St. Jude Superfast',
+        'image': 'assets/images/place_chinnakkada.jpg',
       },
       {
-        'tag': 'FEEDER HUB',
-        'title': 'Chathannoor Junction',
-        'sub': 'NH66 Crossway • 12 min',
+        'title': 'Varkala Cliff Beach',
+        'location': 'Varkala',
+        'sub': 'Aug 19 • 06:45 PM',
+        'destination': 'Varkala Cliff Beach',
+        'bus': 'Coastal AC Express',
+        'image': 'assets/images/place_varkala.jpg',
+      },
+      {
+        'title': 'Town Junction',
+        'location': 'Chathannoor',
+        'sub': 'Aug 18 • 11:20 AM',
         'destination': 'Chathannoor Junction',
         'bus': 'Venad Fast Passenger',
-      },
-      {
-        'tag': 'TERMINAL',
-        'title': 'TVM Central Stand',
-        'sub': 'Thampanoor • 52 min',
-        'destination': 'TVM Central Stand',
-        'bus': 'Royal King Electric AC',
+        'image': 'assets/images/place_chathannoor.jpg',
       },
     ];
 
@@ -677,7 +681,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 106,
+          height: 98,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -691,11 +695,11 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                   widget.onBusSelected(item['bus']!);
                 },
                 child: Container(
-                  width: 180,
-                  padding: const EdgeInsets.all(12),
+                  width: 260,
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primaryDark.withOpacity(0.04),
@@ -704,55 +708,102 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryLight,
-                              borderRadius: BorderRadius.circular(6),
+                      // Photo thumbnail on the left
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.asset(
+                          item['image']!,
+                          width: 78,
+                          height: 78,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 78,
+                            height: 78,
+                            color: AppColors.primaryLight,
+                            child: const Icon(
+                              Icons.location_city_rounded,
+                              color: AppColors.primary,
                             ),
-                            child: Text(
-                              item['tag']!,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Details on the right
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Location pin + Bookmark button
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on_rounded,
+                                        size: 13,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Flexible(
+                                        child: Text(
+                                          item['location']!,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.textSecondary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 26,
+                                  height: 26,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFF1F5F9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.bookmark_rounded,
+                                    size: 13,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item['title']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 8.5,
+                                fontSize: 13.5,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.primaryDark,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.2,
                               ),
                             ),
-                          ),
-                          const Icon(Icons.bookmark_rounded, size: 16, color: AppColors.primary),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                            const SizedBox(height: 3),
+                            Text(
+                              item['sub']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item['sub']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

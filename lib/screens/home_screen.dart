@@ -853,26 +853,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Places Viewed Section (Image 4)
+  /// Places Viewed Section (Image 4 & reference design with landmark photos)
   Widget _buildPlacesViewedSection() {
     final places = [
       {
-        'title': 'Technopark Kazhakkoottam',
-        'sub': 'Phase 1 & 3 • 32 min',
+        'title': 'Technopark Campus',
+        'location': 'Kazhakkoottam',
+        'sub': 'Aug 21 • 05:37 PM',
         'destination': 'Technopark Kazhakkoottam',
-        'tag': 'IT HUB',
+        'image': 'assets/images/place_technopark.jpg',
       },
       {
-        'title': 'Kollam Chinnakkada Stand',
-        'sub': 'Clock Tower • 18 min',
+        'title': 'Clock Tower Square',
+        'location': 'Chinnakkada, Kollam',
+        'sub': 'Aug 20 • 03:15 PM',
         'destination': 'Kollam Chinnakkada Stand',
-        'tag': 'CENTRAL',
+        'image': 'assets/images/place_chinnakkada.jpg',
       },
       {
-        'title': 'Chathannoor Junction',
-        'sub': 'NH66 Crossway • 12 min',
+        'title': 'Varkala Cliff Beach',
+        'location': 'Varkala',
+        'sub': 'Aug 19 • 06:45 PM',
+        'destination': 'Varkala Cliff Beach',
+        'image': 'assets/images/place_varkala.jpg',
+      },
+      {
+        'title': 'Town Junction',
+        'location': 'Chathannoor',
+        'sub': 'Aug 18 • 11:20 AM',
         'destination': 'Chathannoor Junction',
-        'tag': 'FEEDER',
+        'image': 'assets/images/place_chathannoor.jpg',
       },
     ];
 
@@ -906,7 +916,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 105,
+          height: 98,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -917,11 +927,11 @@ class _HomeScreenState extends State<HomeScreen> {
               return GestureDetector(
                 onTap: () => _openFullMap(destination: item['destination']),
                 child: Container(
-                  width: 190,
-                  padding: const EdgeInsets.all(12),
+                  width: 260,
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.04),
@@ -930,53 +940,102 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.brandBlueLight,
-                              borderRadius: BorderRadius.circular(6),
+                      // Photo thumbnail on the left
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.asset(
+                          item['image']!,
+                          width: 78,
+                          height: 78,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 78,
+                            height: 78,
+                            color: AppColors.brandBlueLight,
+                            child: const Icon(
+                              Icons.location_city_rounded,
+                              color: AppColors.brandBlue,
                             ),
-                            child: Text(
-                              item['tag']!,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Details on the right
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Location pin + Bookmark button
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on_rounded,
+                                        size: 13,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Flexible(
+                                        child: Text(
+                                          item['location']!,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.textSecondary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 26,
+                                  height: 26,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFF1F5F9),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.bookmark_rounded,
+                                    size: 13,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item['title']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 9,
+                                fontSize: 13.5,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.brandBlue,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.2,
                               ),
                             ),
-                          ),
-                          const Icon(Icons.bookmark_border_rounded, size: 16, color: AppColors.textSecondary),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
+                            const SizedBox(height: 3),
+                            Text(
+                              item['sub']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item['sub']!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -989,7 +1048,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Recent Activity Section (Image 4: Trip logs with fares and status)
+  /// Recent Activity Section (Image 4 & reference design style)
   Widget _buildRecentActivitySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1022,16 +1081,18 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 12),
         _buildRecentActivityItem(
           title: 'Mayyanad ➔ Technopark Phase 1',
-          time: 'Today • 08:30 AM',
+          time: 'Aug 28 • 05:37PM',
           fare: '₹22.00',
+          imageAsset: 'assets/images/pixar_bus.jpg',
           isSuccess: true,
           onTap: () => _openFullMap(busName: 'Venad Fast Passenger'),
         ),
         const SizedBox(height: 10),
         _buildRecentActivityItem(
           title: 'Kollam Stand ➔ Mayyanad Jn',
-          time: 'Yesterday • 06:15 PM',
+          time: 'Aug 27 • 06:15PM',
           fare: '₹18.00',
+          imageAsset: 'assets/images/bus_3d.jpg',
           isSuccess: true,
           onTap: () => _openFullMap(busName: 'St. Jude Superfast'),
         ),
@@ -1043,40 +1104,73 @@ class _HomeScreenState extends State<HomeScreen> {
     required String title,
     required String time,
     required String fare,
+    required String imageAsset,
     required bool isSuccess,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
+              blurRadius: 12,
               offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Row(
           children: [
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSecondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.directions_bus_rounded,
-                size: 20,
-                color: AppColors.textPrimary,
-              ),
+            // Vehicle container with green checkmark status badge
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.asset(
+                    imageAsset,
+                    width: 52,
+                    height: 52,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Center(
+                      child: Icon(
+                        Icons.directions_bus_rounded,
+                        size: 24,
+                        color: AppColors.brandBlue,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: Container(
+                    padding: const EdgeInsets.all(1.5),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check_circle_rounded,
+                      size: 15,
+                      color: AppColors.statusLive,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
+            // Title & Timestamp
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1087,32 +1181,51 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 13.5,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
                     ),
                   ),
+                  const SizedBox(height: 3),
+                  Text(
+                    time,
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      Icon(
-                        isSuccess ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                        size: 12,
-                        color: isSuccess ? AppColors.statusLive : AppColors.statusError,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$time • $fare',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    fare,
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.textSecondary),
+            // "View ➔" link
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'View',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(width: 4),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 14,
+                  color: AppColors.textPrimary,
+                ),
+              ],
+            ),
           ],
         ),
       ),
