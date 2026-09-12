@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              const Icon(Icons.notifications_none_rounded, size: 22, color: AppColors.textPrimary),
+              const Icon(Icons.notifications, size: 22, color: Color(0xFF6B21A8)),
               Positioned(
                 top: 10,
                 right: 11,
@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            child: const Icon(Icons.qr_code_scanner_rounded, size: 22, color: Colors.white),
+            child: const Icon(Icons.qr_code, size: 22, color: Colors.white),
           ),
         ),
       ],
@@ -506,24 +506,22 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 12),
         Row(
           children: [
-            // 1. City Bus
+            // 1. City Bus (3D Pixar Bus)
             Expanded(
               child: _buildServiceCard(
                 title: 'City Bus',
-                icon: Icons.directions_bus_rounded,
-                iconColor: const Color(0xFF2563EB),
+                imageAsset: 'assets/images/pixar_bus.jpg',
                 badgeText: null,
                 onTap: () => _openFullMap(busName: 'Venad Fast Passenger'),
               ),
             ),
             const SizedBox(width: 10),
 
-            // 2. Metro (*50% OFF)
+            // 2. Metro (*50% OFF - 3D Pixar Metro Train)
             Expanded(
               child: _buildServiceCard(
                 title: 'Metro',
-                icon: Icons.subway_rounded,
-                iconColor: const Color(0xFF0D9488),
+                imageAsset: 'assets/images/pixar_metro.jpg',
                 badgeText: '*50% OFF',
                 badgeColor: const Color(0xFFEA580C),
                 onTap: () => _openFullMap(busName: 'Royal King Electric AC'),
@@ -531,14 +529,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 10),
 
-            // 3. Intercity (Coming Soon)
+            // 3. Intercity (Coming Soon - 3D Pixar Coach)
             Expanded(
               child: _buildServiceCard(
                 title: 'Intercity',
-                icon: Icons.airport_shuttle_rounded,
-                iconColor: const Color(0xFF9333EA),
-                badgeText: 'Coming Soon',
-                badgeColor: const Color(0xFF64748B),
+                imageAsset: 'assets/images/pixar_intercity.jpg',
+                isComingSoon: true,
                 onTap: () {},
               ),
             ),
@@ -550,21 +546,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildServiceCard({
     required String title,
-    required IconData icon,
-    required Color iconColor,
+    required String imageAsset,
     String? badgeText,
     Color? badgeColor,
+    bool isComingSoon = false,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 110,
-        padding: const EdgeInsets.all(10),
+        height: 126,
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.border),
+          color: isComingSoon ? const Color(0xFFF1F5F9) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isComingSoon ? const Color(0xFFE2E8F0) : AppColors.border,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
@@ -573,54 +571,90 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (badgeText != null)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: badgeColor ?? AppColors.primary,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    badgeText,
-                    style: const TextStyle(
-                      fontSize: 8.5,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Header: Title + optional Top Badge (e.g. *50% OFF)
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: iconColor.withOpacity(0.10),
-                      shape: BoxShape.circle,
+                Flexible(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
                     ),
-                    child: Icon(icon, size: 26, color: iconColor),
                   ),
                 ),
-                const SizedBox(height: 2),
+                if (badgeText != null) ...[
+                  const SizedBox(width: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: badgeColor ?? AppColors.primary,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      badgeText,
+                      style: const TextStyle(
+                        fontSize: 7.5,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
+
+            const Spacer(),
+
+            // 3D Pixar Vehicle Asset
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  imageAsset,
+                  height: isComingSoon ? 50 : 56,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+
+            const Spacer(),
+
+            // Bottom Coming Soon pill if applicable
+            if (isComingSoon)
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    'Coming Soon',
+                    style: TextStyle(
+                      fontSize: 8.5,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF475569),
+                    ),
+                  ),
+                ),
+              )
+            else
+              const SizedBox(height: 2),
           ],
         ),
       ),
@@ -663,18 +697,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0284C7),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    'Setup Now ↗',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Safety tracking & emergency contact sharing active')),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0284C7),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF0284C7).withOpacity(0.3),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Text(
+                      'Setup Now ↗',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -683,16 +731,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 12),
           Container(
-            width: 52,
-            height: 52,
+            width: 68,
+            height: 68,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              shape: BoxShape.circle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF0284C7).withOpacity(0.15),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.shield_rounded,
-              size: 28,
-              color: Color(0xFF0284C7),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                'assets/images/pixar_shield.jpg',
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ],
