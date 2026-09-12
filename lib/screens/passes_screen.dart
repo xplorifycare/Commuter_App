@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import '../widgets/graphic_drawings.dart';
 
 class PassesScreen extends StatefulWidget {
   const PassesScreen({super.key});
@@ -85,7 +86,7 @@ class _PassesScreenState extends State<PassesScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Floating 3D RFID Card Graphic (Image 2 with 3D Pixar asset)
+              // Floating 3D RFID Card Graphic (Image 2 with 3D Pixar asset + NFC Waves)
               Center(
                 child: SizedBox(
                   height: 220,
@@ -93,54 +94,49 @@ class _PassesScreenState extends State<PassesScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Electric Cyan/Blue Glowing Telematics Halo
-                      Positioned(
-                        child: Container(
-                          width: 180,
-                          height: 180,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                AppColors.brandCyan.withOpacity(0.35),
-                                AppColors.brandBlue.withOpacity(0.15),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
+                      // Electric Cyan/Blue Glowing Telematics Halo + NFC Waves
+                      const Positioned(
+                        child: AnimatedNfcWaves(
+                          color: AppColors.brandCyan,
+                          size: 190,
                         ),
                       ),
 
-                      // Tilted Perspective 3D Pixar Smartcard
-                      Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..rotateZ(-0.08)
-                          ..rotateY(0.06),
-                        child: Container(
-                          width: 220,
-                          height: 170,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.50),
-                                blurRadius: 28,
-                                offset: const Offset(0, 14),
+                      // Tilted Perspective 3D Pixar Smartcard with FloatingBounce
+                      FloatingBounce(
+                        delayFraction: 0.0,
+                        maxOffset: 6.0,
+                        duration: const Duration(milliseconds: 2800),
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..rotateZ(-0.08)
+                            ..rotateY(0.06),
+                          child: Container(
+                            width: 220,
+                            height: 170,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.50),
+                                  blurRadius: 28,
+                                  offset: const Offset(0, 14),
+                                ),
+                                BoxShadow(
+                                  color: AppColors.brandCyan.withOpacity(0.35),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: Image.asset(
+                                'assets/images/pixar_smartcard_3d.jpg',
+                                fit: BoxFit.cover,
                               ),
-                              BoxShadow(
-                                color: AppColors.brandCyan.withOpacity(0.35),
-                                blurRadius: 24,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: Image.asset(
-                              'assets/images/pixar_smartcard_3d.jpg',
-                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -245,23 +241,38 @@ class _PassesScreenState extends State<PassesScreen> {
               const Spacer(),
 
               // Card 1: 3D Pixar Bus (Cashless, queueless, stressless)
-              _buildBenefitRow(
-                imageAsset: 'assets/images/pixar_bus.jpg',
-                title: 'Ride cashless, queueless,\nstressless across all buses.',
+              FloatingBounce(
+                delayFraction: 0.0,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2500),
+                child: _buildBenefitRow(
+                  imageAsset: 'assets/images/pixar_bus.jpg',
+                  title: 'Ride cashless, queueless,\nstressless across all buses.',
+                ),
               ),
               const SizedBox(height: 28),
 
               // Card 2: 3D Pixar ETM (Instant conductor validation)
-              _buildBenefitRow(
-                imageAsset: 'assets/images/pixar_etm_3d.jpg',
-                title: 'Track usage & tap instantly\non conductor handheld ETM.',
+              FloatingBounce(
+                delayFraction: 0.33,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2500),
+                child: _buildBenefitRow(
+                  imageAsset: 'assets/images/pixar_etm_3d.jpg',
+                  title: 'Track usage & tap instantly\non conductor handheld ETM.',
+                ),
               ),
               const SizedBox(height: 28),
 
               // Card 3: 3D Pixar Smartcard (Contactless tap & recharge)
-              _buildBenefitRow(
-                imageAsset: 'assets/images/pixar_smartcard_3d.jpg',
-                title: 'Instant UPI tap & recharge\nwith smart NFC microchip.',
+              FloatingBounce(
+                delayFraction: 0.66,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2500),
+                child: _buildBenefitRow(
+                  imageAsset: 'assets/images/pixar_smartcard_3d.jpg',
+                  title: 'Instant UPI tap & recharge\nwith smart NFC microchip.',
+                ),
               ),
               const Spacer(),
 
@@ -375,87 +386,92 @@ class _PassesScreenState extends State<PassesScreen> {
         ),
         const SizedBox(height: 24),
 
-        // High-end Digital Pass Card
-        Container(
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1E3A8A), Color(0xFF0F172A)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppColors.brandCyan.withOpacity(0.4)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.brandBlue.withOpacity(0.30),
-                blurRadius: 28,
-                offset: const Offset(0, 10),
+        // High-end Digital Pass Card with FloatingBounce
+        FloatingBounce(
+          delayFraction: 0.0,
+          maxOffset: 5.0,
+          duration: const Duration(milliseconds: 3000),
+          child: Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF1E3A8A), Color(0xFF0F172A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          'assets/images/pixar_smartcard_3d.jpg',
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'GETMYBUS COMMUTER PASS',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.brandCyan,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(Icons.contactless_rounded, color: Colors.white.withOpacity(0.8), size: 24),
-                ],
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Kollam ↔ Technopark',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: -0.3,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: AppColors.brandCyan.withOpacity(0.4)),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.brandBlue.withOpacity(0.30),
+                  blurRadius: 28,
+                  offset: const Offset(0, 10),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Valid on all Fast Passenger & Electric AC buses',
-                style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.7)),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildCardMetric('RIDES LEFT', '24 / 30'),
-                  _buildCardMetric('EXPIRES', '30 Sep 2026'),
-                  _buildCardMetric('SAVINGS', '₹340'),
-                ],
-              ),
-            ],
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            'assets/images/pixar_smartcard_3d.jpg',
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'GETMYBUS COMMUTER PASS',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.brandCyan,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.contactless_rounded, color: Colors.white.withOpacity(0.8), size: 24),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Kollam ↔ Technopark',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Valid on all Fast Passenger & Electric AC buses',
+                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.7)),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildCardMetric('RIDES LEFT', '24 / 30'),
+                    _buildCardMetric('EXPIRES', '30 Sep 2026'),
+                    _buildCardMetric('SAVINGS', '₹340'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 24),
 
-        // Quick ETM Scanner NFC Instruction
+        // Quick ETM Scanner NFC Instruction with live radiated NFC waves
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -465,13 +481,26 @@ class _PassesScreenState extends State<PassesScreen> {
           ),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'assets/images/pixar_etm_3d.jpg',
-                  width: 46,
-                  height: 46,
-                  fit: BoxFit.cover,
+              SizedBox(
+                width: 58,
+                height: 58,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const AnimatedNfcWaves(
+                      color: AppColors.brandCyan,
+                      size: 56,
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'assets/images/pixar_etm_3d.jpg',
+                        width: 44,
+                        height: 44,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 14),

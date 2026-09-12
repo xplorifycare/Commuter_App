@@ -4,6 +4,7 @@ import '../config/theme.dart';
 import '../services/socket_service.dart';
 import '../widgets/uber_map_view.dart';
 import '../widgets/uber_bottom_sheet.dart';
+import '../widgets/graphic_drawings.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onOpenStops;
@@ -205,6 +206,12 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildMoreWaysToTravelSection(),
           const SizedBox(height: 20),
 
+          // ── D2. VECTOR TRANSIT CORRIDOR SCHEMATIC GRAPHIC (NH-66 Live Route) ──
+          TransitCorridorGraphic(
+            onViewFullRoute: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
+          ),
+          const SizedBox(height: 24),
+
           // ── E. SAFETY BANNER (Image 1: Travel safe, stay secure!) ──
           _buildSafetyBanner(),
           const SizedBox(height: 24),
@@ -369,8 +376,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.near_me_rounded, size: 13, color: AppColors.statusLive),
-                  SizedBox(width: 5),
+                  AnimatedRadarBeacon(
+                    color: AppColors.statusLive,
+                    size: 14,
+                  ),
+                  SizedBox(width: 6),
                   Text(
                     'Mayyanad, Kollam',
                     style: TextStyle(
@@ -378,6 +388,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
+                  ),
+                  SizedBox(width: 8),
+                  LiveTelematicsWave(
+                    barCount: 4,
+                    height: 12,
+                    color: AppColors.brandCyan,
                   ),
                 ],
               ),
@@ -614,36 +630,51 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // 1. City Bus (3D Pixar Bus)
             Expanded(
-              child: _buildServiceCard(
-                title: 'City Bus',
-                imageAsset: 'assets/images/pixar_bus.jpg',
-                badgeText: 'Local',
-                badgeColor: AppColors.brandBlue,
-                onTap: () => _openFullMap(busName: 'Venad Fast Passenger'),
+              child: FloatingBounce(
+                delayFraction: 0.0,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2600),
+                child: _buildServiceCard(
+                  title: 'City Bus',
+                  imageAsset: 'assets/images/pixar_bus.jpg',
+                  badgeText: 'Local',
+                  badgeColor: AppColors.brandBlue,
+                  onTap: () => _openFullMap(busName: 'Venad Fast Passenger'),
+                ),
               ),
             ),
             const SizedBox(width: 10),
 
             // 2. Fast Passenger (Limited Stop Highway Express - 3D Commute Express Bus)
             Expanded(
-              child: _buildServiceCard(
-                title: 'Fast Passenger',
-                imageAsset: 'assets/images/bus_3d.jpg',
-                badgeText: '*EXPRESS*',
-                badgeColor: const Color(0xFFEA580C),
-                onTap: () => _openFullMap(busName: 'Royal King Electric AC'),
+              child: FloatingBounce(
+                delayFraction: 0.33,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2600),
+                child: _buildServiceCard(
+                  title: 'Fast Passenger',
+                  imageAsset: 'assets/images/bus_3d.jpg',
+                  badgeText: '*EXPRESS*',
+                  badgeColor: const Color(0xFFEA580C),
+                  onTap: () => _openFullMap(busName: 'Royal King Electric AC'),
+                ),
               ),
             ),
             const SizedBox(width: 10),
 
             // 3. Intercity Coach (Long Distance AC Low Floor - 3D Pixar Coach)
             Expanded(
-              child: _buildServiceCard(
-                title: 'Intercity',
-                imageAsset: 'assets/images/pixar_intercity.jpg',
-                badgeText: 'AC Fleet',
-                badgeColor: const Color(0xFF0891B2),
-                onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
+              child: FloatingBounce(
+                delayFraction: 0.66,
+                maxOffset: 4.0,
+                duration: const Duration(milliseconds: 2600),
+                child: _buildServiceCard(
+                  title: 'Intercity',
+                  imageAsset: 'assets/images/pixar_intercity.jpg',
+                  badgeText: 'AC Fleet',
+                  badgeColor: const Color(0xFF0891B2),
+                  onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
+                ),
               ),
             ),
           ],

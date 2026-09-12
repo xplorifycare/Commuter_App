@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import '../widgets/graphic_drawings.dart';
 
 class TripsScreen extends StatefulWidget {
   const TripsScreen({super.key});
@@ -788,7 +789,7 @@ class _TripsScreenState extends State<TripsScreen> {
             ),
           ),
 
-          // Lower Ticket Body (Scannable Barcode)
+          // Lower Ticket Body (Scannable Barcode with Holographic Laser Scan)
           Padding(
             padding: const EdgeInsets.fromLTRB(22, 12, 22, 22),
             child: Column(
@@ -799,16 +800,26 @@ class _TripsScreenState extends State<TripsScreen> {
                     color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(
-                      48,
-                      (i) => Container(
-                        width: (i % 3 == 0 || i % 7 == 0) ? 3.0 : 1.5,
-                        height: 38,
-                        color: Colors.black.withOpacity((i % 5 == 0) ? 0.3 : 0.85),
+                  child: Stack(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(
+                          48,
+                          (i) => Container(
+                            width: (i % 3 == 0 || i % 7 == 0) ? 3.0 : 1.5,
+                            height: 38,
+                            color: Colors.black.withOpacity((i % 5 == 0) ? 0.3 : 0.85),
+                          ),
+                        ),
                       ),
-                    ),
+                      const Positioned.fill(
+                        child: LaserScanBeam(
+                          laserColor: Color(0xFF10B981),
+                          bracketColor: Color(0xFF059669),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),

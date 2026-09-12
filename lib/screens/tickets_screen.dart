@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../config/theme.dart';
 import '../widgets/cashless_booking_modal.dart';
+import '../widgets/graphic_drawings.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({super.key});
@@ -127,7 +128,6 @@ class _TicketsScreenState extends State<TicketsScreen>
       decoration: BoxDecoration(
         color: AppColors.surfaceSecondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: List.generate(segments.length, (index) {
@@ -197,12 +197,11 @@ class _TicketsScreenState extends State<TicketsScreen>
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.border),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
@@ -301,7 +300,7 @@ class _TicketsScreenState extends State<TicketsScreen>
                       ),
                       const SizedBox(height: 18),
 
-                      // Dynamic QR Code with Center GMB Brand Embed
+                      // Dynamic QR Code with Laser Scan Beam Overlay
                       ScaleTransition(
                         scale: _qrScaleAnimation,
                         child: Container(
@@ -309,30 +308,44 @@ class _TicketsScreenState extends State<TicketsScreen>
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.border),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
+                                color: Colors.black.withOpacity(0.06),
+                                blurRadius: 16,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
-                          child: QrImageView(
-                            data: 'GETMYBUS-ETM-KL02BB4521-TKT8921-VALID-2026',
-                            version: QrVersions.auto,
-                            size: 170.0,
-                            embeddedImage: const AssetImage(
-                                'assets/images/gmb_icon_pin.png'),
-                            embeddedImageStyle: const QrEmbeddedImageStyle(
-                              size: Size(34, 34),
+                          child: SizedBox(
+                            width: 176,
+                            height: 176,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                QrImageView(
+                                  data: 'GETMYBUS-ETM-KL02BB4521-TKT8921-VALID-2026',
+                                  version: QrVersions.auto,
+                                  size: 170.0,
+                                  embeddedImage: const AssetImage(
+                                      'assets/images/gmb_icon_pin.png'),
+                                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                                    size: Size(34, 34),
+                                  ),
+                                  eyeStyle: const QrEyeStyle(
+                                      eyeShape: QrEyeShape.square,
+                                      color: AppColors.uberBlack),
+                                  dataModuleStyle: const QrDataModuleStyle(
+                                      dataModuleShape: QrDataModuleShape.square,
+                                      color: AppColors.uberBlack),
+                                ),
+                                const Positioned.fill(
+                                  child: LaserScanBeam(
+                                    laserColor: AppColors.brandCyan,
+                                    bracketColor: AppColors.brandBlue,
+                                  ),
+                                ),
+                              ],
                             ),
-                            eyeStyle: const QrEyeStyle(
-                                eyeShape: QrEyeShape.square,
-                                color: AppColors.uberBlack),
-                            dataModuleStyle: const QrDataModuleStyle(
-                                dataModuleShape: QrDataModuleShape.square,
-                                color: AppColors.uberBlack),
                           ),
                         ),
                       ),
@@ -388,7 +401,6 @@ class _TicketsScreenState extends State<TicketsScreen>
                             decoration: BoxDecoration(
                               color: AppColors.surfaceSecondary,
                               borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: AppColors.border),
                             ),
                             child: const Text(
                               'GMB-7419',
