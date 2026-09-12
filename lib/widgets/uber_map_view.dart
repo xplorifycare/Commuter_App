@@ -319,7 +319,7 @@ class _UberMapViewState extends State<UberMapView>
     switch (_currentMapStyle) {
       case MapStyle.uberMinimal:
       case MapStyle.googleMaps:
-        return 'https://mt{s}.google.com/vt/lyrs=m&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
+        return 'https://mt{s}.google.com/vt/lyrs=m&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2&apistyle=s.t:33|p.v:off,s.t:49|p.v:off,s.t:81|p.v:off,s.t:2|p.v:off,s.t:50|p.v:off';
       case MapStyle.googleTerrain:
         return 'https://mt{s}.google.com/vt/lyrs=p&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2';
       case MapStyle.googleHybrid:
@@ -749,35 +749,41 @@ class _UberMapViewState extends State<UberMapView>
         ),
         const SizedBox(height: 3),
 
-        // Uber Circular Vehicle Puck
+        // Uber Vector Vehicle Puck (Clean high-contrast transit marker)
         Container(
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isSelected ? AppColors.uberBlack : Colors.white,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.border,
+              color: isSelected ? AppColors.primary : const Color(0xFFCBD5E1),
               width: isSelected ? 2.5 : 1.5,
             ),
             boxShadow: [
               BoxShadow(
                 color: isSelected
                     ? AppColors.primary.withOpacity(0.40)
-                    : Colors.black.withOpacity(0.12),
+                    : Colors.black.withOpacity(0.14),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
             ],
           ),
           child: Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                'assets/images/bus_3d.jpg',
-                width: 28,
-                height: 28,
-                fit: BoxFit.cover,
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : AppColors.uberBlack,
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.directions_bus_rounded,
+                  size: 16,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

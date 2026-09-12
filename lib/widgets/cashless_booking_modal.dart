@@ -475,14 +475,31 @@ class _CashlessBookingModalState extends State<CashlessBookingModal> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 3D Cartoon Ticket Illustration with Gold Coins
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/ticket_3d.jpg',
-              width: 72,
-              height: 72,
-              fit: BoxFit.cover,
+          // Executive Payment Confirmation Disc
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              color: AppColors.statusLive.withOpacity(0.12),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.statusLive.withOpacity(0.35),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.statusLive.withOpacity(0.20),
+                  blurRadius: 18,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.check_rounded,
+                size: 38,
+                color: AppColors.statusLive,
+              ),
             ),
           ),
           const SizedBox(height: 10),

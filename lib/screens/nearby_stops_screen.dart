@@ -101,7 +101,7 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen>
               children: [
                 TileLayer(
                   urlTemplate:
-                      'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                      'https://mt{s}.google.com/vt/lyrs=m&hl=en&gl=in&x={x}&y={y}&z={z}&scale=2&apistyle=s.t:33|p.v:off,s.t:49|p.v:off,s.t:81|p.v:off,s.t:2|p.v:off,s.t:50|p.v:off',
                   subdomains: const ['0', '1', '2', '3'],
                   userAgentPackageName: 'in.getmybus.app',
                   maxZoom: 20,
@@ -439,13 +439,19 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen>
                   Expanded(
                     child: Row(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.asset(
-                            'assets/images/bus_3d.jpg',
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.cover,
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.directions_bus_rounded,
+                              size: 13,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),

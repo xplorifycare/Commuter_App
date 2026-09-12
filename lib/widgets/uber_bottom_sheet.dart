@@ -250,7 +250,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     );
   }
 
-  /// 2. Dark Luxury Hero Promo Card (Image 5 style)
+  /// 2. Live Corridor Telematics HUD (Replaces generic 3D marketing promos)
   Widget _buildDarkHeroPromoCard() {
     return GestureDetector(
       onTap: () {
@@ -286,7 +286,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                         decoration: BoxDecoration(
-                          color: AppColors.accent.withOpacity(0.20),
+                          color: AppColors.accent.withOpacity(0.18),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: AppColors.accent.withOpacity(0.40)),
                         ),
@@ -295,7 +295,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                             Icon(Icons.bolt_rounded, size: 12, color: AppColors.accent),
                             SizedBox(width: 3),
                             Text(
-                              'NH66 EXPRESS',
+                              'NH66 CORRIDOR',
                               style: TextStyle(
                                 fontSize: 9.5,
                                 fontWeight: FontWeight.w800,
@@ -317,18 +317,19 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                       ),
                       const SizedBox(width: 4),
                       const Text(
-                        'LIVE GPS',
+                        'LIVE TELEMETRY',
                         style: TextStyle(
                           fontSize: 9.5,
                           fontWeight: FontWeight.w700,
                           color: AppColors.statusLive,
+                          letterSpacing: 0.3,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Buses every 4 mins',
+                    'Venad Fast Passenger',
                     style: TextStyle(
                       fontSize: 16.5,
                       fontWeight: FontWeight.w800,
@@ -336,16 +337,26 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                       letterSpacing: -0.3,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 3),
                   Text(
-                    'Real-time GPS • Smart alerts • Instant QR boarding along NH66.',
-                    maxLines: 2,
+                    'Approaching Mayyanad Stop • On Schedule',
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 11.5,
                       color: Colors.white.withOpacity(0.72),
-                      height: 1.3,
+                      fontWeight: FontWeight.w500,
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: [
+                      _buildDarkHudChip(Icons.event_seat_rounded, '14 seats free'),
+                      _buildDarkHudChip(Icons.speed_rounded, '42 km/h'),
+                      _buildDarkHudChip(Icons.currency_rupee_rounded, '22 fare'),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Container(
@@ -367,17 +378,116 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
               ),
             ),
             const SizedBox(width: 14),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: Image.asset(
-                'assets/images/kerala_promo_3d.jpg',
-                width: 82,
-                height: 82,
-                fit: BoxFit.cover,
+            // Precision Live ETA / Speed Digital Telematics Dial
+            Container(
+              width: 82,
+              height: 82,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.accent.withOpacity(0.30)),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    top: 8,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 5,
+                          height: 5,
+                          decoration: const BoxDecoration(
+                            color: AppColors.statusLive,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Text(
+                          'ETA',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.accent,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 6),
+                      Text(
+                        '3',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                      Text(
+                        'MINS',
+                        style: TextStyle(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.textMuted,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'KL 02 BB',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDarkHudChip(IconData icon, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 10, color: AppColors.accentLight),
+          const SizedBox(width: 3.5),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 9.5,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -394,7 +504,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     );
   }
 
-  /// 3. Four Chunky Category Cards (Image 5 & Image 2 Swiggy/Zomato style)
+  /// 3. Four Chunky Category Cards (Cohesive agency-grade monochrome design)
   Widget _buildChunkyCategoryCardsRow() {
     return Row(
       children: [
@@ -403,9 +513,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             title: 'Express',
             subtitle: '3 min',
             icon: Icons.directions_bus_filled_rounded,
-            iconColor: const Color(0xFF2563EB),
-            backgroundColor: const Color(0xFFEFF6FF),
-            borderColor: const Color(0xFFDBEAFE),
             onTap: () {
               widget.onDestinationSelected('Technopark Kazhakkoottam');
               widget.onBusSelected('Venad Fast Passenger');
@@ -418,9 +525,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             title: 'Electric',
             subtitle: 'Low Floor',
             icon: Icons.electric_bolt_rounded,
-            iconColor: const Color(0xFF059669),
-            backgroundColor: const Color(0xFFECFDF5),
-            borderColor: const Color(0xFFA7F3D0),
             onTap: () {
               widget.onDestinationSelected('Technopark Kazhakkoottam');
               widget.onBusSelected('Royal King Electric AC');
@@ -433,9 +537,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             title: 'Passes',
             subtitle: 'Save 20%',
             icon: Icons.confirmation_number_rounded,
-            iconColor: const Color(0xFFD97706),
-            backgroundColor: const Color(0xFFFFFBEB),
-            borderColor: const Color(0xFFFDE68A),
             onTap: widget.onOpenTicketsTab,
           ),
         ),
@@ -445,9 +546,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             title: 'Stops',
             subtitle: 'Nearby',
             icon: Icons.place_rounded,
-            iconColor: const Color(0xFF7C3AED),
-            backgroundColor: const Color(0xFFF5F3FF),
-            borderColor: const Color(0xFFDDD6FE),
             onTap: widget.onOpenStopsTab,
           ),
         ),
@@ -459,9 +557,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     required String title,
     required String subtitle,
     required IconData icon,
-    required Color iconColor,
-    required Color backgroundColor,
-    required Color borderColor,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -469,14 +564,14 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: borderColor),
+          border: Border.all(color: AppColors.border),
           boxShadow: [
             BoxShadow(
-              color: iconColor.withOpacity(0.06),
+              color: Colors.black.withOpacity(0.03),
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -485,18 +580,11 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             Container(
               width: 38,
               height: 38,
-              decoration: BoxDecoration(
-                color: Colors.white,
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceSecondary,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: iconColor.withOpacity(0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
-              child: Icon(icon, color: iconColor, size: 20),
+              child: Icon(icon, color: AppColors.textPrimary, size: 20),
             ),
             const SizedBox(height: 8),
             Text(
@@ -515,10 +603,10 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
               subtitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
-                color: iconColor,
+                color: AppColors.textSecondary,
               ),
             ),
           ],
@@ -795,13 +883,28 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                'assets/images/bus_3d.jpg',
-                width: 52,
-                height: 52,
-                fit: BoxFit.cover,
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: isElectric
+                    ? const Color(0xFFECFDF5)
+                    : (isRecommended ? const Color(0xFFEFF6FF) : AppColors.surfaceSecondary),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isElectric
+                      ? const Color(0xFFA7F3D0)
+                      : (isRecommended ? const Color(0xFFBFDBFE) : AppColors.border),
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  isElectric ? Icons.electric_bolt_rounded : Icons.directions_bus_rounded,
+                  size: 24,
+                  color: isElectric
+                      ? const Color(0xFF059669)
+                      : (isRecommended ? AppColors.primary : AppColors.textPrimary),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -1388,13 +1491,28 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                'assets/images/bus_3d.jpg',
-                width: 52,
-                height: 52,
-                fit: BoxFit.cover,
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: isElectric
+                    ? const Color(0xFFECFDF5)
+                    : (isRecommended ? const Color(0xFFEFF6FF) : AppColors.surfaceSecondary),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isElectric
+                      ? const Color(0xFFA7F3D0)
+                      : (isRecommended ? const Color(0xFFBFDBFE) : AppColors.border),
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  isElectric ? Icons.electric_bolt_rounded : Icons.directions_bus_rounded,
+                  size: 24,
+                  color: isElectric
+                      ? const Color(0xFF059669)
+                      : (isRecommended ? AppColors.primary : AppColors.textPrimary),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -1476,13 +1594,28 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: Image.asset(
-              'assets/images/conductor_3d.jpg',
-              width: 48,
-              height: 48,
-              fit: BoxFit.cover,
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: const Center(
+              child: Text(
+                'SK',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
