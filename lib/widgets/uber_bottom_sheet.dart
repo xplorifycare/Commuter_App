@@ -1203,7 +1203,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      '480 m away · 42 km/h · On time',
+                      '480 m away • 42 km/h (On time)',
                       style: TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ],
@@ -1422,7 +1422,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '$etaMinutes min · $arrivalTime · $seatsAvailable seats free',
+                    '$etaMinutes min • $arrivalTime ($seatsAvailable seats free)',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
