@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import 'home_screen.dart';
@@ -67,44 +65,30 @@ class _MainShellState extends State<MainShell> {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 390),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(36),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: Container(
-                      height: 64,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.92),
-                        borderRadius: BorderRadius.circular(36),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.90),
-                          width: 1.2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
-                            blurRadius: 28,
-                            offset: const Offset(0, 10),
-                          ),
-                          BoxShadow(
-                            color: AppColors.primary.withOpacity(0.08),
-                            blurRadius: 14,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                child: Container(
+                  height: 54,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x0A000000),
+                        blurRadius: 12,
+                        offset: Offset(0, 3),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildNavItem(0, Icons.directions_bus_rounded, 'Ride'),
-                          _buildNavItem(1, Icons.alt_route_rounded, 'Routes'),
-                          _buildNavItem(2, Icons.near_me_rounded, 'Stops'),
-                          _buildNavItem(3, Icons.confirmation_number_rounded, 'Tickets'),
-                          _buildNavItem(4, Icons.person_rounded, 'Account'),
-                        ],
-                      ),
-                    ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildNavItem(0, Icons.directions_bus_filled_rounded, 'Transit'),
+                      _buildNavItem(1, Icons.alt_route_rounded, 'Routes'),
+                      _buildNavItem(2, Icons.place_rounded, 'Stops'),
+                      _buildNavItem(3, Icons.confirmation_number_rounded, 'Passes'),
+                      _buildNavItem(4, Icons.person_outline_rounded, 'Account'),
+                    ],
                   ),
                 ),
               ),
@@ -121,23 +105,24 @@ class _MainShellState extends State<MainShell> {
       onTap: () => _onTabTapped(index),
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
+        duration: const Duration(milliseconds: 180),
         curve: Curves.easeOutCubic,
-        padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 14 : 10,
-          vertical: 8,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 6,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.uberBlack : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
+          color: isSelected ? AppColors.surfaceSecondary : Colors.transparent,
+          borderRadius: BorderRadius.circular(9),
+          border: isSelected ? Border.all(color: AppColors.border) : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              size: 19,
-              color: isSelected ? Colors.white : const Color(0xFF64748B),
+              size: 17,
+              color: isSelected ? AppColors.primary : const Color(0xFF64748B),
             ),
             if (isSelected) ...[
               const SizedBox(width: 6),
@@ -146,7 +131,7 @@ class _MainShellState extends State<MainShell> {
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   letterSpacing: -0.2,
                 ),
               ),

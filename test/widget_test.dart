@@ -95,10 +95,10 @@ void main() {
       ),
     );
 
-    // Verify conversational greeting renders
-    expect(find.text('Hello, Jassim 👋'), findsOneWidget);
-    // Verify Uber-style 'Where to?' input renders
-    expect(find.text('Where to?'), findsOneWidget);
+    // Verify GetMyBus brand header renders
+    expect(find.text('GetMyBus'), findsOneWidget);
+    // Verify route destination selector renders
+    expect(find.textContaining('Where to?'), findsOneWidget);
   });
 
   testWidgets('UberMapView state changes and controls test', (WidgetTester tester) async {

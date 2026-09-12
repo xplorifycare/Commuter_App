@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import 'cashless_booking_modal.dart';
@@ -39,69 +37,62 @@ class UberBottomSheet extends StatefulWidget {
 }
 
 class _UberBottomSheetState extends State<UberBottomSheet> {
-  String _selectedCategory = 'All';
+  String _selectedFilter = 'All';
   bool _stopAlarmEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       initialChildSize: _getInitialChildSize(),
-      minChildSize: 0.20,
+      minChildSize: 0.18,
       maxChildSize: 0.88,
       snap: true,
-      snapSizes: const [0.20, 0.48, 0.88],
+      snapSizes: const [0.18, 0.44, 0.88],
       builder: (context, scrollController) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(28),
-            topRight: Radius.circular(28),
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            border: Border(
+              top: BorderSide(color: AppColors.border, width: 1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x0D000000),
+                blurRadius: 16,
+                offset: Offset(0, -4),
+              ),
+            ],
           ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.92),
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.white.withOpacity(0.90),
-                    width: 1.2,
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              // Restrained Sheet Grab Handle (32 x 4)
+              Center(
+                child: Container(
+                  width: 32,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primaryDark.withOpacity(0.12),
-                    blurRadius: 28,
-                    offset: const Offset(0, -8),
-                  ),
-                ],
               ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  // Sheet Drag Handle
-                  Container(
-                    width: 44,
-                    height: 4.5,
-                    decoration: BoxDecoration(
-                      color: AppColors.textMuted.withOpacity(0.35),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    child: _buildCurrentStateContent(),
                   ),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 240),
-                        child: _buildCurrentStateContent(),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         );
       },
@@ -111,11 +102,11 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   double _getInitialChildSize() {
     switch (widget.currentState) {
       case UberSheetState.discovery:
-        return 0.46;
+        return 0.44;
       case UberSheetState.busSelection:
-        return 0.60;
+        return 0.58;
       case UberSheetState.activeTracking:
-        return 0.62;
+        return 0.60;
     }
   }
 
@@ -131,615 +122,52 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // VIEW 1: DISCOVERY (Consumer-Grade Uber / Swiggy / Dispatch Style)
+  // VIEW 1: DISCOVERY (Linear + Google Maps Minimal Mobility Panel)
   // ───────────────────────────────────────────────────────────────────────────
   Widget _buildDiscoveryView() {
     return Column(
       key: const ValueKey('discovery_view'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Unified Search Pill (Where to? + Now)
-        _buildSearchBox(),
-        const SizedBox(height: 16),
+        // 1. Google Maps / Uber style Origin-Destination Module
+        _buildRouteInputModule(),
+        const SizedBox(height: 14),
 
-        // 2. Dark Luxury Hero Promo Card (Image 5 style)
-        _buildDarkHeroPromoCard(),
+        // 2. Corridor Quick Chips
+        _buildCorridorQuickChips(),
         const SizedBox(height: 20),
 
-        // 3. Four Chunky Category Cards ("What's on your mind?")
-        _buildCategorySectionHeader('EXPLORE TRANSIT'),
+        // 3. Live Departures Board (Linear-style dense tabular departure rows)
+        _buildLiveDeparturesHeader(),
         const SizedBox(height: 10),
-        _buildChunkyCategoryCardsRow(),
-        const SizedBox(height: 22),
 
-        // 4. "Places Viewed" Horizontal Carousel (Image 5 style)
-        _buildPlacesViewedCarousel(),
-        const SizedBox(height: 22),
-
-        // 5. "Live Corridor Buses" Feed (Image 5 "Recent Activity" style)
-        _buildLiveCorridorFeed(),
-
-        // Bottom clearance for floating island navbar
-        const SizedBox(height: 96),
-      ],
-    );
-  }
-
-  /// 1. Unified Search Box Pill
-  Widget _buildSearchBox() {
-    return GestureDetector(
-      onTap: () => widget.onDestinationSelected('Technopark Kazhakkoottam'),
-      child: Container(
-        height: 56,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.border),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryDark.withOpacity(0.06),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                gradient: AppColors.brandGradient,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.search_rounded, size: 20, color: Colors.white),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Where to?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                  Text(
-                    'Search stop, town, or college',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSecondary,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.schedule_rounded, size: 14, color: AppColors.primary),
-                  SizedBox(width: 4),
-                  Text(
-                    'Now ▾',
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 2. Dark Luxury Hero Promo Card (Image 5 style)
-  Widget _buildDarkHeroPromoCard() {
-    return GestureDetector(
-      onTap: () {
-        widget.onDestinationSelected('Technopark Kazhakkoottam');
-        widget.onBusSelected('Venad Fast Passenger');
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.20),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent.withOpacity(0.20),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.accent.withOpacity(0.40)),
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.bolt_rounded, size: 12, color: AppColors.accent),
-                            SizedBox(width: 3),
-                            Text(
-                              'NH66 EXPRESS',
-                              style: TextStyle(
-                                fontSize: 9.5,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.accent,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: AppColors.statusLive,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Text(
-                        'LIVE GPS',
-                        style: TextStyle(
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.statusLive,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Buses every 4 mins',
-                    style: TextStyle(
-                      fontSize: 16.5,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Real-time GPS • Smart alerts • Instant QR boarding along NH66.',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: Colors.white.withOpacity(0.72),
-                      height: 1.3,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Track Approaching →',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.uberBlack,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 14),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: Image.asset(
-                'assets/images/kerala_promo_3d.jpg',
-                width: 82,
-                height: 82,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategorySectionHeader(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w800,
-        color: AppColors.textMuted,
-        letterSpacing: 0.8,
-      ),
-    );
-  }
-
-  /// 3. Four Chunky Category Cards (Image 5 & Image 2 Swiggy/Zomato style)
-  Widget _buildChunkyCategoryCardsRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildChunkyCard(
-            title: 'Express',
-            subtitle: '3 min',
-            icon: Icons.directions_bus_filled_rounded,
-            iconColor: const Color(0xFF2563EB),
-            backgroundColor: const Color(0xFFEFF6FF),
-            borderColor: const Color(0xFFDBEAFE),
-            onTap: () {
-              widget.onDestinationSelected('Technopark Kazhakkoottam');
-              widget.onBusSelected('Venad Fast Passenger');
-            },
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildChunkyCard(
-            title: 'Electric',
-            subtitle: 'Low Floor',
-            icon: Icons.electric_bolt_rounded,
-            iconColor: const Color(0xFF059669),
-            backgroundColor: const Color(0xFFECFDF5),
-            borderColor: const Color(0xFFA7F3D0),
-            onTap: () {
-              widget.onDestinationSelected('Technopark Kazhakkoottam');
-              widget.onBusSelected('Royal King Electric AC');
-            },
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildChunkyCard(
-            title: 'Passes',
-            subtitle: 'Save 20%',
-            icon: Icons.confirmation_number_rounded,
-            iconColor: const Color(0xFFD97706),
-            backgroundColor: const Color(0xFFFFFBEB),
-            borderColor: const Color(0xFFFDE68A),
-            onTap: widget.onOpenTicketsTab,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildChunkyCard(
-            title: 'Stops',
-            subtitle: 'Nearby',
-            icon: Icons.place_rounded,
-            iconColor: const Color(0xFF7C3AED),
-            backgroundColor: const Color(0xFFF5F3FF),
-            borderColor: const Color(0xFFDDD6FE),
-            onTap: widget.onOpenStopsTab,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildChunkyCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color iconColor,
-    required Color backgroundColor,
-    required Color borderColor,
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: borderColor),
-          boxShadow: [
-            BoxShadow(
-              color: iconColor.withOpacity(0.06),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: iconColor.withOpacity(0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Icon(icon, color: iconColor, size: 20),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.2,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: iconColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 4. "Places Viewed" Horizontal Carousel (Image 5 style)
-  Widget _buildPlacesViewedCarousel() {
-    final places = [
-      {
-        'tag': 'IT CORRIDOR',
-        'title': 'Technopark Kazhakkoottam',
-        'sub': 'Phase 1 & 3 • 32 min',
-        'destination': 'Technopark Kazhakkoottam',
-        'bus': 'Venad Fast Passenger',
-      },
-      {
-        'tag': 'CENTRAL STAND',
-        'title': 'Kollam Chinnakkada Stand',
-        'sub': 'Clock Tower • 18 min',
-        'destination': 'Kollam Chinnakkada Stand',
-        'bus': 'St. Jude Superfast',
-      },
-      {
-        'tag': 'FEEDER HUB',
-        'title': 'Chathannoor Junction',
-        'sub': 'NH66 Crossway • 12 min',
-        'destination': 'Chathannoor Junction',
-        'bus': 'Venad Fast Passenger',
-      },
-      {
-        'tag': 'TERMINAL',
-        'title': 'TVM Central Stand',
-        'sub': 'Thampanoor • 52 min',
-        'destination': 'TVM Central Stand',
-        'bus': 'Royal King Electric AC',
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Places Viewed',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.2,
-              ),
-            ),
-            GestureDetector(
-              onTap: () => widget.onDestinationSelected('Technopark Kazhakkoottam'),
-              child: const Text(
-                'See All',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 106,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: places.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
-            itemBuilder: (context, index) {
-              final item = places[index];
-              return GestureDetector(
-                onTap: () {
-                  widget.onDestinationSelected(item['destination']!);
-                  widget.onBusSelected(item['bus']!);
-                },
-                child: Container(
-                  width: 180,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: AppColors.borderLight),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryDark.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryLight,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              item['tag']!,
-                              style: const TextStyle(
-                                fontSize: 8.5,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.primaryDark,
-                              ),
-                            ),
-                          ),
-                          const Icon(Icons.bookmark_rounded, size: 16, color: AppColors.primary),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item['sub']!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 5. "Live Corridor Buses" Feed (Image 5 "Recent Activity" style)
-  Widget _buildLiveCorridorFeed() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Live Corridor Buses',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.2,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColors.statusLive.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.circle, size: 7, color: AppColors.statusLive),
-                  SizedBox(width: 4),
-                  Text(
-                    '3 APPROACHING',
-                    style: TextStyle(
-                      fontSize: 9.5,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.statusLive,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildFeedBusItem(
+        _buildDepartureRow(
+          routeCode: '66A',
+          routeBadgeColor: const Color(0xFF1E293B),
           busName: 'Venad Fast Passenger',
           plate: 'KL 02 BB 4521',
-          route: 'Mayyanad ➔ Technopark',
-          eta: '3 min',
-          status: '14 seats free · Contactless ETM',
+          destination: 'To Technopark Kazhakkoottam',
+          etaMinutes: 3,
+          seatsFree: 14,
+          vehicleType: 'Fast Passenger',
           fare: 22,
-          isRecommended: true,
+          isFastest: true,
           onTap: () {
             widget.onDestinationSelected('Technopark Kazhakkoottam');
             widget.onBusSelected('Venad Fast Passenger');
           },
         ),
-        const SizedBox(height: 10),
-        _buildFeedBusItem(
+        const SizedBox(height: 8),
+
+        _buildDepartureRow(
+          routeCode: '66E',
+          routeBadgeColor: AppColors.accent,
           busName: 'Royal King Electric AC',
           plate: 'KL 01 CZ 8819',
-          route: 'Mayyanad ➔ TVM Central',
-          eta: '7 min',
-          status: 'AC Low Floor · Smart Air Conditioned',
+          destination: 'To TVM Central Terminal',
+          etaMinutes: 7,
+          seatsFree: 4,
+          vehicleType: 'Low Floor AC',
           fare: 35,
           isElectric: true,
           onTap: () {
@@ -747,31 +175,275 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             widget.onBusSelected('Royal King Electric AC');
           },
         ),
-        const SizedBox(height: 10),
-        _buildFeedBusItem(
+        const SizedBox(height: 8),
+
+        _buildDepartureRow(
+          routeCode: '14S',
+          routeBadgeColor: const Color(0xFF475569),
           busName: 'St. Jude Superfast',
           plate: 'KL 02 AK 3302',
-          route: 'Mayyanad ➔ Kollam Stand',
-          eta: '11 min',
-          status: '21 seats free · Express Corridor',
+          destination: 'To Kollam Chinnakkada Stand',
+          etaMinutes: 11,
+          seatsFree: 21,
+          vehicleType: 'Express Corridor',
           fare: 18,
           onTap: () {
             widget.onDestinationSelected('Kollam Chinnakkada Stand');
             widget.onBusSelected('St. Jude Superfast');
           },
         ),
+
+        // Navbar bottom clearance
+        const SizedBox(height: 84),
       ],
     );
   }
 
-  Widget _buildFeedBusItem({
+  /// 1. Origin-Destination Route Module (Google Maps & Uber style)
+  Widget _buildRouteInputModule() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: [
+          // Origin Row
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            child: Row(
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.accent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mayyanad Stop',
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      Text(
+                        'Current boarding stop • NH66',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: widget.onOpenStopsTab,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Text(
+                      'Change',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, thickness: 1, color: AppColors.borderLight),
+          // Destination Row
+          InkWell(
+            onTap: () => widget.onDestinationSelected('Technopark Kazhakkoottam'),
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+              child: Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Where to? (e.g. Technopark, Kollam)',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSecondary,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.schedule_rounded, size: 12, color: AppColors.textSecondary),
+                        SizedBox(width: 4),
+                        Text(
+                          'Now ▾',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 2. Corridor Quick Chips
+  Widget _buildCorridorQuickChips() {
+    final chips = [
+      {'label': 'Technopark', 'eta': '32m', 'dest': 'Technopark Kazhakkoottam', 'bus': 'Venad Fast Passenger'},
+      {'label': 'Kollam Stand', 'eta': '18m', 'dest': 'Kollam Chinnakkada Stand', 'bus': 'St. Jude Superfast'},
+      {'label': 'Chathannoor', 'eta': '12m', 'dest': 'Chathannoor Junction', 'bus': 'Venad Fast Passenger'},
+      {'label': 'TVM Central', 'eta': '52m', 'dest': 'TVM Central Stand', 'bus': 'Royal King Electric AC'},
+    ];
+
+    return SizedBox(
+      height: 32,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: chips.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final chip = chips[index];
+          return GestureDetector(
+            onTap: () {
+              widget.onDestinationSelected(chip['dest']!);
+              widget.onBusSelected(chip['bus']!);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    chip['label']!,
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    chip['eta']!,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.accent,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// 3. Live Departures Header
+  Widget _buildLiveDeparturesHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'LIVE DEPARTURES FROM MAYYANAD',
+          style: TextStyle(
+            fontSize: 10.5,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMuted,
+            letterSpacing: 0.8,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0FDFA),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: const Color(0xFFCCFBF1)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 5,
+                height: 5,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Text(
+                '4s Telemetry',
+                style: TextStyle(
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0F766E),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Linear-style Departure Row
+  Widget _buildDepartureRow({
+    required String routeCode,
+    required Color routeBadgeColor,
     required String busName,
     required String plate,
-    required String route,
-    required String eta,
-    required String status,
+    required String destination,
+    required int etaMinutes,
+    required int seatsFree,
+    required String vehicleType,
     required int fare,
-    bool isRecommended = false,
+    bool isFastest = false,
     bool isElectric = false,
     required VoidCallback onTap,
   }) {
@@ -781,101 +453,121 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: isRecommended ? AppColors.primary.withOpacity(0.35) : AppColors.borderLight,
-          ),
-          boxShadow: [
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.border),
+          boxShadow: const [
             BoxShadow(
-              color: isRecommended ? AppColors.primary.withOpacity(0.08) : Colors.black.withOpacity(0.03),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Color(0x04000000),
+              blurRadius: 4,
+              offset: Offset(0, 1),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                'assets/images/bus_3d.jpg',
-                width: 52,
-                height: 52,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      _buildHsrpPlatePill(plate),
-                      const SizedBox(width: 6),
-                      if (isElectric)
-                        _buildSoftBadge('ELECTRIC AC', color: AppColors.accentDark)
-                      else if (isRecommended)
-                        _buildSoftBadge('FASTEST', color: AppColors.primary),
-                      const Spacer(),
-                      Text(
-                        eta,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.statusLive,
-                        ),
-                      ),
-                    ],
+            Row(
+              children: [
+                // Route Code Badge (e.g. [ 66A ])
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: routeBadgeColor,
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
+                  child: Text(
+                    routeCode,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
                     busName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    status,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textSecondary,
-                    ),
+                ),
+                // ETA
+                Text(
+                  '$etaMinutes min',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.accent,
                   ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              destination,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11.5,
+                color: AppColors.textSecondary,
               ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            const SizedBox(height: 8),
+            Row(
               children: [
+                // HSRP Plate Pill
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceSecondary,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Text(
+                    plate,
+                    style: const TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '$seatsFree seats free • $vehicleType',
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const Spacer(),
                 Text(
                   '₹$fare',
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.uberBlack,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
-                    'Track →',
+                    'Track',
                     style: TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                   ),
@@ -889,43 +581,45 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // VIEW 2: BUS SELECTION (With Transit Timeline Arc - Image 4 Airline Style)
+  // VIEW 2: BUS SELECTION (Linear-style Route Comparison)
   // ───────────────────────────────────────────────────────────────────────────
   Widget _buildBusSelectionView() {
+    final destination = widget.selectedDestination ?? 'Technopark Kazhakkoottam';
     return Column(
       key: const ValueKey('bus_selection_view'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildBackHeader(
-          title: 'Choose a bus',
-          subtitle: 'Mayyanad to ${widget.selectedDestination ?? 'Technopark'}',
+          title: 'Trip to $destination',
+          subtitle: '18.4 km via NH66 • Typical transit time 28-35 min',
           onBack: widget.onBackToDiscovery,
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
 
-        // Transit Timeline Arc Card (Image 4 flight / transit arc style)
+        // Route Timeline Card
         _buildTransitTimelineArcCard(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
 
-        // Category Filter Pills
+        // Filter Pills
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           child: Row(
             children: [
-              _buildSimpleCategoryFilter('All'),
-              _buildSimpleCategoryFilter('Express'),
-              _buildSimpleCategoryFilter('Electric AC'),
-              _buildSimpleCategoryFilter('Limited Stop'),
+              _buildFilterPill('All'),
+              _buildFilterPill('Express'),
+              _buildFilterPill('Electric AC'),
+              _buildFilterPill('Limited'),
             ],
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
 
         _buildBusOptionCard(
+          routeCode: '66A',
+          routeColor: const Color(0xFF1E293B),
           busName: 'Venad Fast Passenger',
           busPlate: 'KL 02 BB 4521',
-          tagBadge: 'Fastest',
           etaMinutes: 3,
           arrivalTime: '08:42 AM',
           seatsAvailable: 14,
@@ -933,11 +627,13 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
           isRecommended: true,
           onSelect: () => widget.onBusSelected('Venad Fast Passenger'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
+
         _buildBusOptionCard(
+          routeCode: '66E',
+          routeColor: AppColors.accent,
           busName: 'Royal King Electric AC',
           busPlate: 'KL 01 CZ 8819',
-          tagBadge: 'Electric AC',
           etaMinutes: 7,
           arrivalTime: '08:46 AM',
           seatsAvailable: 4,
@@ -945,110 +641,87 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
           isElectric: true,
           onSelect: () => widget.onBusSelected('Royal King Electric AC'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
+
         _buildBusOptionCard(
+          routeCode: '14S',
+          routeColor: const Color(0xFF475569),
           busName: 'St. Jude Superfast',
           busPlate: 'KL 02 AK 3302',
-          tagBadge: 'Comfort',
           etaMinutes: 11,
           arrivalTime: '08:50 AM',
           seatsAvailable: 21,
           fare: 18,
           onSelect: () => widget.onBusSelected('St. Jude Superfast'),
         ),
-        const SizedBox(height: 96),
+        const SizedBox(height: 84),
       ],
     );
   }
 
-  /// Transit Timeline Arc Card (Image 4 flight / transit arc style)
+  /// Linear-style Transit Timeline Arc Card
   Widget _buildTransitTimelineArcCard() {
     final destination = widget.selectedDestination ?? 'Technopark Kazhakkoottam';
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryDark.withOpacity(0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Origin
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Mayyanad Stop',
+                  Text(
+                    'Mayyanad',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceSecondary,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      '08:15 AM',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textSecondary,
-                      ),
+                  Text(
+                    '08:15 AM',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
-
-              // Arc Line with Duration Pill
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryLight,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.primary.withOpacity(0.20)),
+                          color: AppColors.surfaceSecondary,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: AppColors.border),
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.directions_bus_rounded, size: 12, color: AppColors.primary),
-                            SizedBox(width: 4),
-                            Text(
-                              '22 min',
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.primaryDark,
-                              ),
-                            ),
-                          ],
+                        child: const Text(
+                          '22 min direct',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
                           Container(
-                            width: 8,
-                            height: 8,
+                            width: 6,
+                            height: 6,
                             decoration: const BoxDecoration(
                               color: AppColors.primary,
                               shape: BoxShape.circle,
@@ -1056,24 +729,24 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                           ),
                           Expanded(
                             child: Container(
-                              height: 2,
-                              color: AppColors.primary.withOpacity(0.35),
+                              height: 1.5,
+                              color: AppColors.border,
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: AppColors.primary),
+                          const Icon(Icons.arrow_forward_ios_rounded, size: 9, color: AppColors.textSecondary),
                           Expanded(
                             child: Container(
-                              height: 2,
-                              color: AppColors.primary.withOpacity(0.35),
+                              height: 1.5,
+                              color: AppColors.border,
                             ),
                           ),
                           Container(
-                            width: 8,
-                            height: 8,
+                            width: 6,
+                            height: 6,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.primary, width: 2),
+                              border: Border.all(color: AppColors.primary, width: 1.5),
                             ),
                           ),
                         ],
@@ -1082,7 +755,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                   ),
                 ),
               ),
-
               // Destination
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -1095,49 +767,40 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.end,
                       style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceSecondary,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Text(
-                      '08:37 AM',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textSecondary,
-                      ),
+                  const Text(
+                    '08:37 AM',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.surfaceSecondary.withOpacity(0.60),
-              borderRadius: BorderRadius.circular(10),
+              color: AppColors.surfaceSecondary,
+              borderRadius: BorderRadius.circular(6),
             ),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.alt_route_rounded, size: 13, color: AppColors.textSecondary),
-                SizedBox(width: 5),
+                Icon(Icons.check_circle_rounded, size: 12, color: AppColors.accent),
+                SizedBox(width: 4),
                 Text(
-                  'NH66 Direct Corridor • 18.4 km • Smooth traffic',
+                  'NH66 Highway Corridor • 42 km/h avg speed • Smooth traffic',
                   style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 10.5,
                     color: AppColors.textSecondary,
                   ),
                 ),
@@ -1150,7 +813,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // VIEW 3: ACTIVE TRACKING (Live Telematics & UPI Booking)
+  // VIEW 3: ACTIVE TRACKING (Minimal Telematics & Direct UPI Action)
   // ───────────────────────────────────────────────────────────────────────────
   Widget _buildActiveTrackingView() {
     return Column(
@@ -1158,73 +821,184 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildBackHeader(
-          title: 'Live tracking',
+          title: 'Live Tracking',
           subtitle: widget.selectedBusName ?? 'Venad Fast Passenger',
           onBack: widget.onBackToBusSelection,
-          trailing: _buildSoftBadge('GPS 4G'),
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0FDFA),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFFCCFBF1)),
+            ),
+            child: const Text(
+              'GPS Active (4s)',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF0F766E),
+              ),
+            ),
+          ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
+
+        // Arrival Panel (Off-black solid surface, crisp white typography)
         Container(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: AppColors.brandGradient,
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.20),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
+            color: AppColors.surfaceDark,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Arriving at Mayyanad in',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: Color(0xFF94A3B8),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF334155),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'KL 02 BB 4521',
+                      style: TextStyle(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                '3 mins',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              const SizedBox(height: 2),
+              const Text(
+                '480 m away • 42 km/h (On schedule)',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: Color(0xFF94A3B8),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Progress hairline
+              ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: const LinearProgressIndicator(
+                  value: 0.82,
+                  minHeight: 3,
+                  backgroundColor: Color(0xFF334155),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
+                ),
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 10),
+
+        // Walking Direction
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppColors.border),
+          ),
           child: const Row(
             children: [
+              Icon(Icons.directions_walk_rounded, size: 18, color: AppColors.textPrimary),
+              SizedBox(width: 10),
               Expanded(
+                child: Text(
+                  'Walk to Mayyanad Stop • 120 m (2 min walk)',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Conductor / ETM Telematics Card
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.badge_outlined, size: 18, color: AppColors.textSecondary),
+              ),
+              const SizedBox(width: 10),
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Arrives in',
+                      'Suresh Kumar',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 2),
                     Text(
-                      '3 mins',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      '480 m away • 42 km/h (On time)',
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                      'Verified Conductor • Contactless ETM',
+                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.route_rounded, size: 36, color: Colors.white),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceSecondary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.phone_outlined, size: 16, color: AppColors.textPrimary),
+              ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        _buildInfoStrip(
-          icon: Icons.directions_walk_rounded,
-          title: 'Start walking to Mayyanad Junction',
-          subtitle: '120 m · 2 min walk',
-        ),
-        const SizedBox(height: 12),
-        _buildConductorCard(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
+
+        // Direct UPI Boarding Ticket CTA
         SizedBox(
           width: double.infinity,
-          height: 52,
+          height: 48,
           child: ElevatedButton(
             onPressed: () => CashlessBookingModal.show(
               context,
@@ -1235,22 +1009,24 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
               backgroundColor: AppColors.uberBlack,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(10),
               ),
               elevation: 0,
             ),
             child: const Text(
-              'Book UPI Ticket · ₹22',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              'Book Ticket • ₹22 (UPI)',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
+
+        // Secondary Action Pills
         Row(
           children: [
             Expanded(
               child: _buildSecondaryAction(
-                icon: Icons.share_location_rounded,
+                icon: Icons.share_outlined,
                 label: 'Share trip',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1265,9 +1041,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             const SizedBox(width: 8),
             Expanded(
               child: _buildSecondaryAction(
-                icon: _stopAlarmEnabled
-                    ? Icons.notifications_active_rounded
-                    : Icons.notifications_off_rounded,
+                icon: _stopAlarmEnabled ? Icons.notifications_active_outlined : Icons.notifications_off_outlined,
                 label: _stopAlarmEnabled ? 'Alarm on' : 'Set alarm',
                 isHighlighted: _stopAlarmEnabled,
                 onTap: () => setState(() => _stopAlarmEnabled = !_stopAlarmEnabled),
@@ -1275,7 +1049,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             ),
           ],
         ),
-        const SizedBox(height: 96),
+        const SizedBox(height: 84),
       ],
     );
   }
@@ -1294,26 +1068,28 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         GestureDetector(
           onTap: onBack,
           child: Container(
-            width: 38,
-            height: 38,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.borderLight),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
             ),
-            child: const Icon(Icons.arrow_back_rounded, size: 18, color: AppColors.textPrimary),
+            child: const Icon(Icons.arrow_back_rounded, size: 16, color: AppColors.textPrimary),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                 ),
               ),
@@ -1321,7 +1097,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                 subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -1331,23 +1107,23 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     );
   }
 
-  Widget _buildSimpleCategoryFilter(String label) {
-    final isSelected = _selectedCategory == label || (_selectedCategory == 'All' && label == 'All');
+  Widget _buildFilterPill(String label) {
+    final isSelected = _selectedFilter == label || (_selectedFilter == 'All' && label == 'All');
     return GestureDetector(
-      onTap: () => setState(() => _selectedCategory = label),
+      onTap: () => setState(() => _selectedFilter = label),
       child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        margin: const EdgeInsets.only(right: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.uberBlack : Colors.white.withOpacity(0.85),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? AppColors.uberBlack : AppColors.borderLight),
+          color: isSelected ? AppColors.uberBlack : Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: isSelected ? AppColors.uberBlack : AppColors.border),
         ),
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
             color: isSelected ? Colors.white : AppColors.textSecondary,
           ),
         ),
@@ -1356,9 +1132,10 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
   }
 
   Widget _buildBusOptionCard({
+    required String routeCode,
+    required Color routeColor,
     required String busName,
     required String busPlate,
-    required String tagBadge,
     required int etaMinutes,
     required String arrivalTime,
     required int seatsAvailable,
@@ -1367,56 +1144,47 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     bool isElectric = false,
     required VoidCallback onSelect,
   }) {
-    final accent = isElectric ? AppColors.accentDark : AppColors.primary;
     return GestureDetector(
       onTap: onSelect,
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isRecommended ? AppColors.primary.withOpacity(0.35) : AppColors.borderLight,
+            color: isRecommended ? AppColors.primary : AppColors.border,
+            width: isRecommended ? 1.5 : 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isRecommended ? AppColors.primary.withOpacity(0.08) : Colors.black.withOpacity(0.03),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                'assets/images/bus_3d.jpg',
-                width: 52,
-                height: 52,
-                fit: BoxFit.cover,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+              decoration: BoxDecoration(
+                color: routeColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                routeCode,
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      _buildHsrpPlatePill(busPlate),
-                      const SizedBox(width: 6),
-                      _buildSoftBadge(tagBadge, color: accent),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
                   Text(
                     busName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
@@ -1425,7 +1193,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                     '$etaMinutes min • $arrivalTime ($seatsAvailable seats free)',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -1437,23 +1205,23 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
                 Text(
                   '₹$fare',
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: AppColors.uberBlack,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
                     'Track',
                     style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                   ),
@@ -1462,99 +1230,6 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildConductorCard() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.borderLight),
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: Image.asset(
-              'assets/images/conductor_3d.jpg',
-              width: 48,
-              height: 48,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Suresh Kumar',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                Text(
-                  '4.9 rating · ETM verified',
-                  style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: AppColors.surfaceSecondary,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: const Icon(Icons.phone_rounded, size: 17, color: AppColors.textPrimary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoStrip({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFBEB),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFFDE68A)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: const Color(0xFFB45309), size: 20),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF92400E),
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(fontSize: 11.5, color: Color(0xFF92400E)),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -1568,66 +1243,31 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 9),
         decoration: BoxDecoration(
-          color: isHighlighted ? AppColors.primaryLight : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isHighlighted ? AppColors.primary.withOpacity(0.20) : AppColors.borderLight,
-          ),
+          color: isHighlighted ? AppColors.surfaceSecondary : Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.border),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: 15,
+              size: 14,
               color: isHighlighted ? AppColors.primary : AppColors.textPrimary,
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
                 color: isHighlighted ? AppColors.primary : AppColors.textPrimary,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildHsrpPlatePill(String plateNumber) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Text(
-        plateNumber,
-        style: const TextStyle(
-          fontSize: 9.5,
-          fontWeight: FontWeight.w800,
-          color: AppColors.uberBlack,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSoftBadge(String label, {Color color = AppColors.primary}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: color),
       ),
     );
   }
