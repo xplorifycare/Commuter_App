@@ -375,16 +375,14 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen>
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 1.4 : 1,
-          ),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: isSelected
+                  ? AppColors.primary.withOpacity(0.12)
+                  : Colors.black.withOpacity(0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -392,15 +390,14 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen>
           children: [
             Row(
               children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: const BoxDecoration(
-                    color: AppColors.surfaceSecondary,
-                    shape: BoxShape.circle,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    'assets/images/pixar_bus_stop_3d.jpg',
+                    width: 44,
+                    height: 44,
+                    fit: BoxFit.cover,
                   ),
-                  child: const Icon(Icons.location_on_rounded,
-                      size: 18, color: AppColors.primary),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -411,7 +408,7 @@ class _NearbyStopsScreenState extends State<NearbyStopsScreen>
                         stop['name'],
                         style: const TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: AppColors.textPrimary),
                       ),
                       Text(

@@ -504,10 +504,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
+                      const Text(
                         'View Map',
                         style: TextStyle(
                           fontSize: 12.5,
@@ -515,8 +515,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(width: 5),
-                      Icon(Icons.explore_outlined, size: 16, color: AppColors.textPrimary),
+                      const SizedBox(width: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.asset(
+                          'assets/images/pixar_compass_3d.jpg',
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ],
                   ),
                 ),

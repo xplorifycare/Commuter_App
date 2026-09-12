@@ -85,26 +85,25 @@ class _PassesScreenState extends State<PassesScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Floating 3D RFID Card Graphic (Image 2)
+              // Floating 3D RFID Card Graphic (Image 2 with 3D Pixar asset)
               Center(
                 child: SizedBox(
-                  height: 210,
+                  height: 220,
                   width: double.infinity,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Electric Cyan/Blue Glowing Telematics Blob
+                      // Electric Cyan/Blue Glowing Telematics Halo
                       Positioned(
-                        left: 20,
-                        top: 20,
                         child: Container(
-                          width: 90,
-                          height: 90,
+                          width: 180,
+                          height: 180,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                AppColors.brandCyan.withOpacity(0.55),
+                                AppColors.brandCyan.withOpacity(0.35),
+                                AppColors.brandBlue.withOpacity(0.15),
                                 Colors.transparent,
                               ],
                             ),
@@ -112,25 +111,18 @@ class _PassesScreenState extends State<PassesScreen> {
                         ),
                       ),
 
-                      // Tilted Perspective Matte Black Smartcard
+                      // Tilted Perspective 3D Pixar Smartcard
                       Transform(
                         alignment: Alignment.center,
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
-                          ..rotateZ(-0.24)
-                          ..rotateX(0.18),
+                          ..rotateZ(-0.08)
+                          ..rotateY(0.06),
                         child: Container(
-                          width: 250,
-                          height: 150,
-                          padding: const EdgeInsets.all(18),
+                          width: 220,
+                          height: 170,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.brandCyan.withOpacity(0.35)),
+                            borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.50),
@@ -138,59 +130,18 @@ class _PassesScreenState extends State<PassesScreen> {
                                 offset: const Offset(0, 14),
                               ),
                               BoxShadow(
-                                color: AppColors.brandBlue.withOpacity(0.25),
-                                blurRadius: 20,
-                                offset: const Offset(-8, -4),
+                                color: AppColors.brandCyan.withOpacity(0.35),
+                                blurRadius: 24,
+                                offset: const Offset(0, 6),
                               ),
                             ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'GETMYBUS PASS',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                      letterSpacing: 2.0,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.contactless_rounded,
-                                    color: Colors.white.withOpacity(0.8),
-                                    size: 24,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 32,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD4AF37).withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.6)),
-                                    ),
-                                  ),
-                                  const Text(
-                                    '•••• 8819',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white60,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Image.asset(
+                              'assets/images/pixar_smartcard_3d.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -205,55 +156,43 @@ class _PassesScreenState extends State<PassesScreen> {
                 'One pass\nRide anytime\nTravel',
                 style: TextStyle(
                   fontSize: 34,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                   color: Colors.white,
-                  height: 1.15,
-                  letterSpacing: -0.5,
+                  letterSpacing: -1.0,
+                  height: 1.12,
                 ),
               ),
-              const SizedBox(height: 6),
-
-              // Smarter enclosed in the signature gradient hairline pill
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppColors.brandCyan, width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.brandCyan.withOpacity(0.35),
-                      blurRadius: 14,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
+              ShaderMask(
+                shaderCallback: (bounds) => AppColors.brandGradient.createShader(bounds),
                 child: const Text(
-                  'Smarter',
+                  'Smarter.',
                   style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
                     color: Colors.white,
-                    letterSpacing: -0.5,
+                    letterSpacing: -1.0,
+                    height: 1.12,
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
-
-              // Subtitle
+              const SizedBox(height: 12),
               Text(
-                'No fuss, no hassle, just tap your GetMyBus Pass on the conductor\'s handheld ETM and ride smoothly across Kerala.',
+                'Instant ETM contactless tap on any Kerala bus. Zero physical cash needed.',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   color: Colors.white.withOpacity(0.65),
+                  fontWeight: FontWeight.w500,
                   height: 1.4,
                 ),
               ),
               const Spacer(),
 
-              // Gradient Capsule Continue Button (Image 2)
+              // Continue Button
               _buildGradientContinueButton(
+                label: 'Explore Benefits',
                 onTap: () => setState(() => _activeStep = 1),
               ),
+              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -262,13 +201,15 @@ class _PassesScreenState extends State<PassesScreen> {
   }
 
   // ══════════════════════════════════════════════════════════════
-  // ── SCREEN 2: 3 BENEFIT VALUE CARDS (Image 3)
+  // ── SCREEN 2: 3 BENEFIT STACK CARDS (Image 3 with 3D Pixar Elements)
   // ══════════════════════════════════════════════════════════════
   Widget _buildImage3BenefitsView() {
     return Stack(
       key: const ValueKey('step_1_benefits'),
       children: [
+        // Orbital Sparkles
         _buildOrbitalDecorations(),
+
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           child: Column(
@@ -303,27 +244,24 @@ class _PassesScreenState extends State<PassesScreen> {
               ),
               const Spacer(),
 
-              // Card 1: Ribbon / Loop (Cashless, queueless, stressless)
+              // Card 1: 3D Pixar Bus (Cashless, queueless, stressless)
               _buildBenefitRow(
-                icon: Icons.all_inclusive_rounded,
-                cardColor: AppColors.brandBlue,
-                title: 'Ride cashless, queueless,\nstressless.',
+                imageAsset: 'assets/images/pixar_bus.jpg',
+                title: 'Ride cashless, queueless,\nstressless across all buses.',
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
 
-              // Card 2: Bar Chart (Track usage in real time)
+              // Card 2: 3D Pixar ETM (Instant conductor validation)
               _buildBenefitRow(
-                icon: Icons.bar_chart_rounded,
-                cardColor: const Color(0xFF0284C7),
-                title: 'Track usage & savings in real time.',
+                imageAsset: 'assets/images/pixar_etm_3d.jpg',
+                title: 'Track usage & tap instantly\non conductor handheld ETM.',
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
 
-              // Card 3: Lightning Bolt (Recharge passes anytime)
+              // Card 3: 3D Pixar Smartcard (Contactless tap & recharge)
               _buildBenefitRow(
-                icon: Icons.bolt_rounded,
-                cardColor: AppColors.brandCyanDark,
-                title: 'Instant UPI tap & recharge\non conductor\'s handheld ETM.',
+                imageAsset: 'assets/images/pixar_smartcard_3d.jpg',
+                title: 'Instant UPI tap & recharge\nwith smart NFC microchip.',
               ),
               const Spacer(),
 
@@ -348,40 +286,38 @@ class _PassesScreenState extends State<PassesScreen> {
   }
 
   Widget _buildBenefitRow({
-    required IconData icon,
-    required Color cardColor,
+    required String imageAsset,
     required String title,
   }) {
     return Column(
       children: [
         Container(
-          width: 84,
-          height: 52,
+          width: 72,
+          height: 72,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [cardColor, cardColor.withOpacity(0.75)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: cardColor.withOpacity(0.40),
+                color: AppColors.brandCyan.withOpacity(0.35),
                 blurRadius: 18,
                 offset: const Offset(0, 6),
               ),
             ],
           ),
-          child: Center(
-            child: Icon(icon, color: Colors.white, size: 26),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: Image.asset(
+              imageAsset,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         Text(
           title,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 15.5,
+            fontSize: 14.5,
             fontWeight: FontWeight.w700,
             color: Colors.white,
             height: 1.3,
@@ -464,14 +400,28 @@ class _PassesScreenState extends State<PassesScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'GETMYBUS COMMUTER PASS',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.brandCyan,
-                      letterSpacing: 1.2,
-                    ),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          'assets/images/pixar_smartcard_3d.jpg',
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'GETMYBUS COMMUTER PASS',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.brandCyan,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
                   ),
                   Icon(Icons.contactless_rounded, color: Colors.white.withOpacity(0.8), size: 24),
                 ],
@@ -515,14 +465,14 @@ class _PassesScreenState extends State<PassesScreen> {
           ),
           child: Row(
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.purplePrimary.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/images/pixar_etm_3d.jpg',
+                  width: 46,
+                  height: 46,
+                  fit: BoxFit.cover,
                 ),
-                child: const Icon(Icons.nfc_rounded, color: Color(0xFFC084FC), size: 24),
               ),
               const SizedBox(width: 14),
               const Expanded(

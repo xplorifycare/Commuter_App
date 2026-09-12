@@ -143,11 +143,24 @@ class _CashlessBookingModalState extends State<CashlessBookingModal> {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
-              Image.asset(
-                'assets/images/gmb_logo_color.png',
-                height: 24,
-                fit: BoxFit.contain,
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/images/pixar_etm_3d.jpg',
+                      width: 38,
+                      height: 38,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Image.asset(
+                    'assets/images/gmb_logo_color.png',
+                    height: 22,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
             ],
           ),
@@ -159,7 +172,6 @@ class _CashlessBookingModalState extends State<CashlessBookingModal> {
             decoration: BoxDecoration(
               color: AppColors.surfaceSecondary,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.border),
             ),
             child: Row(
               children: [
@@ -475,34 +487,52 @@ class _CashlessBookingModalState extends State<CashlessBookingModal> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Executive Payment Confirmation Disc
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: AppColors.statusLive.withOpacity(0.12),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.statusLive.withOpacity(0.35),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.statusLive.withOpacity(0.20),
-                  blurRadius: 18,
-                  offset: const Offset(0, 4),
+          // 3D ETM Ticketing Machine with green check badge
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.brandBlue.withOpacity(0.20),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.check_rounded,
-                size: 38,
-                color: AppColors.statusLive,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/pixar_etm_3d.jpg',
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                bottom: -3,
+                right: -3,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_circle_rounded,
+                    size: 22,
+                    color: AppColors.statusLive,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           const Text(
             'Payment Confirmed',

@@ -223,6 +223,16 @@ class _TicketsScreenState extends State<TicketsScreen>
                     children: [
                       Row(
                         children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.asset(
+                              'assets/images/pixar_bus.jpg',
+                              width: 24,
+                              height: 24,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Image.asset(
                             'assets/images/gmb_logo_white.png',
                             height: 18,
@@ -327,6 +337,39 @@ class _TicketsScreenState extends State<TicketsScreen>
                         ),
                       ),
                       const SizedBox(height: 14),
+
+                      // 3D ETM Validation Banner
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.brandBlueLight,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: Image.asset(
+                                'assets/images/pixar_etm_3d.jpg',
+                                width: 22,
+                                height: 22,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Conductor Handheld ETM Tap & Scan',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.brandBlue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
 
                       // PIN & Validation code
                       Row(
@@ -465,13 +508,27 @@ class _TicketsScreenState extends State<TicketsScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'KERALA COMMUTER PASS',
-                    style: TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white70,
-                        letterSpacing: 0.6),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          'assets/images/pixar_smartcard_3d.jpg',
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'KERALA COMMUTER PASS',
+                        style: TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white70,
+                            letterSpacing: 0.6),
+                      ),
+                    ],
                   ),
                   Container(
                     padding:
@@ -556,15 +613,30 @@ class _TicketsScreenState extends State<TicketsScreen>
         final r = receipts[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/images/pixar_etm_3d.jpg',
+                  width: 44,
+                  height: 44,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,7 +647,7 @@ class _TicketsScreenState extends State<TicketsScreen>
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 13.5,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.textPrimary),
                     ),
                     Text(
@@ -596,7 +668,7 @@ class _TicketsScreenState extends State<TicketsScreen>
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -604,11 +676,11 @@ class _TicketsScreenState extends State<TicketsScreen>
                     r['fare']!,
                     style: const TextStyle(
                         fontSize: 15.5,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                         color: AppColors.textPrimary),
                   ),
                   const Text(
-                    'Paid via UPI',
+                    'Paid via ETM',
                     style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
