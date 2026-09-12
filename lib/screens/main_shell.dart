@@ -125,7 +125,7 @@ class _MainShellState extends State<MainShell> {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.purpleLight : Colors.transparent,
+          color: isSelected ? AppColors.brandBlueLight : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -134,7 +134,7 @@ class _MainShellState extends State<MainShell> {
             Icon(
               icon,
               size: 20,
-              color: isSelected ? AppColors.purplePrimary : const Color(0xFF64748B),
+              color: isSelected ? AppColors.brandBlue : const Color(0xFF64748B),
             ),
             if (isSelected) ...[
               const SizedBox(width: 6),
@@ -143,7 +143,7 @@ class _MainShellState extends State<MainShell> {
                 style: const TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.purplePrimary,
+                  color: AppColors.brandBlue,
                   letterSpacing: -0.2,
                 ),
               ),

@@ -98,7 +98,7 @@ void main() {
     // Verify Image 1 location chip & search pill render
     expect(find.text('Mayyanad, Kollam'), findsOneWidget);
     expect(find.text('Where do you wanna go ?'), findsOneWidget);
-    expect(find.text('More ways to travel'), findsOneWidget);
+    expect(find.text('Bus Services & Fleet'), findsOneWidget);
   });
 
   testWidgets('UberMapView state changes and controls test', (WidgetTester tester) async {

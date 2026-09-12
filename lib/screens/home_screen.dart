@@ -220,117 +220,199 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Top Bar matching Image 1: [Bell] | [Location / View Bus Schedule >] | [QR Code]
+  /// Top Bar: GetMyBus Official Brand Header & Quick Actions
   Widget _buildImage1TopBar() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Notification Bell Disc
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              const Icon(Icons.notifications, size: 22, color: Color(0xFF6B21A8)),
-              Positioned(
-                top: 10,
-                right: 11,
-                child: Container(
-                  width: 7,
-                  height: 7,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEF4444),
-                    shape: BoxShape.circle,
+        // Top Brand Row: Official GetMyBus Logo + Notification Bell & Conductor ETM Scan
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // GetMyBus Official Wordmark + Tagline
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    'assets/images/gmb_icon_pin.png',
+                    width: 38,
+                    height: 38,
+                    fit: BoxFit.contain,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Get',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.brandBlue,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'MyBus',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.brandCyan,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Text(
+                      'know before you go.',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.brandBlueDark,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-        // Center Location Status & Bus Schedule Pill (Image 1)
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            // Right Action Discs: [Notification Bell] & [Conductor ETM / UPI QR]
+            Row(
+              children: [
+                // Notification Bell Disc
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(Icons.notifications, size: 20, color: AppColors.brandBlue),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFEF4444),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                // Conductor ETM Scan / UPI QR Disc in GetMyBus Royal Blue
+                GestureDetector(
+                  onTap: () => widget.onOpenTickets?.call(),
+                  child: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.brandGradient,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.brandBlue.withOpacity(0.35),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.qr_code, size: 20, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Live Corridor Status & Bus Schedule Pill
+        Row(
+          children: [
+            // Live Status Pill
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 6,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.near_me_rounded, size: 14, color: AppColors.statusLive),
-                  SizedBox(width: 4),
+                  Icon(Icons.near_me_rounded, size: 13, color: AppColors.statusLive),
+                  SizedBox(width: 5),
                   Text(
                     'Mayyanad, Kollam',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 11.5,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
-              GestureDetector(
-                onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
-                  decoration: BoxDecoration(
-                    color: AppColors.purpleLight,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.purplePrimary.withOpacity(0.4)),
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.directions_bus_filled_rounded, size: 12, color: AppColors.purplePrimary),
-                      SizedBox(width: 4),
-                      Text(
-                        'View Bus Schedule ›',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.purplePrimary,
-                        ),
+            ),
+            const Spacer(),
+
+            // View Bus Schedule Pill
+            GestureDetector(
+              onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: AppColors.brandBlueLight,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.brandBlue.withOpacity(0.25)),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.directions_bus, size: 13, color: AppColors.brandBlue),
+                    SizedBox(width: 4),
+                    Text(
+                      'Bus Schedule ›',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.brandBlue,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-
-        // Deep Purple QR Scanner Disc (Image 1)
-        GestureDetector(
-          onTap: () => widget.onOpenTickets?.call(),
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.purplePrimary,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.purplePrimary.withOpacity(0.35),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
-            child: const Icon(Icons.qr_code, size: 22, color: Colors.white),
-          ),
+          ],
         ),
       ],
     );
@@ -449,7 +531,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Search Pill (Image 1): [↗ Where do you wanna go ?        🎤]
+  /// Search Pill (GetMyBus): [↗ Where do you wanna go ?        🎤]
   Widget _buildImage1SearchPill() {
     return GestureDetector(
       onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
@@ -459,10 +541,10 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.purplePrimary.withOpacity(0.40)),
+          border: Border.all(color: AppColors.brandBlue.withOpacity(0.30)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.purplePrimary.withOpacity(0.06),
+              color: AppColors.brandBlue.withOpacity(0.06),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -470,7 +552,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: const Row(
           children: [
-            Icon(Icons.near_me_rounded, size: 20, color: AppColors.statusLive),
+            Icon(Icons.near_me_rounded, size: 20, color: AppColors.brandCyan),
             SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -489,19 +571,39 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// "More ways to travel" Section (Image 1: City Bus, Metro 50% OFF, Intercity Coming Soon)
+  /// Bus Services & Fleet Section (100% BUS ONLY: City Bus, Fast Passenger, Intercity AC)
   Widget _buildMoreWaysToTravelSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'More ways to travel',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textPrimary,
-            letterSpacing: -0.3,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Bus Services & Fleet',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+                letterSpacing: -0.3,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: AppColors.brandBlueLight,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                'Kerala Transit',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.brandBlue,
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         Row(
@@ -511,31 +613,33 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildServiceCard(
                 title: 'City Bus',
                 imageAsset: 'assets/images/pixar_bus.jpg',
-                badgeText: null,
+                badgeText: 'Local',
+                badgeColor: AppColors.brandBlue,
                 onTap: () => _openFullMap(busName: 'Venad Fast Passenger'),
               ),
             ),
             const SizedBox(width: 10),
 
-            // 2. Metro (*50% OFF - 3D Pixar Metro Train)
+            // 2. Fast Passenger (Limited Stop Highway Express - 3D Commute Express Bus)
             Expanded(
               child: _buildServiceCard(
-                title: 'Metro',
-                imageAsset: 'assets/images/pixar_metro.jpg',
-                badgeText: '*50% OFF',
+                title: 'Fast Passenger',
+                imageAsset: 'assets/images/bus_3d.jpg',
+                badgeText: '*EXPRESS*',
                 badgeColor: const Color(0xFFEA580C),
                 onTap: () => _openFullMap(busName: 'Royal King Electric AC'),
               ),
             ),
             const SizedBox(width: 10),
 
-            // 3. Intercity (Coming Soon - 3D Pixar Coach)
+            // 3. Intercity Coach (Long Distance AC Low Floor - 3D Pixar Coach)
             Expanded(
               child: _buildServiceCard(
                 title: 'Intercity',
                 imageAsset: 'assets/images/pixar_intercity.jpg',
-                isComingSoon: true,
-                onTap: () {},
+                badgeText: 'AC Fleet',
+                badgeColor: const Color(0xFF0891B2),
+                onTap: () => _openFullMap(destination: 'Technopark Kazhakkoottam'),
               ),
             ),
           ],
@@ -802,7 +906,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.purplePrimary,
+                  color: AppColors.brandBlue,
                 ),
               ),
             ),
@@ -845,7 +949,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.purpleLight,
+                              color: AppColors.brandBlueLight,
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -853,7 +957,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: const TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.purplePrimary,
+                                color: AppColors.brandBlue,
                               ),
                             ),
                           ),
@@ -918,7 +1022,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.purplePrimary,
+                  color: AppColors.brandBlue,
                 ),
               ),
             ),

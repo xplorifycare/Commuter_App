@@ -257,7 +257,7 @@ class _TripsScreenState extends State<TripsScreen> {
                     margin: const EdgeInsets.only(top: 4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.purplePrimary, width: 3),
+                      border: Border.all(color: AppColors.brandBlue, width: 3),
                     ),
                   ),
                   const SizedBox(width: 14),

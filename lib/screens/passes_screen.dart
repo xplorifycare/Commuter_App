@@ -60,21 +60,21 @@ class _PassesScreenState extends State<PassesScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.purplePrimary.withOpacity(0.25),
+                      color: AppColors.brandBlue.withOpacity(0.25),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.purplePrimary.withOpacity(0.4)),
+                      border: Border.all(color: AppColors.brandBlue.withOpacity(0.4)),
                     ),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.nfc_rounded, size: 14, color: Color(0xFFC084FC)),
+                        Icon(Icons.nfc_rounded, size: 14, color: AppColors.brandCyan),
                         SizedBox(width: 4),
                         Text(
                           'ETM TAP READY',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFFC084FC),
+                            color: AppColors.brandCyan,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -93,7 +93,7 @@ class _PassesScreenState extends State<PassesScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Purple Organic Glowing Blob
+                      // Electric Cyan/Blue Glowing Telematics Blob
                       Positioned(
                         left: 20,
                         top: 20,
@@ -104,7 +104,7 @@ class _PassesScreenState extends State<PassesScreen> {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                const Color(0xFF9333EA).withOpacity(0.5),
+                                AppColors.brandCyan.withOpacity(0.55),
                                 Colors.transparent,
                               ],
                             ),
@@ -125,12 +125,12 @@ class _PassesScreenState extends State<PassesScreen> {
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Color(0xFF27272A), Color(0xFF18181B)],
+                              colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.18)),
+                            border: Border.all(color: AppColors.brandCyan.withOpacity(0.35)),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.50),
@@ -138,7 +138,7 @@ class _PassesScreenState extends State<PassesScreen> {
                                 offset: const Offset(0, 14),
                               ),
                               BoxShadow(
-                                color: AppColors.purplePrimary.withOpacity(0.20),
+                                color: AppColors.brandBlue.withOpacity(0.25),
                                 blurRadius: 20,
                                 offset: const Offset(-8, -4),
                               ),
@@ -152,11 +152,11 @@ class _PassesScreenState extends State<PassesScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
-                                    'XPLOR PASS',
+                                    'GETMYBUS PASS',
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w900,
-                                      color: Colors.white70,
+                                      color: Colors.white,
                                       letterSpacing: 2.0,
                                     ),
                                   ),
@@ -218,10 +218,10 @@ class _PassesScreenState extends State<PassesScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFFC084FC), width: 1.5),
+                  border: Border.all(color: AppColors.brandCyan, width: 1.5),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFC084FC).withOpacity(0.25),
+                      color: AppColors.brandCyan.withOpacity(0.35),
                       blurRadius: 14,
                       offset: const Offset(0, 2),
                     ),
@@ -241,7 +241,7 @@ class _PassesScreenState extends State<PassesScreen> {
 
               // Subtitle
               Text(
-                'No fuss, no hassle, just tap your Xplor Pass and continue your journey along NH66.',
+                'No fuss, no hassle, just tap your GetMyBus Pass on the conductor\'s handheld ETM and ride smoothly across Kerala.',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white.withOpacity(0.65),
@@ -290,11 +290,11 @@ class _PassesScreenState extends State<PassesScreen> {
                     ),
                   ),
                   const Text(
-                    'XPLOR PASS BENEFITS',
+                    'GETMYBUS PASS BENEFITS',
                     style: TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white60,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.brandCyan,
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -306,7 +306,7 @@ class _PassesScreenState extends State<PassesScreen> {
               // Card 1: Ribbon / Loop (Cashless, queueless, stressless)
               _buildBenefitRow(
                 icon: Icons.all_inclusive_rounded,
-                cardColor: const Color(0xFF8B5CF6),
+                cardColor: AppColors.brandBlue,
                 title: 'Ride cashless, queueless,\nstressless.',
               ),
               const SizedBox(height: 36),
@@ -314,16 +314,16 @@ class _PassesScreenState extends State<PassesScreen> {
               // Card 2: Bar Chart (Track usage in real time)
               _buildBenefitRow(
                 icon: Icons.bar_chart_rounded,
-                cardColor: const Color(0xFF7C3AED),
-                title: 'Track usage in real time.',
+                cardColor: const Color(0xFF0284C7),
+                title: 'Track usage & savings in real time.',
               ),
               const SizedBox(height: 36),
 
               // Card 3: Lightning Bolt (Recharge passes anytime)
               _buildBenefitRow(
                 icon: Icons.bolt_rounded,
-                cardColor: const Color(0xFF6D28D9),
-                title: 'Recharge your passes anytime,\nanywhere right from the app.',
+                cardColor: AppColors.brandCyanDark,
+                title: 'Instant UPI tap & recharge\non conductor\'s handheld ETM.',
               ),
               const Spacer(),
 
@@ -444,15 +444,15 @@ class _PassesScreenState extends State<PassesScreen> {
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF1E1B4B), Color(0xFF0F172A)],
+              colors: [Color(0xFF1E3A8A), Color(0xFF0F172A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFF818CF8).withOpacity(0.4)),
+            border: Border.all(color: AppColors.brandCyan.withOpacity(0.4)),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF6366F1).withOpacity(0.25),
+                color: AppColors.brandBlue.withOpacity(0.30),
                 blurRadius: 28,
                 offset: const Offset(0, 10),
               ),
@@ -465,11 +465,11 @@ class _PassesScreenState extends State<PassesScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'KERALA COMMUTER PASS',
+                    'GETMYBUS COMMUTER PASS',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF818CF8),
+                      color: AppColors.brandCyan,
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -607,11 +607,11 @@ class _PassesScreenState extends State<PassesScreen> {
         height: 56,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          gradient: AppColors.purplePinkGradient,
+          gradient: AppColors.buttonGradient,
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: AppColors.neonPink.withOpacity(0.35),
+              color: AppColors.brandBlue.withOpacity(0.40),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

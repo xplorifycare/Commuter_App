@@ -58,29 +58,56 @@ class AppColors {
     colors: [primary, Color(0xFF1D4ED8)],
   );
 
-  // ── Signature Purple & Pass Tokens (From Reference UI/UX) ──
-  static const Color purplePrimary = Color(0xFF7C3AED);
-  static const Color purpleDark = Color(0xFF5B21B6);
-  static const Color purpleLight = Color(0xFFEDE9FE);
-  static const Color neonPink = Color(0xFFFF2E93);
-  static const Color obsidianDark = Color(0xFF0B0B14);
+  // ── GetMyBus Brand Tokens & Pass Gradients ──
+  /// Electric Royal Blue Primary
+  static const Color brandBlue = Color(0xFF2563EB);
+  static const Color brandBlueDark = Color(0xFF1D4ED8);
+  static const Color brandBlueLight = Color(0xFFEFF6FF);
 
+  /// Telematics Cyan Accent
+  static const Color brandCyan = Color(0xFF06B6D4);
+  static const Color brandCyanDark = Color(0xFF0891B2);
+  static const Color brandCyanLight = Color(0xFFCFFAFE);
+
+  /// Deep Navy Obsidian (for Pass backdrop and dark surfaces)
+  static const Color obsidianDark = Color(0xFF0A0F1D);
+
+  /// High-Tech GetMyBus Electric Gradient (Royal Blue to Cyan)
+  static const LinearGradient brandGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
+  );
+
+  /// Smart Card Pass Gradient
+  static const LinearGradient passCardGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1E3A8A), Color(0xFF0284C7), Color(0xFF06B6D4)],
+  );
+
+  /// Button CTA Gradient (Vibrant Royal Blue to Vivid Cyan)
+  static const LinearGradient buttonGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
+  );
+
+  /// Legacy aliases mapped to official brand colors
+  static const Color purplePrimary = Color(0xFF2563EB);
+  static const Color purpleDark = Color(0xFF1D4ED8);
+  static const Color purpleLight = Color(0xFFEFF6FF);
+  static const Color neonPink = Color(0xFF06B6D4);
   static const LinearGradient purplePinkGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [Color(0xFFFF2E93), Color(0xFF7C3AED)],
+    colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
   );
 
   static const LinearGradient orangePurpleGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [Color(0xFFFB923C), Color(0xFFC084FC)],
-  );
-
-  static const LinearGradient brandGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [primary, accent],
+    colors: [Color(0xFF0284C7), Color(0xFF06B6D4)],
   );
 
   static const LinearGradient cardOverlay = LinearGradient(

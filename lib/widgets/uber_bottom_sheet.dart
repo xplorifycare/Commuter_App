@@ -147,7 +147,7 @@ class _UberBottomSheetState extends State<UberBottomSheet> {
         const SizedBox(height: 20),
 
         // 3. Four Chunky Category Cards ("What's on your mind?")
-        _buildCategorySectionHeader('EXPLORE TRANSIT'),
+        _buildCategorySectionHeader('BUS FLEET & PASSES'),
         const SizedBox(height: 10),
         _buildChunkyCategoryCardsRow(),
         const SizedBox(height: 22),
