@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import 'home_screen.dart';
 import 'trips_screen.dart';
-import 'nearby_stops_screen.dart';
-import 'tickets_screen.dart';
+import 'passes_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -40,12 +39,11 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(
-        onOpenStops: () => _onTabTapped(2),
-        onOpenTickets: () => _onTabTapped(3),
+        onOpenStops: () => _onTabTapped(1),
+        onOpenTickets: () => _onTabTapped(2),
       ),
       const TripsScreen(),
-      const NearbyStopsScreen(),
-      const TicketsScreen(),
+      const PassesScreen(),
       const AccountScreen(),
     ];
 
@@ -97,11 +95,10 @@ class _MainShellState extends State<MainShell> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildNavItem(0, Icons.directions_bus_rounded, 'Ride'),
-                          _buildNavItem(1, Icons.alt_route_rounded, 'Routes'),
-                          _buildNavItem(2, Icons.near_me_rounded, 'Stops'),
-                          _buildNavItem(3, Icons.confirmation_number_rounded, 'Tickets'),
-                          _buildNavItem(4, Icons.person_rounded, 'Account'),
+                          _buildNavItem(0, Icons.home_filled, 'Home'),
+                          _buildNavItem(1, Icons.confirmation_number_rounded, 'My Trips'),
+                          _buildNavItem(2, Icons.credit_card_rounded, 'Passes'),
+                          _buildNavItem(3, Icons.person_rounded, 'Profile'),
                         ],
                       ),
                     ),
@@ -128,25 +125,25 @@ class _MainShellState extends State<MainShell> {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.uberBlack : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
+          color: isSelected ? AppColors.purpleLight : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              size: 19,
-              color: isSelected ? Colors.white : const Color(0xFF64748B),
+              size: 20,
+              color: isSelected ? AppColors.purplePrimary : const Color(0xFF64748B),
             ),
             if (isSelected) ...[
               const SizedBox(width: 6),
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.purplePrimary,
                   letterSpacing: -0.2,
                 ),
               ),

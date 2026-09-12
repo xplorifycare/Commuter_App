@@ -58,6 +58,25 @@ class AppColors {
     colors: [primary, Color(0xFF1D4ED8)],
   );
 
+  // ── Signature Purple & Pass Tokens (From Reference UI/UX) ──
+  static const Color purplePrimary = Color(0xFF7C3AED);
+  static const Color purpleDark = Color(0xFF5B21B6);
+  static const Color purpleLight = Color(0xFFEDE9FE);
+  static const Color neonPink = Color(0xFFFF2E93);
+  static const Color obsidianDark = Color(0xFF0B0B14);
+
+  static const LinearGradient purplePinkGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFFFF2E93), Color(0xFF7C3AED)],
+  );
+
+  static const LinearGradient orangePurpleGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [Color(0xFFFB923C), Color(0xFFC084FC)],
+  );
+
   static const LinearGradient brandGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
