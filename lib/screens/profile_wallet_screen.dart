@@ -129,82 +129,113 @@ class ProfileWalletScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
 
-            // 3. Wallet Card
+            // 3. Wallet Card with Ambient Accent Circle (v3)
             Container(
-              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: AppColors.line),
+                color: Colors.white,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(Icons.credit_card_rounded,
-                              size: 16, color: AppColors.sub),
-                          SizedBox(width: 8),
-                          Text(
-                            'Wallet',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.sub,
-                            ),
-                          ),
-                        ],
+                  // Ambient Accent Circle at Top-Right
+                  Positioned(
+                    right: -18,
+                    top: -18,
+                    child: Container(
+                      width: 96,
+                      height: 96,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.tint.withOpacity(0.7),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Wallet history')),
-                          );
-                        },
-                        child: const Text(
-                          'History →',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    '₹245.50',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.28,
-                      color: AppColors.ink,
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  GestureDetector(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Opening UPI instant wallet recharge...'),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.credit_card_rounded,
+                                    size: 16, color: AppColors.sub),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Wallet',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.sub,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Wallet history')),
+                                );
+                              },
+                              child: const Text(
+                                'History →',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    child: const Text(
-                      '+ Add money',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
-                      ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          '₹245.50',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.28,
+                            color: AppColors.ink,
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        GestureDetector(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Opening UPI instant wallet recharge...'),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            '+ Add money',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 6),
+            const Text(
+              'Illustration spot (optional) — tiny line-art coin or houseboat motif could sit inside the soft circle behind the balance, top-right of the wallet card',
+              style: TextStyle(
+                fontSize: 10.5,
+                color: AppColors.faint,
+                height: 1.3,
+              ),
+            ),
+            const SizedBox(height: 20),
 
             // 4. Saved Places Section
             const Text(

@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import '../config/theme.dart';
 import '../data/corridor_route.dart';
+import '../widgets/crowd_gauge.dart';
 import '../widgets/illustration_placeholder.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
@@ -306,56 +307,21 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
             ),
             const SizedBox(height: 20),
 
-            // 4. Crowd Level Indicator
-            Row(
+            // 4. Unified CrowdGauge Row (v3)
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Crowd level',
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.sub,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 20,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: AppColors.success,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Container(
-                        width: 20,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: AppColors.success,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Container(
-                        width: 20,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: AppColors.line,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Text(
-                  'Low',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.success,
-                  ),
+                CrowdGauge(
+                  level: 'Low',
+                  color: AppColors.success,
+                  size: CrowdGaugeSize.md,
                 ),
               ],
             ),

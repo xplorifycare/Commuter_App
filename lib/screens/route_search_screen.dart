@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import '../widgets/crowd_gauge.dart';
+import '../widgets/illustration_placeholder.dart';
 import 'live_tracking_screen.dart';
 
 class RouteSearchScreen extends StatefulWidget {
@@ -126,7 +128,14 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 2. From / To Card (in #F1F3F8)
+            // 2. Kerala-Touch Illustration Spot (v3)
+            const IllustrationPlaceholder(
+              label: 'Illustration — minimal single-line bus stop signpost with a faint coconut-palm silhouette, Kerala touch',
+              height: 120,
+            ),
+            const SizedBox(height: 18),
+
+            // 3. From / To Card (in #F1F3F8)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
               decoration: BoxDecoration(
@@ -218,7 +227,7 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 3. Filter Underline Tabs
+            // 4. Filter Underline Tabs
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
@@ -254,7 +263,7 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
             ),
             const SizedBox(height: 18),
 
-            // 4. Results Header & Sort
+            // 5. Results Header & Sort
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -277,7 +286,7 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
             ),
             const SizedBox(height: 6),
 
-            // 5. Open Route List
+            // 6. Open Route List with CrowdGauge (size sm)
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -368,30 +377,14 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
                       ),
                       const SizedBox(height: 12),
 
-                      // Bottom Row: Crowd Pill & Track bus →
+                      // Bottom Row: CrowdGauge & Track bus →
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: r['crowdColor'] as Color,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                '${r['crowd']} crowd',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: r['crowdColor'] as Color,
-                                ),
-                              ),
-                            ],
+                          CrowdGauge(
+                            level: r['crowd'] as String,
+                            color: r['crowdColor'] as Color,
+                            size: CrowdGaugeSize.sm,
                           ),
                           GestureDetector(
                             onTap: () => _openLiveTracking(r),

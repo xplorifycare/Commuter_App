@@ -132,6 +132,7 @@ class DigitalTicketScreen extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: AppColors.ink,
+                            fontFeatures: [FontFeature.tabularFigures()],
                           ),
                         ),
                         SizedBox(height: 3),
@@ -160,6 +161,7 @@ class DigitalTicketScreen extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: AppColors.ink,
+                            fontFeatures: [FontFeature.tabularFigures()],
                           ),
                         ),
                         SizedBox(height: 3),
@@ -262,66 +264,107 @@ class DigitalTicketScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
 
-            // 4. Perforated QR Section
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: AppColors.line,
-                    width: 1.0,
-                    style: BorderStyle.solid,
-                  ),
-                  bottom: BorderSide(
-                    color: AppColors.line,
-                    width: 1.0,
-                    style: BorderStyle.solid,
+            // 4. Boarding-Pass Style Tear Notches & Perforated QR Section (v3)
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Left Cutout Notch
+                Positioned(
+                  left: -32,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.background,
+                        border: Border.all(color: AppColors.line),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    width: 108,
-                    height: 108,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.line),
-                    ),
-                    padding: const EdgeInsets.all(6),
-                    child: QrImageView(
-                      data: 'GMB-2609-77341',
-                      version: QrVersions.auto,
-                      size: 96,
-                      eyeStyle: const QrEyeStyle(
-                        eyeShape: QrEyeShape.square,
-                        color: AppColors.ink,
-                      ),
-                      dataModuleStyle: const QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.square,
-                        color: AppColors.ink,
+                // Right Cutout Notch
+                Positioned(
+                  right: -32,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.background,
+                        border: Border.all(color: AppColors.line),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Show this code to the conductor',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.sub,
+                ),
+                // Perforated Content
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 22),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: AppColors.line,
+                        width: 1.5,
+                      ),
+                      bottom: BorderSide(
+                        color: AppColors.line,
+                        width: 1.5,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'GMB-2609-77341',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: AppColors.faint,
-                    ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 108,
+                        height: 108,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.line),
+                        ),
+                        padding: const EdgeInsets.all(6),
+                        child: QrImageView(
+                          data: 'GMB-2609-77341',
+                          version: QrVersions.auto,
+                          size: 96,
+                          eyeStyle: const QrEyeStyle(
+                            eyeShape: QrEyeShape.square,
+                            color: AppColors.ink,
+                          ),
+                          dataModuleStyle: const QrDataModuleStyle(
+                            dataModuleShape: QrDataModuleShape.square,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      const Text(
+                        'Show this code to the conductor',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.sub,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'GMB-2609-77341',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppColors.faint,
+                          fontFamily: 'monospace',
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             const SizedBox(height: 22),
 
@@ -392,6 +435,7 @@ class DigitalTicketScreen extends StatelessWidget {
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: AppColors.ink,
+                          fontFeatures: [FontFeature.tabularFigures()],
                         ),
                       ),
                     ],

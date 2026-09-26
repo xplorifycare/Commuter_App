@@ -86,6 +86,13 @@ void main() {
   });
 
   testWidgets('GetMyBus app smoke test', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -95,11 +102,13 @@ void main() {
       ),
     );
 
-    // Verify v2 Home Screen elements render
+    // Verify v3 Home Screen elements render
     expect(find.text('Where to?'), findsOneWidget);
     expect(find.text('3 buses near you'), findsOneWidget);
-    expect(find.text('Recent trips'), findsOneWidget);
     expect(find.text('Nearby'), findsOneWidget);
+    expect(find.text('Live near you'), findsOneWidget);
+    expect(find.text('2 trips to your free ride'), findsOneWidget);
+    expect(find.text('Recent trips'), findsOneWidget);
     expect(find.text('Tickets'), findsWidgets);
   });
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../widgets/illustration_placeholder.dart';
+import '../widgets/live_rail_chip.dart';
 import 'live_tracking_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -131,52 +132,55 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.success,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.success,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 6),
-                              const Text(
-                                'Live',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.success,
-                                  letterSpacing: 0.2,
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'Live',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.success,
+                                    letterSpacing: 0.2,
+                                  ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              '3 buses near you',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.17,
+                                color: AppColors.ink,
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            '3 buses near you',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.17,
-                              color: AppColors.ink,
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          const Text(
-                            'Route 42, 7B and 12 · within 5 min',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.sub,
-                              fontWeight: FontWeight.w400,
+                            const SizedBox(height: 2),
+                            const Text(
+                              'Route 42, 7B and 12 · within 5 min',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.sub,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 12),
                       const Text(
                         'View map →',
                         style: TextStyle(
@@ -215,7 +219,101 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 26),
 
-            // 5. Recent Trips Section
+            // 5. Live Near You Horizontal Rail (v3)
+            const Text(
+              'Live near you',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.ink,
+              ),
+            ),
+            const SizedBox(height: 12),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  LiveRailChip(
+                    route: '42',
+                    eta: '4 min',
+                    crowdColor: AppColors.success,
+                    onTap: () => _openLiveTracking(context, routeId: '42'),
+                  ),
+                  const SizedBox(width: 10),
+                  LiveRailChip(
+                    route: '7B',
+                    eta: '6 min',
+                    crowdColor: AppColors.orange,
+                    onTap: () => _openLiveTracking(context, routeId: '7B', destination: 'Chavara'),
+                  ),
+                  const SizedBox(width: 10),
+                  LiveRailChip(
+                    route: '12',
+                    eta: '9 min',
+                    crowdColor: AppColors.success,
+                    onTap: () => _openLiveTracking(context, routeId: '12'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // 6. Milestone Commuter Reward Banner (v3)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              decoration: BoxDecoration(
+                gradient: AppColors.brandGradient,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.16),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_outlined,
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '2 trips to your free ride',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Illustration — line-art bus crossing a small finish flag, milestone reward banner',
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: Colors.white.withOpacity(0.8),
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 26),
+
+            // 7. Recent Trips Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.baseline,
