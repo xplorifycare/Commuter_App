@@ -233,13 +233,27 @@ class _HomeScreenState extends State<HomeScreen> {
             // GetMyBus Official Wordmark + Tagline
             Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/gmb_icon_pin.png',
-                    width: 38,
-                    height: 38,
-                    fit: BoxFit.contain,
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.brandBlue.withOpacity(0.18),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/gmb_mascot_avatar.jpg',
+                      width: 42,
+                      height: 42,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -860,24 +874,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 12),
           Container(
-            width: 68,
-            height: 68,
+            width: 78,
+            height: 78,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0284C7).withOpacity(0.15),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
+                  color: const Color(0xFF0284C7).withOpacity(0.20),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               child: Image.asset(
-                'assets/images/pixar_shield.jpg',
-                fit: BoxFit.contain,
+                'assets/images/gmb_safety_cartoon.jpg',
+                fit: BoxFit.cover,
               ),
             ),
           ),

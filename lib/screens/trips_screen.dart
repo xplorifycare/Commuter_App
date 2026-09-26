@@ -48,21 +48,47 @@ class _TripsScreenState extends State<TripsScreen> {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 110),
       physics: const BouncingScrollPhysics(),
       children: [
-        // Top Greeting Header
+        // Top Greeting Header with Official Mascot Avatar
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Text(
-                  'Welcome back',
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.brandBlue.withOpacity(0.14),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/gmb_mascot_avatar.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 2),
-                const Text(
-                  'Jassim Collins',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back',
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Jassim Collins',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -72,7 +98,6 @@ class _TripsScreenState extends State<TripsScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade200),
                 boxShadow: [
                   BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
                 ],
@@ -122,7 +147,7 @@ class _TripsScreenState extends State<TripsScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: Image.asset(
-                  'assets/images/pixar_compass_3d.jpg',
+                  'assets/images/gmb_mascot_tracker.jpg',
                   width: 62,
                   height: 62,
                   fit: BoxFit.cover,

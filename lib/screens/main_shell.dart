@@ -205,20 +205,22 @@ class AccountScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
+                      width: 52,
+                      height: 52,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary, width: 2),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 26,
-                        backgroundColor: AppColors.primary,
-                        child: Text(
-                          'J',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.brandBlue.withOpacity(0.18),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
                           ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/gmb_commuter_cartoon.jpg',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -415,13 +417,19 @@ class AccountScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // GetMyBus Official Brand Footer
+              // GetMyBus Official Brand Mascot & Footer
               Center(
                 child: Column(
                   children: [
                     Image.asset(
+                      'assets/images/gmb_mascot_official.png',
+                      height: 72,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 8),
+                    Image.asset(
                       'assets/images/gmb_logo_color.png',
-                      height: 32,
+                      height: 28,
                       fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 6),

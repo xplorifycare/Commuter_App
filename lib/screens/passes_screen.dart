@@ -240,13 +240,13 @@ class _PassesScreenState extends State<PassesScreen> {
               ),
               const Spacer(),
 
-              // Card 1: 3D Pixar Bus (Cashless, queueless, stressless)
+              // Card 1: Cheerful Commuter Cartoon (Cashless, queueless, stressless)
               FloatingBounce(
                 delayFraction: 0.0,
                 maxOffset: 4.0,
                 duration: const Duration(milliseconds: 2500),
                 child: _buildBenefitRow(
-                  imageAsset: 'assets/images/pixar_bus.jpg',
+                  imageAsset: 'assets/images/gmb_commuter_cartoon.jpg',
                   title: 'Ride cashless, queueless,\nstressless across all buses.',
                 ),
               ),
@@ -417,13 +417,18 @@ class _PassesScreenState extends State<PassesScreen> {
                   children: [
                     Row(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            'assets/images/pixar_smartcard_3d.jpg',
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child: Image.asset(
+                              'assets/images/gmb_mascot_avatar.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
