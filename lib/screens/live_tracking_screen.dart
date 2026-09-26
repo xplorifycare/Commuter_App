@@ -5,6 +5,7 @@ import '../config/theme.dart';
 import '../data/corridor_route.dart';
 import '../widgets/crowd_gauge.dart';
 import '../widgets/illustration_placeholder.dart';
+import '../widgets/route_badge.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
   final String routeId;
@@ -25,11 +26,13 @@ class LiveTrackingScreen extends StatefulWidget {
 }
 
 class _LiveTrackingScreenState extends State<LiveTrackingScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final MapController _mapController;
   late final AnimationController _pulseController;
+  late final AnimationController _refreshController;
   late final List<LatLng> _routePoints;
   bool _showInteractiveMap = true;
+  bool _refreshing = false;
 
   // Real-time bus simulation point along route
   final LatLng _busPosition = const LatLng(8.8895, 76.6020); // Near Kadappakkada
@@ -50,17 +53,33 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1600),
     )..repeat(reverse: true);
+    _refreshController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
   }
 
   @override
   void dispose() {
     _mapController.dispose();
     _pulseController.dispose();
+    _refreshController.dispose();
     super.dispose();
   }
 
   void _recenterMap() {
     _mapController.move(_busPosition, 14.5);
+  }
+
+  void _doRefresh() {
+    setState(() => _refreshing = true);
+    _refreshController.forward(from: 0.0);
+    _recenterMap();
+    Future.delayed(const Duration(milliseconds: 900), () {
+      if (mounted) {
+        setState(() => _refreshing = false);
+      }
+    });
   }
 
   @override
@@ -106,28 +125,64 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showInteractiveMap = !_showInteractiveMap;
-                    });
-                    _recenterMap();
-                  },
+                  onTap: _doRefresh,
                   behavior: HitTestBehavior.opaque,
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 36,
                     height: 36,
                     child: Center(
-                      child: Icon(
-                        Icons.refresh_rounded,
-                        size: 18,
-                        color: AppColors.ink,
+                      child: AnimatedBuilder(
+                        animation: _refreshController,
+                        builder: (context, child) {
+                          return Transform.rotate(
+                            angle: _refreshing
+                                ? _refreshController.value * 2 * 3.1415926535
+                                : 0.0,
+                            child: child,
+                          );
+                        },
+                        child: const Icon(
+                          Icons.refresh_rounded,
+                          size: 18,
+                          color: AppColors.ink,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 22),
+            if (_refreshing) ...[
+              const SizedBox(height: 12),
+              Container(
+                height: 3,
+                decoration: BoxDecoration(
+                  color: AppColors.line,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: AnimatedBuilder(
+                  animation: _refreshController,
+                  builder: (context, child) {
+                    return Align(
+                      alignment: Alignment(
+                        -1.0 + (_refreshController.value * 2.0),
+                        0.0,
+                      ),
+                      child: child,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.directions_bus_rounded,
+                    size: 14,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ] else ...[
+              const SizedBox(height: 22),
+            ],
 
             // 2. Map / Illustration Spot (height 200)
             if (_showInteractiveMap)
@@ -240,24 +295,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color: AppColors.tint,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          widget.routeId,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
+                    RouteBadge(num: widget.routeId),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

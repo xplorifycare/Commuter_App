@@ -235,9 +235,52 @@ class ProfileWalletScreen extends StatelessWidget {
                 height: 1.3,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
 
-            // 4. Saved Places Section
+            // 4. CO₂ Carbon Savings Impact Pill (v3)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.successBg,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.eco_rounded,
+                    size: 16,
+                    color: AppColors.success,
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "You've saved ",
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          color: AppColors.ink,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '~4.2 kg',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFeatures: [FontFeature.tabularFigures()],
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' CO₂ this month by riding the bus',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 22),
+
+            // 5. Saved Places Section
             const Text(
               'Saved places',
               style: TextStyle(

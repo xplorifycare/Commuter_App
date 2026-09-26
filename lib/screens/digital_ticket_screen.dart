@@ -2,11 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../config/theme.dart';
 import '../widgets/illustration_placeholder.dart';
+import '../widgets/route_badge.dart';
 
-class DigitalTicketScreen extends StatelessWidget {
+class DigitalTicketScreen extends StatefulWidget {
   final VoidCallback? onBack;
 
   const DigitalTicketScreen({super.key, this.onBack});
+
+  @override
+  State<DigitalTicketScreen> createState() => _DigitalTicketScreenState();
+}
+
+class _DigitalTicketScreenState extends State<DigitalTicketScreen> {
+  bool _scanned = false;
+
+  void _simulateScan() {
+    setState(() => _scanned = true);
+    Future.delayed(const Duration(milliseconds: 1600), () {
+      if (mounted) {
+        setState(() => _scanned = false);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +39,7 @@ class DigitalTicketScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: onBack ?? () {
+                  onTap: widget.onBack ?? () {
                     if (Navigator.of(context).canPop()) {
                       Navigator.of(context).pop();
                     }
@@ -85,28 +102,11 @@ class DigitalTicketScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Badge 42 & Confirmed
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        color: AppColors.tint,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '42',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Text(
+                    RouteBadge(num: '42'),
+                    Text(
                       'Confirmed',
                       style: TextStyle(
                         fontSize: 11,
@@ -264,7 +264,7 @@ class DigitalTicketScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
 
-            // 4. Boarding-Pass Style Tear Notches & Perforated QR Section (v3)
+            // 4. Boarding-Pass Style Tear Notches & Tap-to-Scan Simulation (v3)
             Stack(
               clipBehavior: Clip.none,
               children: [
@@ -320,33 +320,47 @@ class DigitalTicketScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Container(
-                        width: 108,
-                        height: 108,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.line),
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        child: QrImageView(
-                          data: 'GMB-2609-77341',
-                          version: QrVersions.auto,
-                          size: 96,
-                          eyeStyle: const QrEyeStyle(
-                            eyeShape: QrEyeShape.square,
-                            color: AppColors.ink,
+                      GestureDetector(
+                        onTap: _simulateScan,
+                        behavior: HitTestBehavior.opaque,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          width: 108,
+                          height: 108,
+                          decoration: BoxDecoration(
+                            color: _scanned ? AppColors.success : AppColors.ink,
+                            borderRadius: BorderRadius.circular(14),
                           ),
-                          dataModuleStyle: const QrDataModuleStyle(
-                            dataModuleShape: QrDataModuleShape.square,
-                            color: AppColors.ink,
-                          ),
+                          child: _scanned
+                              ? const Center(
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    size: 44,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: QrImageView(
+                                    data: 'GMB-2609-77341',
+                                    version: QrVersions.auto,
+                                    size: 92,
+                                    eyeStyle: const QrEyeStyle(
+                                      eyeShape: QrEyeShape.square,
+                                      color: Colors.white,
+                                    ),
+                                    dataModuleStyle: const QrDataModuleStyle(
+                                      dataModuleShape: QrDataModuleShape.square,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 14),
-                      const Text(
-                        'Show this code to the conductor',
-                        style: TextStyle(
+                      Text(
+                        _scanned ? 'Boarding confirmed' : 'Show this code to the conductor',
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.sub,
                         ),
@@ -361,6 +375,16 @@ class DigitalTicketScreen extends StatelessWidget {
                           letterSpacing: 0.5,
                         ),
                       ),
+                      if (!_scanned) ...[
+                        const SizedBox(height: 6),
+                        const Text(
+                          '(tap the code to preview the scan confirmation)',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.faint,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -445,7 +469,92 @@ class DigitalTicketScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // 6. Action Buttons
+            // 6. Shareable Trip Card & WhatsApp CTA (v3)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Share this trip',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ink,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.brandGradient,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'GETMYBUS',
+                        style: TextStyle(
+                          fontSize: 11,
+                          letterSpacing: 0.8,
+                          color: Colors.white.withOpacity(0.75),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Kollam → Chinnakada',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        'Route 42 · 18 min · on time',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          color: Colors.white.withOpacity(0.85),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Opening WhatsApp share...')),
+                      );
+                    },
+                    icon: const Icon(Icons.share_rounded, size: 16, color: Colors.white),
+                    label: const Text(
+                      'Share to WhatsApp',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.whatsappGreen,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // 7. Action Buttons
             Row(
               children: [
                 Expanded(

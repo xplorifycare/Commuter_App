@@ -61,6 +61,23 @@ class AppColors {
   /// Highway Corridor Special / Express
   static const Color statusExpress = Color(0xFF6366F1);
 
+  // ── Extended Colors from GetMyBusApp_v3 (2).jsx ──
+  static const Color cyan = Color(0xFF12CBE0);
+  static const Color violet = Color(0xFF8B5CF6);
+  static const Color whatsappGreen = Color(0xFF25D366);
+
+  /// Fixed per-route accent colors — like a metro map, each route number
+  /// always reads in the same color everywhere it appears.
+  static const Map<String, Color> routeColors = {
+    '42': primary,
+    '7B': cyan,
+    '12': violet,
+  };
+
+  static Color getRouteColor(String routeNum) {
+    return routeColors[routeNum] ?? primary;
+  }
+
   // ── Gradient Definitions (from GetMyBusApp.jsx) ──
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,

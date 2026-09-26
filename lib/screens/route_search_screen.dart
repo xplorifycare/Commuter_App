@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../widgets/crowd_gauge.dart';
 import '../widgets/illustration_placeholder.dart';
+import '../widgets/route_badge.dart';
 import 'live_tracking_screen.dart';
 
 class RouteSearchScreen extends StatefulWidget {
@@ -310,24 +311,7 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
                         children: [
                           Row(
                             children: [
-                              Container(
-                                width: 38,
-                                height: 38,
-                                decoration: BoxDecoration(
-                                  color: AppColors.tint,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    r['num'] as String,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              RouteBadge(num: r['num'] as String),
                               const SizedBox(width: 12),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
