@@ -107,6 +107,15 @@ void main() {
       ),
     );
 
+    // Verify Onboarding Screen renders first
+    expect(find.text('Know exactly\nwhen it arrives.'), findsOneWidget);
+    expect(find.text('ബസ് എപ്പോൾ എത്തുമെന്ന് കൃത്യമായി അറിയാം'), findsOneWidget);
+    expect(find.text('Skip'), findsOneWidget);
+
+    // Tap Skip to enter MainShell
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+
     // Verify v3 Home Screen elements render
     expect(find.text('Where to?'), findsOneWidget);
     expect(find.text('എവിടേക്ക്?'), findsOneWidget);
