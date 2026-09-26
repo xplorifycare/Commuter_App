@@ -146,171 +146,156 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
 
-            // 3. Big Blue Hero Card: "3 buses near you" (Figma Screen 1)
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.brandBlue,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.brandBlue.withOpacity(0.32),
-                    blurRadius: 22,
-                    offset: const Offset(0, 8),
+            // 3. Big Blue Hero Card: "3 buses near you" (from GetMyBusApp.jsx)
+            GestureDetector(
+              onTap: () => _openLiveTracking(context),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF2B57FF), Color(0xFF1E3FCC)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top row: LIVE pill and signal/bus icon
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 9, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.20),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF10B981),
-                                shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF2B57FF).withOpacity(0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top row: LIVE pill and Bus icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF17B26A),
+                                  shape: BoxShape.circle,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 5),
-                            const Text(
-                              'LIVE',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
+                              const SizedBox(width: 6),
+                              const Text(
+                                'LIVE',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.16),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
+                        const Icon(
                           Icons.directions_bus_rounded,
-                          size: 15,
+                          size: 22,
                           color: Colors.white,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Headline
-                  const Text(
-                    '3 buses near you',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 4),
+                    const SizedBox(height: 16),
 
-                  // Subtitle
-                  const Text(
-                    'Route 42, 78 and 12 arrive within 4-7 mins.',
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // "View live map →" Button
-                  GestureDetector(
-                    onTap: () => _openLiveTracking(context),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 9),
-                      decoration: BoxDecoration(
+                    // Headline
+                    const Text(
+                      '3 buses near you',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'View live map',
-                            style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.brandBlue,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 14,
-                            color: AppColors.brandBlue,
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 6),
+
+                    // Subtitle
+                    Text(
+                      'Route 42, 7B and 12 arrive within 5 minutes',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.white.withOpacity(0.85),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Bottom Row: "View live map →" + "Next: 2 min" Clock Pill
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'View live map →',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.schedule_rounded,
+                                  size: 12, color: Colors.white),
+                              SizedBox(width: 6),
+                              Text(
+                                'Next: 2 min',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
 
-            // 4. Three Quick Action Cards (Figma Screen 1)
+            // 4. Three Quick Action Buttons (from GetMyBusApp.jsx)
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: _buildActionCard(
-                    icon: Icons.location_on_rounded,
-                    iconBg: const Color(0xFFFEE2E2),
-                    iconColor: const Color(0xFFEF4444),
-                    label: 'Nearby Stops',
-                    onTap: onOpenSearch,
-                  ),
+                _buildActionCard(
+                  icon: Icons.location_on_rounded,
+                  label: 'Nearby Stops',
+                  onTap: onOpenSearch,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildActionCard(
-                    icon: Icons.alt_route_rounded,
-                    iconBg: const Color(0xFFFFF0D4),
-                    iconColor: const Color(0xFFF97316),
-                    label: 'My Routes',
-                    onTap: onOpenSearch,
-                  ),
+                _buildActionCard(
+                  icon: Icons.explore_rounded,
+                  label: 'My Routes',
+                  onTap: onOpenSearch,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildActionCard(
-                    icon: Icons.confirmation_number_rounded,
-                    iconBg: const Color(0xFFDCFCE7),
-                    iconColor: const Color(0xFF16A34A),
-                    label: 'Tickets',
-                    onTap: onOpenTickets,
-                  ),
+                _buildActionCard(
+                  icon: Icons.confirmation_number_rounded,
+                  label: 'Tickets',
+                  onTap: onOpenTickets,
                 ),
               ],
             ),
@@ -344,27 +329,33 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Trip 1 (Route 42)
-            _buildTripCard(
-              routeId: '42',
-              routeBg: const Color(0xFFEFF6FF),
-              routeColor: AppColors.brandBlue,
-              title: 'Kadappakkada → Chinnakada',
-              subtitle: 'Route 42 • 15 m ago',
-              fare: '₹15',
-              onTap: () => _openLiveTracking(context, routeId: '42', destination: 'Chinnakada'),
-            ),
-            const SizedBox(height: 10),
-
-            // Trip 2 (Route 78)
-            _buildTripCard(
-              routeId: '78',
-              routeBg: const Color(0xFFFFF7ED),
-              routeColor: const Color(0xFFEA580C),
-              title: 'Kollam Bus Stand → Chavara',
-              subtitle: 'Route 78 • Yesterday',
-              fare: '₹22',
-              onTap: () => _openLiveTracking(context, routeId: '78', destination: 'Chavara'),
+            // Recent trips Container (from GetMyBusApp.jsx)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Column(
+                children: [
+                  _buildTripRow(
+                    route: '42',
+                    from: 'Kadappakada → Chinnakada',
+                    meta: 'Route 42 · 12 min ago',
+                    fare: '₹15',
+                    showBorder: true,
+                    onTap: () => _openLiveTracking(context, routeId: '42', destination: 'Chinnakada'),
+                  ),
+                  _buildTripRow(
+                    route: '7B',
+                    from: 'Kollam Bus Stand → Chavara',
+                    meta: 'Route 7B · Yesterday',
+                    fare: '₹22',
+                    showBorder: false,
+                    onTap: () => _openLiveTracking(context, routeId: '7B', destination: 'Chavara'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -374,45 +365,31 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildActionCard({
     required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
     required String label,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 94,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 14,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 108,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: iconBg,
+              width: 40,
+              height: 40,
+              decoration: const BoxDecoration(
+                color: AppColors.tint,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 19, color: iconColor),
+              child: Icon(icon, size: 20, color: AppColors.brandBlue),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               label,
               style: const TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w700,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
                 color: AppColors.textPrimary,
               ),
             ),
@@ -422,69 +399,63 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTripCard({
-    required String routeId,
-    required Color routeBg,
-    required Color routeColor,
-    required String title,
-    required String subtitle,
+  Widget _buildTripRow({
+    required String route,
+    required String from,
+    required String meta,
     required String fare,
+    required bool showBorder,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 12,
-              offset: const Offset(0, 3),
-            ),
-          ],
+          border: showBorder
+              ? const Border(bottom: BorderSide(color: AppColors.border))
+              : null,
         ),
         child: Row(
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
-                color: routeBg,
-                borderRadius: BorderRadius.circular(11),
+                color: AppColors.tint,
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
                 child: Text(
-                  routeId,
-                  style: TextStyle(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w900,
-                    color: routeColor,
+                  route,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.brandBlue,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    from,
                     style: const TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(
-                    subtitle,
+                    meta,
                     style: const TextStyle(
-                      fontSize: 11.5,
-                      color: Color(0xFF64748B),
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -493,8 +464,8 @@ class HomeScreen extends StatelessWidget {
             Text(
               fare,
               style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w900,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),
             ),

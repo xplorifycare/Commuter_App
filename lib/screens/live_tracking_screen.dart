@@ -460,28 +460,26 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                       children: [
                         _buildStopItem(
                           title: 'Kollam Bus Stand',
-                          subtitle: 'DEPARTED 9:40 AM',
-                          dotColor: const Color(0xFF10B981),
-                          isDeparted: true,
+                          subtitle: 'Departed 9:40 AM',
+                          isDone: true,
                           showLine: true,
                         ),
                         _buildStopItem(
-                          title: 'Kadappakkada',
-                          subtitle: 'ESTIMATED 9:44 AM',
-                          dotColor: AppColors.brandBlue,
-                          isCurrent: true,
+                          title: 'Kadappakada',
+                          subtitle: 'Departed 9:52 AM',
+                          isDone: true,
                           showLine: true,
                         ),
                         _buildStopItem(
                           title: 'Thattamala',
-                          subtitle: 'ETA 9:52 AM',
-                          dotColor: const Color(0xFF94A3B8),
+                          subtitle: 'ETA 10:02 AM',
+                          isCurrent: true,
                           showLine: true,
                         ),
                         _buildStopItem(
                           title: 'Chinnakada',
-                          subtitle: 'ETA 9:58 AM',
-                          dotColor: const Color(0xFF94A3B8),
+                          subtitle: 'ETA 10:11 AM',
+                          isUpcoming: true,
                           showLine: false,
                         ),
                       ],
@@ -499,9 +497,9 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   Widget _buildStopItem({
     required String title,
     required String subtitle,
-    required Color dotColor,
-    bool isDeparted = false,
+    bool isDone = false,
     bool isCurrent = false,
+    bool isUpcoming = false,
     required bool showLine,
   }) {
     return IntrinsicHeight(
@@ -514,13 +512,13 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
             child: Column(
               children: [
                 Container(
-                  width: isCurrent ? 14 : 10,
-                  height: isCurrent ? 14 : 10,
+                  width: 14,
+                  height: 14,
                   decoration: BoxDecoration(
-                    color: dotColor,
+                    color: isUpcoming ? Colors.white : AppColors.brandBlue,
                     shape: BoxShape.circle,
-                    border: isCurrent
-                        ? Border.all(color: const Color(0xFFDBEAFE), width: 3)
+                    border: !isDone
+                        ? Border.all(color: AppColors.brandBlue, width: 2)
                         : null,
                   ),
                 ),
@@ -528,9 +526,8 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: isDeparted
-                          ? const Color(0xFF10B981).withOpacity(0.4)
-                          : const Color(0xFFE2E8F0),
+                      color: AppColors.border,
+                      margin: const EdgeInsets.only(top: 2),
                     ),
                   ),
               ],
@@ -541,33 +538,24 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
           // Stop Text
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: showLine ? 24.0 : 4.0),
+              padding: EdgeInsets.only(bottom: showLine ? 22.0 : 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
-                      fontWeight:
-                          isCurrent ? FontWeight.w800 : FontWeight.w700,
-                      color: isCurrent
-                          ? AppColors.brandBlue
-                          : AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight:
-                          isCurrent ? FontWeight.w700 : FontWeight.w500,
-                      color: isCurrent
-                          ? AppColors.brandBlue
-                          : (isDeparted
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFF94A3B8)),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],

@@ -96,11 +96,11 @@ class DigitalTicketScreen extends StatelessWidget {
                       children: [
                         // Blue Top Section
                         Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(22),
                           decoration: const BoxDecoration(
-                            color: AppColors.brandBlue,
+                            gradient: AppColors.brandGradient,
                             borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(24),
+                              top: Radius.circular(20),
                             ),
                           ),
                           child: Column(
@@ -112,33 +112,35 @@ class DigitalTicketScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 4),
+                                    width: 44,
+                                    height: 44,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white.withOpacity(0.18),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Text(
-                                      '42',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColors.brandBlue,
+                                    child: const Center(
+                                      child: Text(
+                                        '42',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 4),
+                                        horizontal: 12, vertical: 5),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.20),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(999),
                                     ),
                                     child: const Text(
                                       'CONFIRMED',
                                       style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w800,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
                                         color: Colors.white,
                                         letterSpacing: 0.5,
                                       ),
@@ -146,7 +148,7 @@ class DigitalTicketScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 18),
+                              const SizedBox(height: 22),
 
                               // Time & Route
                               const Row(
@@ -354,7 +356,7 @@ class DigitalTicketScreen extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           height: 50,
-                          child: ElevatedButton(
+                          child: OutlinedButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -362,19 +364,20 @@ class DigitalTicketScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0F172A),
-                              foregroundColor: Colors.white,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.textPrimary,
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: AppColors.border),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(999),
                               ),
                             ),
                             child: const Text(
                               '+ Add to Wallet',
                               style: TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -384,7 +387,7 @@ class DigitalTicketScreen extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           height: 50,
-                          child: OutlinedButton(
+                          child: ElevatedButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -392,20 +395,19 @@ class DigitalTicketScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.textPrimary,
-                              side: const BorderSide(color: Color(0xFFE2E8F0)),
-                              backgroundColor: Colors.white,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: AppColors.primary,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(999),
                               ),
                             ),
                             child: const Text(
                               'Download',
                               style: TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),

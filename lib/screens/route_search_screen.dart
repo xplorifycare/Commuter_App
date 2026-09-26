@@ -13,40 +13,43 @@ class RouteSearchScreen extends StatefulWidget {
 
 class _RouteSearchScreenState extends State<RouteSearchScreen> {
   int _selectedFilterIndex = 0;
-  final List<String> _filters = ['Fastest', 'Cheapest', 'Fewest stops', 'AC'];
+  final List<String> _filters = ['Fastest', 'Cheapest', 'Fewest stops', 'AC Buses'];
 
   final List<Map<String, dynamic>> _routes = [
     {
       'routeId': '42',
-      'bgColor': const Color(0xFFEFF6FF),
+      'bgColor': AppColors.tint,
       'textColor': AppColors.brandBlue,
       'time': '9:40 AM → 9:58 AM',
-      'duration': '18 min • 4 stops',
+      'duration': '18 min · 4 stops',
       'fare': '₹15',
-      'crowd': 'Low crowd',
-      'crowdColor': const Color(0xFF10B981),
+      'crowd': 'Low',
+      'crowdColor': AppColors.statusLive,
+      'crowdBg': AppColors.statusLiveBg,
       'destination': 'Chinnakada',
     },
     {
-      'routeId': '78',
-      'bgColor': const Color(0xFFFFF7ED),
-      'textColor': const Color(0xFFEA580C),
+      'routeId': '7B',
+      'bgColor': AppColors.tint,
+      'textColor': AppColors.brandBlue,
       'time': '9:45 AM → 10:12 AM',
-      'duration': '27 min • 7 stops',
+      'duration': '27 min · 7 stops',
       'fare': '₹22',
-      'crowd': 'Medium crowd',
-      'crowdColor': const Color(0xFFF59E0B),
+      'crowd': 'Medium',
+      'crowdColor': AppColors.orange,
+      'crowdBg': AppColors.orangeBg,
       'destination': 'Chavara',
     },
     {
       'routeId': '12',
-      'bgColor': const Color(0xFFF0FDF4),
-      'textColor': const Color(0xFF16A34A),
-      'time': '9:53 AM → 10:20 AM',
-      'duration': '25 min • 6 stops',
+      'bgColor': AppColors.tint,
+      'textColor': AppColors.brandBlue,
+      'time': '9:52 AM → 10:20 AM',
+      'duration': '28 min · 6 stops',
       'fare': '₹18',
-      'crowd': 'Low crowd',
-      'crowdColor': const Color(0xFF10B981),
+      'crowd': 'Low',
+      'crowdColor': AppColors.statusLive,
+      'crowdBg': AppColors.statusLiveBg,
       'destination': 'Chinnakada',
     },
   ];
@@ -424,53 +427,56 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
                           ),
                           const SizedBox(height: 14),
 
-                          // Bottom Row: Crowd status & Track Bus Pill
+                          // Bottom Row: Crowd status & Track Bus Pill (from GetMyBusApp.jsx)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 6,
-                                    height: 6,
-                                    decoration: BoxDecoration(
-                                      color: route['crowdColor'] as Color,
-                                      shape: BoxShape.circle,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: route['crowdBg'] as Color,
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        color: route['crowdColor'] as Color,
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    route['crowd'] as String,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: route['crowdColor'] as Color,
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      '${route['crowd']} crowd',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: route['crowdColor'] as Color,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               GestureDetector(
                                 onTap: () => _openLiveTracking(route),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 14, vertical: 7),
+                                      horizontal: 16, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: AppColors.brandBlue,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.brandBlue.withOpacity(0.25),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(999),
+                                    border: Border.all(color: AppColors.brandBlue),
                                   ),
                                   child: const Text(
                                     'Track bus',
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.brandBlue,
                                     ),
                                   ),
                                 ),

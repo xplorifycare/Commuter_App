@@ -18,366 +18,327 @@ class ProfileWalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+          physics: const BouncingScrollPhysics(),
           children: [
-            // Top Bar: Profile title & settings gear icon
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Profile',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.5,
-                    ),
+            // Top Bar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings opened'),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: const Icon(
+                      Icons.settings_outlined,
+                      size: 18,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
+
+            // 1. User Card
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  // User Avatar "J" (56x56 Primary)
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'J',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Name & Phone
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Jassim S.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          '+91 98•••••210',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
-                    child: const Icon(Icons.settings_outlined,
-                        size: 20, color: AppColors.textPrimary),
+                  ),
+
+                  // Edit Pill Button
+                  GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Edit profile')),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 18),
 
-            // Scrollable Content
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
-                physics: const BouncingScrollPhysics(),
+            // 2. GetMyBus Wallet Card
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: AppColors.brandGradient,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 1. User Card (Figma Screen 5)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 14,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        // User Avatar "J"
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEEF2FF),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'J',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.brandBlue,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-
-                        // Name & Phone
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Jassim S.',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                '+91 98•••••210',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF64748B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Edit Pill Button
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEFF6FF),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: const Text(
-                            'Edit',
+                  // Top row: Wallet icon + title + View history
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.credit_card_rounded,
+                              size: 16, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            'GetMyBus Wallet',
                             style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.brandBlue,
+                              fontSize: 13,
+                              color: Colors.white.withOpacity(0.85),
                             ),
                           ),
+                        ],
+                      ),
+                      Text(
+                        'View history →',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.85),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
-                  // 2. GetMyBus Wallet Card (Figma Screen 5)
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.brandBlue,
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.brandBlue.withOpacity(0.30),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top row: Wallet icon + title + View history
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.account_balance_wallet_rounded,
-                                    size: 16, color: Colors.white70),
-                                SizedBox(width: 6),
-                                Text(
-                                  'GetMyBus Wallet',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'View history',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Icon(Icons.arrow_forward_ios_rounded,
-                                    size: 9, color: Colors.white70),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Balance
-                        const Text(
-                          '₹245.50',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // + Add Money Button
-                        GestureDetector(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Opening UPI instant wallet recharge...'),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              '+ Add Money',
-                              style: TextStyle(
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.brandBlue,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 3. Saved Places Section (Figma Screen 5)
+                  // Balance
                   const Text(
-                    'Saved places',
+                    '₹245.50',
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Container(
-                    decoration: BoxDecoration(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 14,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _buildPlaceItem(
-                          icon: Icons.home_rounded,
-                          iconBg: const Color(0xFFFEE2E2),
-                          iconColor: const Color(0xFFEF4444),
-                          title: 'Home',
-                          subtitle: 'Thevally, Kollam',
-                          showDivider: true,
-                        ),
-                        _buildPlaceItem(
-                          icon: Icons.business_rounded,
-                          iconBg: const Color(0xFFEFF6FF),
-                          iconColor: AppColors.brandBlue,
-                          title: 'Work',
-                          subtitle: 'Chinnakada Junction',
-                          showDivider: true,
-                        ),
-                        _buildPlaceItem(
-                          icon: Icons.add_rounded,
-                          iconBg: const Color(0xFFF1F5F9),
-                          iconColor: const Color(0xFF64748B),
-                          title: 'Add new place',
-                          subtitle: null,
-                          showDivider: false,
-                        ),
-                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 14),
 
-                  // 4. Settings Section (Figma Screen 5)
-                  const Text(
-                    'Settings',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
+                  // + Add Money Button
+                  GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Opening UPI instant wallet recharge...'),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 9),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.18),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: const Text(
+                        '+ Add Money',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
 
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 14,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _buildSettingItem(
-                          icon: Icons.credit_card_rounded,
-                          iconBg: const Color(0xFFF1F5F9),
-                          iconColor: const Color(0xFF475569),
-                          title: 'Payment methods',
-                          showDivider: true,
-                        ),
-                        _buildSettingItem(
-                          icon: Icons.notifications_none_rounded,
-                          iconBg: const Color(0xFFFEF3C7),
-                          iconColor: const Color(0xFFD97706),
-                          title: 'Notifications',
-                          showDivider: true,
-                        ),
-                        _buildSettingItem(
-                          icon: Icons.language_rounded,
-                          iconBg: const Color(0xFFE0F2FE),
-                          iconColor: const Color(0xFF0284C7),
-                          title: 'Language',
-                          showDivider: true,
-                        ),
-                        _buildSettingItem(
-                          icon: Icons.help_outline_rounded,
-                          iconBg: const Color(0xFFF1F5F9),
-                          iconColor: const Color(0xFF475569),
-                          title: 'Help & support',
-                          showDivider: true,
-                        ),
-                        _buildSettingItem(
-                          icon: Icons.auto_stories_rounded,
-                          iconBg: const Color(0xFFEFF6FF),
-                          iconColor: AppColors.brandBlue,
-                          title: 'Onboarding walkthrough',
-                          onTap: () => _openOnboarding(context),
-                          showDivider: true,
-                        ),
-                        _buildSettingItem(
-                          icon: Icons.logout_rounded,
-                          iconBg: const Color(0xFFFEE2E2),
-                          iconColor: const Color(0xFFEF4444),
-                          title: 'Log out',
-                          isDestructive: true,
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
+            // 3. Saved Places Section
+            const Text(
+              'Saved places',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  _buildSettingsRow(
+                    icon: Icons.home_rounded,
+                    label: 'Home',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.work_rounded,
+                    label: 'Work',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.add_rounded,
+                    label: 'Add new place',
+                    isLast: true,
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            // 4. Settings Section
+            const Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  _buildSettingsRow(
+                    icon: Icons.credit_card_rounded,
+                    label: 'Payment methods',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.notifications_none_rounded,
+                    label: 'Notifications',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.language_rounded,
+                    label: 'Language',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.help_outline_rounded,
+                    label: 'Help & support',
+                    onTap: () {},
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.auto_stories_rounded,
+                    label: 'Onboarding walkthrough',
+                    onTap: () => _openOnboarding(context),
+                  ),
+                  _buildSettingsRow(
+                    icon: Icons.logout_rounded,
+                    label: 'Log out',
+                    isDanger: true,
+                    isLast: true,
+                    iconBg: const Color(0xFFFDECEA),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Logging out...')),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -388,121 +349,68 @@ class ProfileWalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceItem({
+  Widget _buildSettingsRow({
     required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
-    required String title,
-    String? subtitle,
-    required bool showDivider,
-  }) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: iconBg,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, size: 18, color: iconColor),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontSize: 11.5,
-                          color: Color(0xFF64748B),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded,
-                  size: 18, color: Color(0xFF94A3B8)),
-            ],
-          ),
-        ),
-        if (showDivider)
-          Padding(
-            padding: const EdgeInsets.only(left: 64, right: 16),
-            child: Container(height: 1, color: const Color(0xFFF8FAFC)),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildSettingItem({
-    required IconData icon,
-    required Color iconBg,
-    required Color iconColor,
-    required String title,
+    required String label,
+    Color? iconBg,
+    bool isDanger = false,
+    bool isLast = false,
     VoidCallback? onTap,
-    bool isDestructive = false,
-    required bool showDivider,
   }) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, size: 18, color: iconColor),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w700,
-                      color: isDestructive
-                          ? const Color(0xFFEF4444)
-                          : AppColors.textPrimary,
-                    ),
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : const Border(
+                  bottom: BorderSide(
+                    color: AppColors.border,
+                    width: 1,
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded,
-                    size: 18, color: Color(0xFF94A3B8)),
-              ],
-            ),
-          ),
         ),
-        if (showDivider)
-          Padding(
-            padding: const EdgeInsets.only(left: 64, right: 16),
-            child: Container(height: 1, color: const Color(0xFFF8FAFC)),
-          ),
-      ],
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: iconBg ?? AppColors.tint,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 16,
+                color: isDanger ? AppColors.danger : AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDanger ? AppColors.danger : AppColors.textPrimary,
+                ),
+              ),
+            ),
+            if (!isDanger)
+              const Text(
+                '›',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textMuted,
+                  height: 1,
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

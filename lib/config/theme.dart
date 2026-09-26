@@ -3,80 +3,81 @@ import 'package:flutter/material.dart';
 /// GetMyBus Official Brand Colors & Design System
 /// Derived from getmybus.in brand guidelines and official logos.
 class AppColors {
-  // ── Primary Brand Palette ──
-  /// GetMyBus Signature Royal Blue (From official logo & website branding)
-  static const Color primary = Color(0xFF2563EB);
-  static const Color primaryDark = Color(0xFF1D4ED8);
-  static const Color primaryLight = Color(0xFFDBEAFE);
-  static const Color primaryGlow = Color(0x262563EB); // 15% opacity
+  // ── Primary Brand Palette (from GetMyBusApp.jsx) ──
+  static const Color primary = Color(0xFF2B57FF);
+  static const Color primaryDark = Color(0xFF1E3FCC);
+  static const Color primaryLight = Color(0xFFEEF2FF);
+  static const Color primaryGlow = Color(0x262B57FF); // 15% opacity
 
   // ── Brand Accent / Telematics Cyan ──
-  /// Electric Cyan / Aqua (Represents real-time 4s GPS telemetry and digital connectivity)
-  static const Color accent = Color(0xFF06B6D4);
+  static const Color accent = Color(0xFF12CBE0);
   static const Color accentDark = Color(0xFF0891B2);
   static const Color accentLight = Color(0xFFCFFAFE);
-  static const Color accentGlow = Color(0x3306B6D4); // 20% opacity
+  static const Color accentGlow = Color(0x3312CBE0);
 
   // ── Uber Contrast Neutrals (Dark) ──
   static const Color uberBlack = Color(0xFF0A0D14);
   static const Color surfaceDark = Color(0xFF111827);
   static const Color cardDark = Color(0xFF1E293B);
 
-  // ── Uber Clean Surfaces (Light) ──
+  // ── Clean Surfaces (from GetMyBusApp.jsx) ──
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF8FAFC);
+  static const Color background = Color(0xFFF6F8FC);
   static const Color surfaceSecondary = Color(0xFFF1F5F9);
-  static const Color border = Color(0xFFE2E8F0);
-  static const Color borderLight = Color(0xFFF1F5F9);
+  static const Color border = Color(0xFFEAECF3);
+  static const Color borderLight = Color(0xFFEAECF3);
+  static const Color tint = Color(0xFFEEF2FF);
 
-  // ── Typography Colors ──
-  static const Color textPrimary = Color(0xFF0F172A);
-  static const Color textSecondary = Color(0xFF475569);
-  static const Color textMuted = Color(0xFF94A3B8);
+  // ── Typography Colors (from GetMyBusApp.jsx) ──
+  static const Color textPrimary = Color(0xFF101828);
+  static const Color textSecondary = Color(0xFF667085);
+  static const Color textMuted = Color(0xFF98A2B3);
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
-  // ── Transit Status Accents ──
-  /// Live on-time status / seats available
-  static const Color statusLive = Color(0xFF10B981);
-  static const Color statusLiveGlow = Color(0x2610B981);
+  // ── Transit Status Accents (from GetMyBusApp.jsx) ──
+  static const Color statusLive = Color(0xFF17B26A);
+  static const Color statusLiveBg = Color(0xFFE9FBF1);
+  static const Color statusLiveGlow = Color(0x2617B26A);
 
-  /// Walking nudge / bus approaching / few seats
-  static const Color statusWarning = Color(0xFFF59E0B);
-  static const Color statusWarningGlow = Color(0x26F59E0B);
+  static const Color orange = Color(0xFFFF9F45);
+  static const Color orangeBg = Color(0xFFFFF4E8);
+  static const Color statusWarning = Color(0xFFFF9F45);
+  static const Color statusWarningGlow = Color(0x26FF9F45);
 
-  /// Delay / heavy crowd / full
-  static const Color statusError = Color(0xFFEF4444);
-  static const Color statusErrorGlow = Color(0x26EF4444);
+  static const Color danger = Color(0xFFE4483C);
+  static const Color dangerBg = Color(0xFFFDECEA);
+  static const Color statusError = Color(0xFFE4483C);
+  static const Color statusErrorGlow = Color(0x26E4483C);
 
   /// Highway Corridor Special / Express
   static const Color statusExpress = Color(0xFF6366F1);
 
-  // ── Gradient Definitions ──
+  // ── Gradient Definitions (from GetMyBusApp.jsx) ──
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primary, Color(0xFF1D4ED8)],
+    colors: [Color(0xFF2B57FF), Color(0xFF1E3FCC)],
   );
 
   // ── GetMyBus Brand Tokens & Pass Gradients ──
-  /// Electric Royal Blue Primary
-  static const Color brandBlue = Color(0xFF2563EB);
-  static const Color brandBlueDark = Color(0xFF1D4ED8);
-  static const Color brandBlueLight = Color(0xFFEFF6FF);
+  /// Electric Royal Blue Primary (from GetMyBusApp.jsx)
+  static const Color brandBlue = Color(0xFF2B57FF);
+  static const Color brandBlueDark = Color(0xFF1E3FCC);
+  static const Color brandBlueLight = Color(0xFFEEF2FF);
 
   /// Telematics Cyan Accent
-  static const Color brandCyan = Color(0xFF06B6D4);
+  static const Color brandCyan = Color(0xFF12CBE0);
   static const Color brandCyanDark = Color(0xFF0891B2);
   static const Color brandCyanLight = Color(0xFFCFFAFE);
 
   /// Deep Navy Obsidian (for Pass backdrop and dark surfaces)
   static const Color obsidianDark = Color(0xFF0A0F1D);
 
-  /// High-Tech GetMyBus Electric Gradient (Royal Blue to Cyan)
+  /// GetMyBus Primary Brand Gradient (from GetMyBusApp.jsx: 135deg, #2B57FF, #1E3FCC)
   static const LinearGradient brandGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
+    colors: [Color(0xFF2B57FF), Color(0xFF1E3FCC)],
   );
 
   /// Smart Card Pass Gradient
