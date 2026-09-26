@@ -3,17 +3,20 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import '../config/theme.dart';
 import '../data/corridor_route.dart';
+import '../widgets/illustration_placeholder.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
   final String routeId;
   final String busName;
   final String destination;
+  final VoidCallback? onBack;
 
   const LiveTrackingScreen({
     super.key,
     this.routeId = '42',
     this.busName = 'Venad Fast Passenger',
     this.destination = 'Chinnakada',
+    this.onBack,
   });
 
   @override
@@ -25,9 +28,17 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   late final MapController _mapController;
   late final AnimationController _pulseController;
   late final List<LatLng> _routePoints;
+  bool _showInteractiveMap = true;
 
   // Real-time bus simulation point along route
   final LatLng _busPosition = const LatLng(8.8895, 76.6020); // Near Kadappakkada
+
+  final List<Map<String, String>> _stops = const [
+    {'name': 'Kollam Bus Stand', 'meta': 'Departed 9:40 AM', 'state': 'done'},
+    {'name': 'Kadappakada', 'meta': 'Departed 9:52 AM', 'state': 'done'},
+    {'name': 'Thattamala', 'meta': 'ETA 10:02 AM', 'state': 'current'},
+    {'name': 'Chinnakada', 'meta': 'ETA 10:11 AM', 'state': 'upcoming'},
+  ];
 
   @override
   void initState() {
@@ -54,515 +65,394 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
+          physics: const BouncingScrollPhysics(),
           children: [
-            // Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+            // 1. ScreenHeader
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: widget.onBack ?? () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: const SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Icon(
+                        Icons.arrow_back_rounded,
+                        size: 19,
+                        color: AppColors.ink,
                       ),
-                      child: const Icon(Icons.arrow_back_rounded,
-                          size: 20, color: AppColors.textPrimary),
                     ),
                   ),
-                  const Text(
-                    'Live Tracking',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                    ),
+                ),
+                const Text(
+                  'Live tracking',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.16,
+                    color: AppColors.ink,
                   ),
-                  GestureDetector(
-                    onTap: _recenterMap,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showInteractiveMap = !_showInteractiveMap;
+                    });
+                    _recenterMap();
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: const SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: Center(
+                      child: Icon(
+                        Icons.refresh_rounded,
+                        size: 18,
+                        color: AppColors.ink,
                       ),
-                      child: const Icon(Icons.my_location_rounded,
-                          size: 19, color: AppColors.brandBlue),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+            const SizedBox(height: 22),
 
-            // Scrollable Content
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  // 1. Framed Live Map Card (matching Figma Screen 2)
-                  Container(
-                    height: 220,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE2E8F0),
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
+            // 2. Map / Illustration Spot (height 200)
+            if (_showInteractiveMap)
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.line),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Stack(
+                  children: [
+                    FlutterMap(
+                      mapController: _mapController,
+                      options: MapOptions(
+                        initialCenter: _busPosition,
+                        initialZoom: 14.2,
+                        interactionOptions: const InteractionOptions(
+                          flags: InteractiveFlag.all,
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(22),
-                      child: Stack(
-                        children: [
-                          FlutterMap(
-                            mapController: _mapController,
-                            options: MapOptions(
-                              initialCenter: _busPosition,
-                              initialZoom: 14.2,
-                              interactionOptions: const InteractionOptions(
-                                flags: InteractiveFlag.all,
-                              ),
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'in.getmybus.commuter',
+                        ),
+                        PolylineLayer(
+                          polylines: [
+                            Polyline(
+                              points: _routePoints,
+                              strokeWidth: 4.0,
+                              color: AppColors.primary,
                             ),
-                            children: [
-                              TileLayer(
-                                urlTemplate:
-                                    'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-                                userAgentPackageName: 'in.getmybus.commuter',
-                              ),
-                              PolylineLayer(
-                                polylines: [
-                                  Polyline(
-                                    points: _routePoints,
-                                    strokeWidth: 5.0,
-                                    color: AppColors.brandBlue,
-                                  ),
-                                ],
-                              ),
-                              MarkerLayer(
-                                markers: [
-                                  // Bus Marker with animated halo
-                                  Marker(
-                                    point: _busPosition,
-                                    width: 50,
-                                    height: 50,
-                                    child: AnimatedBuilder(
-                                      animation: _pulseController,
-                                      builder: (context, child) {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 38 +
-                                                  (_pulseController.value * 12),
-                                              height: 38 +
-                                                  (_pulseController.value * 12),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: AppColors.brandBlue
-                                                    .withOpacity(0.20 *
-                                                        (1 -
-                                                            _pulseController
-                                                                .value)),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.brandBlue,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 2.5),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.25),
-                                                    blurRadius: 8,
-                                                    offset:
-                                                        const Offset(0, 3),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: const Icon(
-                                                Icons.directions_bus_rounded,
-                                                size: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-
-                          // Floating re-center chip
-                          Positioned(
-                            top: 12,
-                            right: 12,
-                            child: GestureDetector(
-                              onTap: _recenterMap,
+                          ],
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              point: _busPosition,
+                              width: 38,
+                              height: 38,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.92),
-                                  borderRadius: BorderRadius.circular(12),
+                                decoration: const BoxDecoration(
+                                  color: AppColors.primary,
+                                  shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      blurRadius: 6,
+                                      color: Color(0x662B57FF),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 3),
                                     ),
                                   ],
                                 ),
-                                child: const Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.gps_fixed_rounded,
-                                        size: 12, color: AppColors.brandBlue),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Live GPS',
-                                      style: TextStyle(
-                                        fontSize: 10.5,
-                                        fontWeight: FontWeight.w800,
-                                        color: AppColors.brandBlue,
-                                      ),
-                                    ),
-                                  ],
+                                child: const Icon(
+                                  Icons.directions_bus_rounded,
+                                  color: Colors.white,
+                                  size: 18,
                                 ),
                               ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showInteractiveMap = false;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.line),
+                          ),
+                          child: const Text(
+                            'Placeholder view',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.sub,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              GestureDetector(
+                onTap: () => setState(() => _showInteractiveMap = true),
+                child: const IllustrationPlaceholder(
+                  label: 'Illustration — live map with bus route and marker',
+                  height: 200,
+                ),
+              ),
+            const SizedBox(height: 22),
+
+            // 3. Route Info Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: AppColors.tint,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          widget.routeId,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'To ${widget.destination}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'via Kadappakada Rd',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: AppColors.sub,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '4 min',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(height: 1),
+                    Text(
+                      '1.2 km away',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: AppColors.faint,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // 4. Crowd Level Indicator
+            Row(
+              children: [
+                const Text(
+                  'Crowd level',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.sub,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 20,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: AppColors.success,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Container(
+                        width: 20,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: AppColors.success,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Container(
+                        width: 20,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: AppColors.line,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Text(
+                  'Low',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.success,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 26),
+
+            // 5. Route Stops Section
+            const Text(
+              'Route stops',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.ink,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Route Stops Timeline
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _stops.length,
+              itemBuilder: (context, i) {
+                final s = _stops[i];
+                final state = s['state']!;
+                final isLast = i == _stops.length - 1;
+
+                Color dotBg;
+                Border? dotBorder;
+
+                if (state == 'upcoming') {
+                  dotBg = Colors.white;
+                  dotBorder = Border.all(color: AppColors.primary, width: 2);
+                } else if (state == 'current') {
+                  dotBg = AppColors.primary;
+                  dotBorder = Border.all(color: AppColors.primary, width: 2);
+                } else {
+                  dotBg = AppColors.primary;
+                  dotBorder = null;
+                }
+
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Timeline indicator column
+                    Column(
+                      children: [
+                        Container(
+                          width: 9,
+                          height: 9,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: dotBg,
+                            border: dotBorder,
+                          ),
+                        ),
+                        if (!isLast)
+                          Container(
+                            width: 1,
+                            height: 44,
+                            color: AppColors.line,
+                            margin: const EdgeInsets.only(top: 3),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(width: 14),
+
+                    // Stop title and metadata
+                    Padding(
+                      padding: EdgeInsets.only(bottom: isLast ? 0 : 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s['name']!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            s['meta']!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.faint,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 2. Live Bus Info Card (matching Figma Screen 2)
-                  Container(
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Route Badge "42"
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEFF6FF),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  widget.routeId,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.brandBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-
-                            // Destination & via
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'To ${widget.destination}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.textPrimary,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  const Text(
-                                    'via Kadappakkada Rd',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF64748B),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // ETA & Distance
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '4 min',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w900,
-                                    color: AppColors.brandBlue,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                                SizedBox(height: 2),
-                                Text(
-                                  '1.2 km away',
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    color: Color(0xFF64748B),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Divider
-                        Container(
-                          height: 1,
-                          color: const Color(0xFFF1F5F9),
-                        ),
-                        const SizedBox(height: 14),
-
-                        // Crowd Level
-                        Row(
-                          children: [
-                            const Text(
-                              'Crowd level',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF64748B),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            // 3-bar indicator (2 green, 1 grey)
-                            Row(
-                              children: [
-                                Container(
-                                  width: 18,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF10B981),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                                const SizedBox(width: 3),
-                                Container(
-                                  width: 18,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF10B981),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                                const SizedBox(width: 3),
-                                Container(
-                                  width: 18,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE2E8F0),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Low',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF10B981),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 3. Route Stops Section (matching Figma Screen 2)
-                  const Text(
-                    'Route stops',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 18, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 14,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _buildStopItem(
-                          title: 'Kollam Bus Stand',
-                          subtitle: 'Departed 9:40 AM',
-                          isDone: true,
-                          showLine: true,
-                        ),
-                        _buildStopItem(
-                          title: 'Kadappakada',
-                          subtitle: 'Departed 9:52 AM',
-                          isDone: true,
-                          showLine: true,
-                        ),
-                        _buildStopItem(
-                          title: 'Thattamala',
-                          subtitle: 'ETA 10:02 AM',
-                          isCurrent: true,
-                          showLine: true,
-                        ),
-                        _buildStopItem(
-                          title: 'Chinnakada',
-                          subtitle: 'ETA 10:11 AM',
-                          isUpcoming: true,
-                          showLine: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              },
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildStopItem({
-    required String title,
-    required String subtitle,
-    bool isDone = false,
-    bool isCurrent = false,
-    bool isUpcoming = false,
-    required bool showLine,
-  }) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Timeline indicator
-          SizedBox(
-            width: 24,
-            child: Column(
-              children: [
-                Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: isUpcoming ? Colors.white : AppColors.brandBlue,
-                    shape: BoxShape.circle,
-                    border: !isDone
-                        ? Border.all(color: AppColors.brandBlue, width: 2)
-                        : null,
-                  ),
-                ),
-                if (showLine)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      color: AppColors.border,
-                      margin: const EdgeInsets.only(top: 2),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 14),
-
-          // Stop Text
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: showLine ? 22.0 : 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

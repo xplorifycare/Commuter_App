@@ -54,7 +54,7 @@ class _MainShellState extends State<MainShell> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           // Screen PageView
@@ -66,39 +66,30 @@ class _MainShellState extends State<MainShell> {
             ),
           ),
 
-          // Exact 5-Tab Figma Bottom Navigation Dock
+          // Exact GetMyBusApp (1).jsx Bottom Navigation Bar
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
             child: Container(
+              height: 62 + MediaQuery.of(context).padding.bottom,
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).padding.bottom > 0
-                    ? MediaQuery.of(context).padding.bottom
-                    : 8,
-                top: 8,
+                bottom: MediaQuery.of(context).padding.bottom,
               ),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.96),
-                border: const Border(
-                  top: BorderSide(color: Color(0xFFF1F5F9), width: 1.0),
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceLight,
+                border: Border(
+                  top: BorderSide(color: AppColors.line, width: 1.0),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
-                    blurRadius: 20,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Home'),
-                  _buildNavItem(1, Icons.search_rounded, Icons.search_rounded, 'Search'),
-                  _buildNavItem(2, Icons.confirmation_number_rounded, Icons.confirmation_number_outlined, 'Tickets'),
-                  _buildNavItem(3, Icons.notifications_rounded, Icons.notifications_none_rounded, 'Alerts'),
-                  _buildNavItem(4, Icons.person_rounded, Icons.person_outline_rounded, 'Profile'),
+                  _buildNavItem(0, Icons.home_rounded, 'Home'),
+                  _buildNavItem(1, Icons.search_rounded, 'Search'),
+                  _buildNavItem(2, Icons.confirmation_number_outlined, 'Tickets'),
+                  _buildNavItem(3, Icons.notifications_none_rounded, 'Alerts'),
+                  _buildNavItem(4, Icons.person_outline_rounded, 'Profile'),
                 ],
               ),
             ),
@@ -110,38 +101,40 @@ class _MainShellState extends State<MainShell> {
 
   Widget _buildNavItem(
     int index,
-    IconData activeIcon,
-    IconData inactiveIcon,
+    IconData icon,
     String label,
   ) {
     final isSelected = _currentIndex == index;
-    return GestureDetector(
-      onTap: () => _onTabTapped(index),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? activeIcon : inactiveIcon,
-              size: 22,
-              color: isSelected
-                  ? AppColors.brandBlue
-                  : const Color(0xFF94A3B8),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10.5,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected
-                    ? AppColors.brandBlue
-                    : const Color(0xFF94A3B8),
+    final color = isSelected ? AppColors.ink : AppColors.faint;
+
+    return Semantics(
+      label: label,
+      selected: isSelected,
+      button: true,
+      child: GestureDetector(
+        onTap: () => _onTabTapped(index),
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: 56,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: color,
               ),
-            ),
-          ],
+              const SizedBox(height: 5),
+              Container(
+                width: 4,
+                height: 4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected ? AppColors.primary : Colors.transparent,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

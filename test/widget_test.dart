@@ -95,11 +95,11 @@ void main() {
       ),
     );
 
-    // Verify Figma Home Screen elements render
-    expect(find.text('Where are you headed?'), findsOneWidget);
+    // Verify v2 Home Screen elements render
+    expect(find.text('Where to?'), findsOneWidget);
     expect(find.text('3 buses near you'), findsOneWidget);
     expect(find.text('Recent trips'), findsOneWidget);
-    expect(find.text('Nearby Stops'), findsOneWidget);
+    expect(find.text('Nearby'), findsOneWidget);
     expect(find.text('Tickets'), findsWidgets);
   });
 

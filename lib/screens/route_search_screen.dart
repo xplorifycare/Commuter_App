@@ -13,43 +13,39 @@ class RouteSearchScreen extends StatefulWidget {
 
 class _RouteSearchScreenState extends State<RouteSearchScreen> {
   int _selectedFilterIndex = 0;
-  final List<String> _filters = ['Fastest', 'Cheapest', 'Fewest stops', 'AC Buses'];
+  final List<String> _filters = const [
+    'Fastest',
+    'Cheapest',
+    'Fewest stops',
+    'AC Buses',
+  ];
 
-  final List<Map<String, dynamic>> _routes = [
+  final List<Map<String, dynamic>> _routes = const [
     {
-      'routeId': '42',
-      'bgColor': AppColors.tint,
-      'textColor': AppColors.brandBlue,
-      'time': '9:40 AM → 9:58 AM',
-      'duration': '18 min · 4 stops',
+      'num': '42',
+      'time': '9:40 → 9:58 AM',
+      'meta': '18 min · 4 stops',
       'fare': '₹15',
       'crowd': 'Low',
-      'crowdColor': AppColors.statusLive,
-      'crowdBg': AppColors.statusLiveBg,
+      'crowdColor': AppColors.success,
       'destination': 'Chinnakada',
     },
     {
-      'routeId': '7B',
-      'bgColor': AppColors.tint,
-      'textColor': AppColors.brandBlue,
-      'time': '9:45 AM → 10:12 AM',
-      'duration': '27 min · 7 stops',
+      'num': '7B',
+      'time': '9:45 → 10:12 AM',
+      'meta': '27 min · 7 stops',
       'fare': '₹22',
       'crowd': 'Medium',
       'crowdColor': AppColors.orange,
-      'crowdBg': AppColors.orangeBg,
       'destination': 'Chavara',
     },
     {
-      'routeId': '12',
-      'bgColor': AppColors.tint,
-      'textColor': AppColors.brandBlue,
-      'time': '9:52 AM → 10:20 AM',
-      'duration': '28 min · 6 stops',
+      'num': '12',
+      'time': '9:52 → 10:20 AM',
+      'meta': '28 min · 6 stops',
       'fare': '₹18',
       'crowd': 'Low',
-      'crowdColor': AppColors.statusLive,
-      'crowdBg': AppColors.statusLiveBg,
+      'crowdColor': AppColors.success,
       'destination': 'Chinnakada',
     },
   ];
@@ -58,7 +54,7 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => LiveTrackingScreen(
-          routeId: route['routeId'] as String,
+          routeId: route['num'] as String,
           destination: route['destination'] as String,
         ),
       ),
@@ -68,427 +64,353 @@ class _RouteSearchScreenState extends State<RouteSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
+          physics: const BouncingScrollPhysics(),
           children: [
-            // Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: widget.onBack ?? () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+            // 1. ScreenHeader
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: widget.onBack ?? () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: const SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Icon(
+                        Icons.arrow_back_rounded,
+                        size: 19,
+                        color: AppColors.ink,
                       ),
-                      child: const Icon(Icons.arrow_back_rounded,
-                          size: 20, color: AppColors.textPrimary),
                     ),
                   ),
-                  const Text(
-                    'Search Routes',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
+                ),
+                const Text(
+                  'Search routes',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.16,
+                    color: AppColors.ink,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Search filters opened')),
+                    );
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: const SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: Center(
+                      child: Icon(
+                        Icons.settings_outlined,
+                        size: 18,
+                        color: AppColors.ink,
+                      ),
                     ),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(Icons.tune_rounded,
-                        size: 19, color: AppColors.textPrimary),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
+            const SizedBox(height: 20),
 
-            // Main Content
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
-                physics: const BouncingScrollPhysics(),
+            // 2. From / To Card (in #F1F3F8)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.inputBg,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
                 children: [
-                  // 1. Origin & Destination Input Card (Figma Screen 3)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // FROM Row
-                        Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: const BoxDecoration(
-                                color: AppColors.brandBlue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'FROM',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF94A3B8),
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  SizedBox(height: 1),
-                                  Text(
-                                    'Kollam Bus Stand',
-                                    style: TextStyle(
-                                      fontSize: 14.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Divider with vertical spacing
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 10, bottom: 10),
-                          child: Container(
-                            height: 1,
-                            color: const Color(0xFFF1F5F9),
-                          ),
-                        ),
-
-                        // TO Row
-                        Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFF97316),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'TO',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF94A3B8),
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  SizedBox(height: 1),
-                                  Text(
-                                    'Chinnakada',
-                                    style: TextStyle(
-                                      fontSize: 14.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 2. Filter Chips Row
-                  SizedBox(
-                    height: 38,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _filters.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final isSelected = _selectedFilterIndex == index;
-                        return GestureDetector(
-                          onTap: () => setState(() => _selectedFilterIndex = index),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.brandBlue
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(19),
-                              boxShadow: isSelected
-                                  ? [
-                                      BoxShadow(
-                                        color: AppColors.brandBlue.withOpacity(0.25),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ]
-                                  : [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.03),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                            ),
-                            child: Text(
-                              _filters[index],
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight:
-                                    isSelected ? FontWeight.w700 : FontWeight.w600,
-                                color: isSelected
-                                    ? Colors.white
-                                    : const Color(0xFF64748B),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // 3. Results Header & Sort
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // FROM
+                  Row(
                     children: [
-                      Text(
-                        '6 routes found',
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.primary, width: 2),
                         ),
                       ),
-                      Row(
+                      const SizedBox(width: 12),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Sort: Fastest',
+                            'From',
                             style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.brandBlue,
+                              fontSize: 10.5,
+                              color: AppColors.faint,
                             ),
                           ),
-                          SizedBox(width: 2),
-                          Icon(Icons.keyboard_arrow_down_rounded,
-                              size: 16, color: AppColors.brandBlue),
+                          SizedBox(height: 1),
+                          Text(
+                            'Kollam Bus Stand',
+                            style: TextStyle(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.ink,
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
 
-                  // 4. Route Result Cards
-                  ..._routes.map((route) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 14,
-                            offset: const Offset(0, 3),
+                  // Divider
+                  Container(
+                    height: 1,
+                    color: AppColors.lineDivider,
+                    margin: const EdgeInsets.only(left: 4, top: 12, bottom: 12),
+                  ),
+
+                  // TO
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: AppColors.orange,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'To',
+                            style: TextStyle(
+                              fontSize: 10.5,
+                              color: AppColors.faint,
+                            ),
+                          ),
+                          SizedBox(height: 1),
+                          Text(
+                            'Chinnakada',
+                            style: TextStyle(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.ink,
+                            ),
                           ),
                         ],
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // 3. Filter Underline Tabs
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: List.generate(_filters.length, (i) {
+                  final isSelected = _selectedFilterIndex == i;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedFilterIndex = i),
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      margin: EdgeInsets.only(right: i < _filters.length - 1 ? 20 : 0),
+                      padding: const EdgeInsets.only(bottom: 6),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: isSelected ? AppColors.ink : Colors.transparent,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        _filters[i],
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                          color: isSelected ? AppColors.ink : AppColors.sub,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            // 4. Results Header & Sort
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '6 routes found',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: AppColors.sub,
+                  ),
+                ),
+                Text(
+                  'Sort: Fastest ▾',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.ink,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+
+            // 5. Open Route List
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _routes.length,
+              itemBuilder: (context, i) {
+                final r = _routes[i];
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    border: i == 0
+                        ? null
+                        : const Border(
+                            top: BorderSide(color: AppColors.line, width: 1.0),
+                          ),
+                  ),
+                  child: Column(
+                    children: [
+                      // Top Row: Badge, Time, Fare
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Top Line: Route Badge + Time + Fare
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Route Badge
                               Container(
-                                width: 40,
-                                height: 40,
+                                width: 38,
+                                height: 38,
                                 decoration: BoxDecoration(
-                                  color: route['bgColor'] as Color,
+                                  color: AppColors.tint,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    route['routeId'] as String,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w900,
-                                      color: route['textColor'] as Color,
+                                    r['num'] as String,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primary,
                                     ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 12),
-
-                              // Time & Duration
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      route['time'] as String,
-                                      style: const TextStyle(
-                                        fontSize: 14.5,
-                                        fontWeight: FontWeight.w800,
-                                        color: AppColors.textPrimary,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      route['duration'] as String,
-                                      style: const TextStyle(
-                                        fontSize: 11.5,
-                                        color: Color(0xFF64748B),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // Price
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    route['fare'] as String,
+                                    r['time'] as String,
                                     style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.textPrimary,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.ink,
                                     ),
                                   ),
-                                  const SizedBox(height: 1),
-                                  const Text(
-                                    'per seat',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Color(0xFF94A3B8),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    r['meta'] as String,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.faint,
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          const SizedBox(height: 14),
-
-                          // Bottom Row: Crowd status & Track Bus Pill (from GetMyBusApp.jsx)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: route['crowdBg'] as Color,
-                                  borderRadius: BorderRadius.circular(999),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 6,
-                                      height: 6,
-                                      decoration: BoxDecoration(
-                                        color: route['crowdColor'] as Color,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      '${route['crowd']} crowd',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: route['crowdColor'] as Color,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                r['fare'] as String,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.ink,
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () => _openLiveTracking(route),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(999),
-                                    border: Border.all(color: AppColors.brandBlue),
-                                  ),
-                                  child: const Text(
-                                    'Track bus',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.brandBlue,
-                                    ),
-                                  ),
+                              const SizedBox(height: 1),
+                              const Text(
+                                'per seat',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.faint,
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                    );
-                  }),
-                ],
-              ),
+                      const SizedBox(height: 12),
+
+                      // Bottom Row: Crowd Pill & Track bus →
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: r['crowdColor'] as Color,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${r['crowd']} crowd',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: r['crowdColor'] as Color,
+                                ),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () => _openLiveTracking(r),
+                            behavior: HitTestBehavior.opaque,
+                            child: const Text(
+                              'Track bus →',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

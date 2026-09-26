@@ -21,199 +21,169 @@ class ProfileWalletScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+          padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
           physics: const BouncingScrollPhysics(),
           children: [
-            // Top Bar
+            // 1. Top Bar
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Profile',
                   style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.46,
+                    color: AppColors.ink,
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Settings opened'),
-                      ),
+                      const SnackBar(content: Text('Settings opened')),
                     );
                   },
-                  child: Container(
+                  behavior: HitTestBehavior.opaque,
+                  child: const SizedBox(
                     width: 36,
                     height: 36,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: const Icon(
-                      Icons.settings_outlined,
-                      size: 18,
-                      color: AppColors.textPrimary,
+                    child: Center(
+                      child: Icon(
+                        Icons.settings_outlined,
+                        size: 18,
+                        color: AppColors.ink,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 22),
 
-            // 1. User Card
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+            // 2. User Row (Avatar + Info + Edit)
+            Row(
+              children: [
+                // 52x52 Ink Avatar "J"
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: const BoxDecoration(
+                    color: AppColors.ink,
+                    shape: BoxShape.circle,
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // User Avatar "J" (56x56 Primary)
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'J',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-
-                  // Name & Phone
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Jassim S.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 3),
-                        Text(
-                          '+91 98•••••210',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Edit Pill Button
-                  GestureDetector(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Edit profile')),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
+                  child: const Center(
+                    child: Text(
+                      'J',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(999),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: const Text(
-                        'Edit',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 18),
+                ),
+                const SizedBox(width: 16),
 
-            // 2. GetMyBus Wallet Card
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: AppColors.brandGradient,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.25),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top row: Wallet icon + title + View history
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Name & Phone
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.credit_card_rounded,
-                              size: 16, color: Colors.white),
-                          const SizedBox(width: 8),
-                          Text(
-                            'GetMyBus Wallet',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white.withOpacity(0.85),
-                            ),
-                          ),
-                        ],
-                      ),
                       Text(
-                        'View history →',
+                        'Jassim S.',
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.85),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        '+91 98•••••210',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.sub,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                ),
 
-                  // Balance
+                // Edit Text Button
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Edit profile')),
+                    );
+                  },
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+
+            // 3. Wallet Card
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.credit_card_rounded,
+                              size: 16, color: AppColors.sub),
+                          SizedBox(width: 8),
+                          Text(
+                            'Wallet',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.sub,
+                            ),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Wallet history')),
+                          );
+                        },
+                        child: const Text(
+                          'History →',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   const Text(
                     '₹245.50',
                     style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.28,
+                      color: AppColors.ink,
                     ),
                   ),
                   const SizedBox(height: 14),
-
-                  // + Add Money Button
                   GestureDetector(
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -222,126 +192,93 @@ class ProfileWalletScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 9),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.18),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: const Text(
-                        '+ Add Money',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                    child: const Text(
+                      '+ Add money',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 22),
 
-            // 3. Saved Places Section
+            // 4. Saved Places Section
             const Text(
               'Saved places',
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                color: AppColors.ink,
               ),
             ),
-            const SizedBox(height: 6),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  _buildSettingsRow(
-                    icon: Icons.home_rounded,
-                    label: 'Home',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.work_rounded,
-                    label: 'Work',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.add_rounded,
-                    label: 'Add new place',
-                    isLast: true,
-                    onTap: () {},
-                  ),
-                ],
-              ),
+            const SizedBox(height: 4),
+            _buildSettingsRow(
+              icon: Icons.home_outlined,
+              label: 'Home',
+              onTap: () {},
             ),
-            const SizedBox(height: 18),
+            _buildSettingsRow(
+              icon: Icons.work_outline_rounded,
+              label: 'Work',
+              onTap: () {},
+            ),
+            _buildSettingsRow(
+              icon: Icons.add_rounded,
+              label: 'Add new place',
+              isLast: true,
+              onTap: () {},
+            ),
+            const SizedBox(height: 22),
 
-            // 4. Settings Section
+            // 5. Settings Section
             const Text(
               'Settings',
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                color: AppColors.ink,
               ),
             ),
-            const SizedBox(height: 6),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  _buildSettingsRow(
-                    icon: Icons.credit_card_rounded,
-                    label: 'Payment methods',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.notifications_none_rounded,
-                    label: 'Notifications',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.language_rounded,
-                    label: 'Language',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.help_outline_rounded,
-                    label: 'Help & support',
-                    onTap: () {},
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.auto_stories_rounded,
-                    label: 'Onboarding walkthrough',
-                    onTap: () => _openOnboarding(context),
-                  ),
-                  _buildSettingsRow(
-                    icon: Icons.logout_rounded,
-                    label: 'Log out',
-                    isDanger: true,
-                    isLast: true,
-                    iconBg: const Color(0xFFFDECEA),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Logging out...')),
-                      );
-                    },
-                  ),
-                ],
-              ),
+            const SizedBox(height: 4),
+            _buildSettingsRow(
+              icon: Icons.credit_card_rounded,
+              label: 'Payment methods',
+              onTap: () {},
+            ),
+            _buildSettingsRow(
+              icon: Icons.notifications_none_rounded,
+              label: 'Notifications',
+              onTap: () {},
+            ),
+            _buildSettingsRow(
+              icon: Icons.language_rounded,
+              label: 'Language',
+              onTap: () {},
+            ),
+            _buildSettingsRow(
+              icon: Icons.help_outline_rounded,
+              label: 'Help & support',
+              onTap: () {},
+            ),
+            _buildSettingsRow(
+              icon: Icons.auto_stories_outlined,
+              label: 'Onboarding walkthrough',
+              onTap: () => _openOnboarding(context),
+            ),
+            _buildSettingsRow(
+              icon: Icons.logout_rounded,
+              label: 'Log out',
+              isDanger: true,
+              isLast: true,
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Logging out...')),
+                );
+              },
             ),
           ],
         ),
@@ -352,7 +289,6 @@ class ProfileWalletScreen extends StatelessWidget {
   Widget _buildSettingsRow({
     required IconData icon,
     required String label,
-    Color? iconBg,
     bool isDanger = false,
     bool isLast = false,
     VoidCallback? onTap,
@@ -361,31 +297,23 @@ class ProfileWalletScreen extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 13),
         decoration: BoxDecoration(
           border: isLast
               ? null
               : const Border(
                   bottom: BorderSide(
-                    color: AppColors.border,
-                    width: 1,
+                    color: AppColors.line,
+                    width: 1.0,
                   ),
                 ),
         ),
         child: Row(
           children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: iconBg ?? AppColors.tint,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 16,
-                color: isDanger ? AppColors.danger : AppColors.primary,
-              ),
+            Icon(
+              icon,
+              size: 18,
+              color: isDanger ? AppColors.danger : AppColors.ink,
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -393,8 +321,8 @@ class ProfileWalletScreen extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: isDanger ? AppColors.danger : AppColors.textPrimary,
+                  fontWeight: FontWeight.w500,
+                  color: isDanger ? AppColors.danger : AppColors.ink,
                 ),
               ),
             ),
@@ -402,10 +330,8 @@ class ProfileWalletScreen extends StatelessWidget {
               const Text(
                 '›',
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textMuted,
-                  height: 1,
+                  fontSize: 16,
+                  color: AppColors.faint,
                 ),
               ),
           ],

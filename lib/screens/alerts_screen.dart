@@ -11,150 +11,134 @@ class AlertsScreen extends StatelessWidget {
         'title': 'Bus Approaching',
         'desc': 'Route 42 (To Chinnakada) arrives at Kadappakkada in 4 mins.',
         'time': 'Just now',
-        'icon': Icons.directions_bus_rounded,
-        'color': AppColors.brandBlue,
+        'icon': Icons.directions_bus_outlined,
         'unread': true,
       },
       {
         'title': 'Wallet Top-up Successful',
         'desc': '₹200.00 added to GetMyBus Wallet via UPI.',
         'time': '2h ago',
-        'icon': Icons.account_balance_wallet_rounded,
-        'color': const Color(0xFF10B981),
+        'icon': Icons.account_balance_wallet_outlined,
         'unread': false,
       },
       {
         'title': 'Trip Completed',
         'desc': 'Ticket GMB-2609-77341 validated by conductor. Hope you had a pleasant trip!',
         'time': 'Yesterday',
-        'icon': Icons.check_circle_rounded,
-        'color': const Color(0xFF64748B),
+        'icon': Icons.check_circle_outline_rounded,
         'unread': false,
       },
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
+          physics: const BouncingScrollPhysics(),
           children: [
             // Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Alerts',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Alerts',
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.46,
+                    color: AppColors.ink,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('All alerts marked as read')),
+                    );
+                  },
+                  child: const Text(
+                    'Mark all read',
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.5,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Mark all read',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.brandBlue,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
+            const SizedBox(height: 16),
 
-            // Alert List
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
-                itemCount: alerts.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final alert = alerts[index];
-                  final isUnread = alert['unread'] as bool;
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 14,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: (alert['color'] as Color).withOpacity(0.12),
-                            shape: BoxShape.circle,
+            // Open Alert List
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: alerts.length,
+              itemBuilder: (context, i) {
+                final a = alerts[i];
+                final isUnread = a['unread'] as bool;
+
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    border: i == 0
+                        ? null
+                        : const Border(
+                            top: BorderSide(color: AppColors.line, width: 1.0),
                           ),
-                          child: Icon(
-                            alert['icon'] as IconData,
-                            size: 20,
-                            color: alert['color'] as Color,
-                          ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Icon(
+                          a['icon'] as IconData,
+                          size: 18,
+                          color: isUnread ? AppColors.primary : AppColors.ink,
                         ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    alert['title'] as String,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: isUnread
-                                          ? FontWeight.w800
-                                          : FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  a['title'] as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
+                                    color: AppColors.ink,
                                   ),
-                                  Text(
-                                    alert['time'] as String,
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Color(0xFF94A3B8),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                alert['desc'] as String,
-                                style: const TextStyle(
-                                  fontSize: 12.5,
-                                  color: Color(0xFF64748B),
-                                  height: 1.35,
                                 ),
+                                Text(
+                                  a['time'] as String,
+                                  style: const TextStyle(
+                                    fontSize: 11.5,
+                                    color: AppColors.faint,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              a['desc'] as String,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.sub,
+                                height: 1.35,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

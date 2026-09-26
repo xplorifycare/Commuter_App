@@ -20,23 +20,32 @@ class AppColors {
   static const Color surfaceDark = Color(0xFF111827);
   static const Color cardDark = Color(0xFF1E293B);
 
-  // ── Clean Surfaces (from GetMyBusApp.jsx) ──
+  // ── Clean Surfaces (from GetMyBusApp (1).jsx v2) ──
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF6F8FC);
-  static const Color surfaceSecondary = Color(0xFFF1F5F9);
-  static const Color border = Color(0xFFEAECF3);
-  static const Color borderLight = Color(0xFFEAECF3);
+  static const Color background = Color(0xFFFAFBFD);
+  static const Color bg = Color(0xFFFAFBFD);
+  static const Color surfaceSecondary = Color(0xFFF1F3F8);
+  static const Color inputBg = Color(0xFFF1F3F8);
+  static const Color border = Color(0xFFEEF0F4);
+  static const Color borderLight = Color(0xFFEEF0F4);
+  static const Color line = Color(0xFFEEF0F4);
+  static const Color lineDivider = Color(0xFFE2E5EC);
   static const Color tint = Color(0xFFEEF2FF);
 
-  // ── Typography Colors (from GetMyBusApp.jsx) ──
-  static const Color textPrimary = Color(0xFF101828);
-  static const Color textSecondary = Color(0xFF667085);
-  static const Color textMuted = Color(0xFF98A2B3);
+  // ── Typography Colors (from GetMyBusApp (1).jsx v2) ──
+  static const Color ink = Color(0xFF12141C);
+  static const Color textPrimary = Color(0xFF12141C);
+  static const Color sub = Color(0xFF6B7280);
+  static const Color textSecondary = Color(0xFF6B7280);
+  static const Color faint = Color(0xFF9AA2B1);
+  static const Color textMuted = Color(0xFF9AA2B1);
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
-  // ── Transit Status Accents (from GetMyBusApp.jsx) ──
+  // ── Transit Status Accents (from GetMyBusApp (1).jsx v2) ──
+  static const Color success = Color(0xFF17B26A);
+  static const Color successBg = Color(0xFFEAF9F1);
   static const Color statusLive = Color(0xFF17B26A);
-  static const Color statusLiveBg = Color(0xFFE9FBF1);
+  static const Color statusLiveBg = Color(0xFFEAF9F1);
   static const Color statusLiveGlow = Color(0x2617B26A);
 
   static const Color orange = Color(0xFFFF9F45);
