@@ -95,10 +95,12 @@ void main() {
       ),
     );
 
-    // Verify Image 1 location chip & search pill render
-    expect(find.text('Mayyanad, Kollam'), findsOneWidget);
-    expect(find.text('Where do you wanna go ?'), findsOneWidget);
-    expect(find.text('Bus Services & Fleet'), findsOneWidget);
+    // Verify Figma Home Screen elements render
+    expect(find.text('Where are you headed?'), findsOneWidget);
+    expect(find.text('3 buses near you'), findsOneWidget);
+    expect(find.text('Recent trips'), findsOneWidget);
+    expect(find.text('Nearby Stops'), findsOneWidget);
+    expect(find.text('Tickets'), findsWidgets);
   });
 
   testWidgets('UberMapView state changes and controls test', (WidgetTester tester) async {
