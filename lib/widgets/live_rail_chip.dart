@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 
-/// Small horizontal-scroll chip used in the Home "Live rail" (v3).
+/// Small horizontal-scroll chip used in the Home "Live rail" (v4).
 /// Features a 3px per-route color accent strip along the top border.
 class LiveRailChip extends StatelessWidget {
   final String route;
@@ -19,19 +19,20 @@ class LiveRailChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color routeColor = AppColors.getRouteColor(route);
+    final tokens = AppThemeTokens.of(context);
+    final Color routeColor = tokens.getRouteColor(route);
 
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.card),
         child: Container(
           constraints: const BoxConstraints(minWidth: 92),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.line),
-            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            border: Border.all(color: tokens.line),
+            color: tokens.surface,
           ),
           child: Stack(
             children: [
@@ -75,20 +76,20 @@ class LiveRailChip extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       eta,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                         letterSpacing: -0.17,
-                        color: AppColors.ink,
-                        fontFeatures: [FontFeature.tabularFigures()],
+                        color: tokens.ink,
+                        fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
                     const SizedBox(height: 2),
-                    const Text(
+                    Text(
                       'away',
                       style: TextStyle(
                         fontSize: 10.5,
-                        color: AppColors.faint,
+                        color: tokens.faint,
                       ),
                     ),
                   ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 
 /// Reusable route badge — background/text tint derived from the
-/// route's fixed color in AppColors.routeColors rather than always primary.
+/// route's fixed color in AppThemeTokens rather than always primary.
 class RouteBadge extends StatelessWidget {
   final String num;
   final double size;
@@ -15,16 +15,16 @@ class RouteBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = AppColors.getRouteColor(num);
-    final double radius = size >= 34 ? 12 : 10;
+    final tokens = AppThemeTokens.of(context);
+    final Color color = tokens.getRouteColor(num);
     final double fontSize = size >= 34 ? 13 : 12;
 
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10), // #RRGGBB1A (10% tint)
-        borderRadius: BorderRadius.circular(radius),
+        color: color.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(AppRadius.chip),
       ),
       child: Center(
         child: Text(

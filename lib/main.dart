@@ -4,12 +4,14 @@ import 'config/theme.dart';
 import 'screens/main_shell.dart';
 import 'screens/onboarding_screen.dart';
 import 'services/socket_service.dart';
+import 'services/theme_service.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SocketService()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const BusPIApp(),
     ),
@@ -36,10 +38,15 @@ class _BusPIAppState extends State<BusPIApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider?>();
+    final themeMode = themeProvider?.themeMode ?? ThemeMode.light;
+
     return MaterialApp(
       title: 'GetMyBus',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       home: _onboarded
           ? const MainShell()
           : OnboardingScreen(

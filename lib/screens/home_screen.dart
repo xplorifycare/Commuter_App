@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../widgets/illustration_placeholder.dart';
 import '../widgets/live_rail_chip.dart';
+import '../widgets/mascot.dart';
+import '../widgets/pulse_dot.dart';
 import '../widgets/route_badge.dart';
 import 'live_tracking_screen.dart';
 
@@ -27,19 +29,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openLiveTracking(BuildContext context,
       {String routeId = '42', String destination = 'Chinnakada'}) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LiveTrackingScreen(
+      PageRouteBuilder(
+        pageBuilder: (_, animation, secondaryAnimation) => LiveTrackingScreen(
           routeId: routeId,
           destination: destination,
         ),
+        transitionsBuilder: (_, animation, secondaryAnimation, child) {
+          final tween = Tween<Offset>(
+            begin: const Offset(0.08, 0.0),
+            end: Offset.zero,
+          ).chain(CurveTween(curve: const Cubic(0.22, 1, 0.36, 1)));
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 320),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: tokens.bg,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
@@ -50,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -58,26 +76,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.sub,
+                        color: tokens.sub,
                       ),
                     ),
-                    SizedBox(height: 3),
+                    const SizedBox(height: 3),
                     Text(
                       'Where to?',
                       style: TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w600,
                         letterSpacing: -0.46,
-                        color: AppColors.ink,
+                        color: tokens.ink,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       'എവിടേക്ക്?',
                       style: TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.faint,
+                        color: tokens.faint,
                       ),
                     ),
                   ],
@@ -85,12 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 GestureDetector(
                   onTap: widget.onOpenAlerts,
                   behavior: HitTestBehavior.opaque,
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 6),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 6),
                     child: Icon(
                       Icons.notifications_none_rounded,
                       size: 22,
-                      color: AppColors.ink,
+                      color: tokens.ink,
                     ),
                   ),
                 ),
@@ -105,24 +123,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  color: AppColors.inputBg,
-                  borderRadius: BorderRadius.circular(16),
+                  color: tokens.tint,
+                  borderRadius: BorderRadius.circular(AppRadius.card),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.search_rounded,
                       size: 18,
-                      color: AppColors.faint,
+                      color: tokens.faint,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Search a stop, route or destination',
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.faint,
+                          color: tokens.faint,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -133,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 26),
 
-            // 3. Illustration & Live Status Row
+            // 3. Illustration & Live Status Row with PulseDot
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -155,42 +173,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Row(
                               children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.success,
-                                  ),
-                                ),
+                                PulseDot(color: tokens.success, size: 6),
                                 const SizedBox(width: 6),
-                                const Text(
+                                Text(
                                   'Live',
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.success,
+                                    color: tokens.success,
                                     letterSpacing: 0.2,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 4),
-                            const Text(
+                            Text(
                               '3 buses near you',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.17,
-                                color: AppColors.ink,
+                                color: tokens.ink,
                               ),
                             ),
                             const SizedBox(height: 2),
-                            const Text(
+                            Text(
                               'Route 42, 7B and 12 · within 5 min',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.sub,
+                                color: tokens.sub,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -198,12 +209,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Text(
+                      Text(
                         'View map →',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
+                          color: tokens.primary,
                         ),
                       ),
                     ],
@@ -220,34 +231,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildActionItem(
                   icon: Icons.location_on_outlined,
                   label: 'Nearby',
+                  tokens: tokens,
                   onTap: () => _openLiveTracking(context),
                 ),
                 _buildActionItem(
                   icon: Icons.explore_outlined,
                   label: 'Routes',
+                  tokens: tokens,
                   onTap: widget.onOpenSearch,
                 ),
                 _buildActionItem(
                   icon: Icons.confirmation_number_outlined,
                   label: 'Tickets',
+                  tokens: tokens,
                   onTap: widget.onOpenTickets,
                 ),
               ],
             ),
             const SizedBox(height: 26),
 
-            // 5. Live Near You Horizontal Rail / NoBusesState (v3)
+            // 5. Live Near You Horizontal Rail / NoBusesState with Mascot (v4)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                const Text(
+                Text(
                   'Live near you',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.ink,
+                    color: tokens.ink,
                   ),
                 ),
                 GestureDetector(
@@ -258,9 +272,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: Text(
                     _noBuses ? 'Show live buses' : 'Preview: no buses',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: AppColors.faint,
+                      color: tokens.faint,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -279,21 +293,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     LiveRailChip(
                       route: '42',
                       eta: '4 min',
-                      crowdColor: AppColors.success,
+                      crowdColor: tokens.success,
                       onTap: () => _openLiveTracking(context, routeId: '42'),
                     ),
                     const SizedBox(width: 10),
                     LiveRailChip(
                       route: '7B',
                       eta: '6 min',
-                      crowdColor: AppColors.orange,
+                      crowdColor: tokens.orange,
                       onTap: () => _openLiveTracking(context, routeId: '7B', destination: 'Chavara'),
                     ),
                     const SizedBox(width: 10),
                     LiveRailChip(
                       route: '12',
                       eta: '9 min',
-                      crowdColor: AppColors.success,
+                      crowdColor: tokens.success,
                       onTap: () => _openLiveTracking(context, routeId: '12'),
                     ),
                   ],
@@ -301,12 +315,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             const SizedBox(height: 24),
 
-            // 6. Milestone Commuter Reward Banner (v3)
+            // 6. Upgraded Milestone Commuter Reward Banner (v4 Warm Terracotta Gradient)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
               decoration: BoxDecoration(
-                gradient: AppColors.brandGradient,
-                borderRadius: BorderRadius.circular(18),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [tokens.warm, const Color(0xFFA65E3D)],
+                ),
+                borderRadius: BorderRadius.circular(AppRadius.sheet),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x33C17A54),
+                    blurRadius: 24,
+                    offset: Offset(0, 10),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
@@ -314,8 +339,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.16),
-                      borderRadius: BorderRadius.circular(14),
+                      color: Colors.white.withOpacity(0.18),
+                      borderRadius: BorderRadius.circular(AppRadius.chip),
                     ),
                     child: const Center(
                       child: Icon(
@@ -343,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Illustration — line-art bus crossing a small finish flag, milestone reward banner',
                           style: TextStyle(
                             fontSize: 11.5,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withOpacity(0.82),
                             height: 1.3,
                           ),
                         ),
@@ -361,21 +386,21 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                const Text(
+                Text(
                   'Recent trips',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.ink,
+                    color: tokens.ink,
                   ),
                 ),
                 GestureDetector(
                   onTap: widget.onOpenSearch,
-                  child: const Text(
+                  child: Text(
                     'See all',
                     style: TextStyle(
                       fontSize: 12.5,
-                      color: AppColors.sub,
+                      color: tokens.sub,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -391,6 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
               meta: '12 min ago',
               fare: '₹15',
               showTopBorder: false,
+              tokens: tokens,
               onTap: () => _openLiveTracking(context, routeId: '42'),
             ),
             _buildTripRow(
@@ -399,6 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
               meta: 'Yesterday',
               fare: '₹22',
               showTopBorder: true,
+              tokens: tokens,
               onTap: () => _openLiveTracking(context, routeId: '7B', destination: 'Chavara'),
             ),
           ],
@@ -410,6 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildActionItem({
     required IconData icon,
     required String label,
+    required AppThemeTokens tokens,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -422,14 +450,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Icon(
               icon,
               size: 22,
-              color: AppColors.ink,
+              color: tokens.ink,
             ),
             const SizedBox(height: 8),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12.5,
-                color: AppColors.sub,
+                color: tokens.sub,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -445,6 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String meta,
     required String fare,
     required bool showTopBorder,
+    required AppThemeTokens tokens,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -454,8 +483,8 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: showTopBorder
-              ? const Border(
-                  top: BorderSide(color: AppColors.line, width: 1.0),
+              ? Border(
+                  top: BorderSide(color: tokens.line, width: 1.0),
                 )
               : null,
         ),
@@ -469,18 +498,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     from,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.ink,
+                      color: tokens.ink,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     meta,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.faint,
+                      color: tokens.faint,
                     ),
                   ),
                 ],
@@ -488,10 +517,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Text(
               fare,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.sub,
+                color: tokens.sub,
               ),
             ),
           ],
@@ -501,40 +530,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Empty state for the Home live rail during off-hours (late night / pre-dawn)
+/// Upgraded empty state with continuous-stroke Mascot character (v4)
 class NoBusesState extends StatelessWidget {
   const NoBusesState({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.card),
         border: Border.all(
-          color: AppColors.line,
+          color: tokens.line,
           width: 1.0,
         ),
       ),
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
-              color: AppColors.tint,
-              borderRadius: BorderRadius.circular(12),
+              color: tokens.tint,
+              borderRadius: BorderRadius.circular(AppRadius.chip),
             ),
             child: const Center(
-              child: Icon(
-                Icons.image_outlined,
-                size: 17,
-                color: AppColors.primary,
-              ),
+              child: Mascot(size: 34),
             ),
           ),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -543,15 +570,15 @@ class NoBusesState extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.ink,
+                    color: tokens.ink,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'Service resumes 5:30 AM · Illustration — line-art bus parked at a depot under a crescent moon',
+                  'Service resumes 5:30 AM',
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.sub,
+                    color: tokens.sub,
                     height: 1.3,
                   ),
                 ),

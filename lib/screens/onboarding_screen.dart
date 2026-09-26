@@ -66,10 +66,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
     final bool isLast = _currentIndex == _slides.length - 1;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: tokens.bg,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(26, 20, 26, 24),
@@ -105,8 +106,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(9),
+                      color: tokens.primary,
+                      borderRadius: BorderRadius.circular(AppRadius.chip),
                     ),
                     child: const Center(
                       child: Icon(
@@ -117,13 +118,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'GetMyBus',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.14,
-                      color: AppColors.ink,
+                      color: tokens.ink,
                     ),
                   ),
                 ],
@@ -147,8 +148,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           width: double.infinity,
                           height: 280,
                           decoration: BoxDecoration(
-                            color: AppColors.tint,
-                            borderRadius: BorderRadius.circular(20),
+                            color: tokens.tint,
+                            borderRadius: BorderRadius.circular(AppRadius.sheet),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: Image.asset(
@@ -166,12 +167,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Title
                         Text(
                           slide['headline']!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -0.54,
                             height: 1.25,
-                            color: AppColors.ink,
+                            color: tokens.ink,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -179,9 +180,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Malayalam Subtitle
                         Text(
                           slide['headlineMl']!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12.5,
-                            color: AppColors.faint,
+                            color: tokens.faint,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -190,9 +191,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Body
                         Text(
                           slide['body']!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14.5,
-                            color: AppColors.sub,
+                            color: tokens.sub,
                             height: 1.5,
                           ),
                         ),
@@ -216,8 +217,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 height: 4,
                                 decoration: BoxDecoration(
                                   color: isActive
-                                      ? AppColors.ink
-                                      : AppColors.line,
+                                      ? tokens.ink
+                                      : tokens.line,
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                               ),
@@ -239,11 +240,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: ElevatedButton(
                       onPressed: _onNext,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.ink,
-                        foregroundColor: Colors.white,
+                        backgroundColor: tokens.ink,
+                        foregroundColor: tokens.bg,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppRadius.card),
                         ),
                       ),
                       child: Text(
@@ -260,12 +261,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     GestureDetector(
                       onTap: widget.onFinish,
                       behavior: HitTestBehavior.opaque,
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           'Skip',
                           style: TextStyle(
                             fontSize: 13,
-                            color: AppColors.sub,
+                            color: tokens.sub,
                           ),
                         ),
                       ),
@@ -274,19 +275,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     GestureDetector(
                       onTap: widget.onFinish,
                       behavior: HitTestBehavior.opaque,
-                      child: const Center(
+                      child: Center(
                         child: Text.rich(
                           TextSpan(
                             text: 'Already have an account? ',
                             style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.sub,
+                              color: tokens.sub,
                             ),
                             children: [
                               TextSpan(
                                 text: 'Sign in',
                                 style: TextStyle(
-                                  color: AppColors.primary,
+                                  color: tokens.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),

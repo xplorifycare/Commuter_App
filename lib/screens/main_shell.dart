@@ -37,6 +37,8 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
+
     final screens = [
       HomeScreen(
         onOpenSearch: () => _onTabTapped(1),
@@ -54,7 +56,7 @@ class _MainShellState extends State<MainShell> {
     ];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: tokens.bg,
       body: Stack(
         children: [
           // Screen PageView
@@ -66,30 +68,32 @@ class _MainShellState extends State<MainShell> {
             ),
           ),
 
-          // Exact GetMyBusApp (1).jsx Bottom Navigation Bar
+          // Floating Pill Bottom Navigation Bar (GetMyBusApp_v4.jsx)
           Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
+            left: 18,
+            right: 18,
+            bottom: 16 + MediaQuery.of(context).padding.bottom,
             child: Container(
-              height: 62 + MediaQuery.of(context).padding.bottom,
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).padding.bottom,
-              ),
-              decoration: const BoxDecoration(
-                color: AppColors.surfaceLight,
-                border: Border(
-                  top: BorderSide(color: AppColors.line, width: 1.0),
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              decoration: BoxDecoration(
+                color: tokens.surface,
+                borderRadius: BorderRadius.circular(999),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(tokens.isDark ? 0.45 : 0.12),
+                    blurRadius: 32,
+                    offset: const Offset(0, 16),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(0, Icons.home_rounded, 'Home'),
-                  _buildNavItem(1, Icons.search_rounded, 'Search'),
-                  _buildNavItem(2, Icons.confirmation_number_outlined, 'Tickets'),
-                  _buildNavItem(3, Icons.notifications_none_rounded, 'Alerts'),
-                  _buildNavItem(4, Icons.person_outline_rounded, 'Profile'),
+                  _buildNavItem(0, Icons.home_rounded, 'Home', tokens),
+                  _buildNavItem(1, Icons.search_rounded, 'Search', tokens),
+                  _buildNavItem(2, Icons.confirmation_number_outlined, 'Tickets', tokens),
+                  _buildNavItem(3, Icons.notifications_none_rounded, 'Alerts', tokens),
+                  _buildNavItem(4, Icons.person_outline_rounded, 'Profile', tokens),
                 ],
               ),
             ),
@@ -103,9 +107,10 @@ class _MainShellState extends State<MainShell> {
     int index,
     IconData icon,
     String label,
+    AppThemeTokens tokens,
   ) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? AppColors.ink : AppColors.faint;
+    final color = isSelected ? tokens.ink : tokens.faint;
 
     return Semantics(
       label: label,
@@ -114,26 +119,20 @@ class _MainShellState extends State<MainShell> {
       child: GestureDetector(
         onTap: () => _onTabTapped(index),
         behavior: HitTestBehavior.opaque,
-        child: SizedBox(
-          width: 56,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: color,
-              ),
-              const SizedBox(height: 5),
-              Container(
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isSelected ? AppColors.primary : Colors.transparent,
-                ),
-              ),
-            ],
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: isSelected ? tokens.tint : Colors.transparent,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Icon(
+              icon,
+              size: 20,
+              color: color,
+            ),
           ),
         ),
       ),

@@ -2,14 +2,16 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:buspi_app/main.dart';
 import 'package:provider/provider.dart';
 import 'package:buspi_app/services/socket_service.dart';
+import 'package:buspi_app/services/theme_service.dart';
 import 'package:buspi_app/screens/home_screen.dart';
 import 'package:buspi_app/screens/digital_ticket_screen.dart';
 import 'package:buspi_app/screens/profile_wallet_screen.dart';
 import 'package:buspi_app/screens/onboarding_screen.dart';
+import 'package:buspi_app/widgets/boarding_mode_overlay.dart';
+import 'package:buspi_app/widgets/mascot.dart';
 import 'package:buspi_app/widgets/uber_map_view.dart';
 import 'package:buspi_app/widgets/uber_bottom_sheet.dart';
 
@@ -102,6 +104,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => SocketService()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ],
         child: const BusPIApp(),
       ),
@@ -114,9 +117,10 @@ void main() {
 
     // Tap Skip to enter MainShell
     await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // Verify v3 Home Screen elements render
+    // Verify v4 Home Screen elements render
     expect(find.text('Where to?'), findsOneWidget);
     expect(find.text('എവിടേക്ക്?'), findsOneWidget);
     expect(find.text('3 buses near you'), findsOneWidget);
@@ -128,7 +132,7 @@ void main() {
     expect(find.text('Tickets'), findsWidgets);
   });
 
-  testWidgets('HomeScreen NoBusesState toggle test', (WidgetTester tester) async {
+  testWidgets('HomeScreen NoBusesState toggle test with Mascot', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.0;
     addTearDown(() {
@@ -145,23 +149,27 @@ void main() {
     // Initially shows preview toggle
     expect(find.text('Preview: no buses'), findsOneWidget);
     expect(find.text('No live buses right now'), findsNothing);
+    expect(find.byType(Mascot), findsNothing);
 
     // Tap toggle to trigger NoBusesState
     await tester.tap(find.text('Preview: no buses'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Show live buses'), findsOneWidget);
     expect(find.text('No live buses right now'), findsOneWidget);
+    expect(find.byType(Mascot), findsOneWidget);
 
     // Tap back
     await tester.tap(find.text('Show live buses'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Preview: no buses'), findsOneWidget);
     expect(find.text('No live buses right now'), findsNothing);
   });
 
-  testWidgets('DigitalTicketScreen QR tap simulation and WhatsApp share test', (WidgetTester tester) async {
+  testWidgets('DigitalTicketScreen FullScreen Boarding Mode takeover test', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.0;
     addTearDown(() {
@@ -177,23 +185,27 @@ void main() {
 
     // Verify initial ticket state
     expect(find.text('My ticket'), findsOneWidget);
-    expect(find.text('Show this code to the conductor'), findsOneWidget);
+    expect(find.text('Full screen for boarding'), findsOneWidget);
     expect(find.text('Share to WhatsApp'), findsOneWidget);
 
-    // Tap QR code to simulate conductor scan
-    await tester.tap(find.byType(QrImageView));
-    await tester.pump();
+    // Tap Full screen for boarding
+    await tester.tap(find.text('Full screen for boarding'));
+    await tester.pumpAndSettle();
 
-    // Check confirmation state
-    expect(find.text('Boarding confirmed'), findsOneWidget);
-    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+    // Verify BoardingModeOverlay is shown
+    expect(find.byType(BoardingModeOverlay), findsOneWidget);
+    expect(find.text('Show this to the conductor'), findsOneWidget);
+    expect(find.text('Tap anywhere to close'), findsOneWidget);
 
-    // Fast-forward after 1600ms
-    await tester.pump(const Duration(milliseconds: 1700));
-    expect(find.text('Show this code to the conductor'), findsOneWidget);
+    // Tap the overlay to close
+    await tester.tap(find.text('Tap anywhere to close'));
+    await tester.pumpAndSettle();
+
+    // Overlay is closed
+    expect(find.byType(BoardingModeOverlay), findsNothing);
   });
 
-  testWidgets('ProfileWalletScreen CO2 savings pill test', (WidgetTester tester) async {
+  testWidgets('ProfileWalletScreen Dark Theme toggle test', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.0;
     addTearDown(() {
@@ -201,16 +213,28 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
+    final themeProvider = ThemeProvider();
+
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ProfileWalletScreen(),
+      ChangeNotifierProvider.value(
+        value: themeProvider,
+        child: const MaterialApp(
+          home: ProfileWalletScreen(),
+        ),
       ),
     );
 
-    // Verify Leaf icon & CO2 savings text
-    expect(find.byIcon(Icons.eco_rounded), findsOneWidget);
-    expect(find.text('Profile'), findsOneWidget);
-    expect(find.text('Wallet'), findsOneWidget);
+    // Verify Dark theme row exists
+    expect(find.text('Dark theme'), findsOneWidget);
+    expect(find.byIcon(Icons.dark_mode_outlined), findsOneWidget);
+    expect(find.byType(Switch), findsOneWidget);
+    expect(themeProvider.isDark, isFalse);
+
+    // Tap Dark theme row
+    await tester.tap(find.text('Dark theme'));
+    await tester.pumpAndSettle();
+
+    expect(themeProvider.isDark, isTrue);
   });
 
   testWidgets('OnboardingScreen bilingual slides test', (WidgetTester tester) async {

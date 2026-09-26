@@ -5,6 +5,7 @@ import '../config/theme.dart';
 import '../data/corridor_route.dart';
 import '../widgets/crowd_gauge.dart';
 import '../widgets/illustration_placeholder.dart';
+import '../widgets/pulse_dot.dart';
 import '../widgets/route_badge.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
@@ -30,9 +31,11 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   late final MapController _mapController;
   late final AnimationController _pulseController;
   late final AnimationController _refreshController;
+  late final AnimationController _flowController;
   late final List<LatLng> _routePoints;
   bool _showInteractiveMap = true;
   bool _refreshing = false;
+  int _eta = 4;
 
   // Real-time bus simulation point along route
   final LatLng _busPosition = const LatLng(8.8895, 76.6020); // Near Kadappakkada
@@ -57,6 +60,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
+    _flowController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..repeat();
   }
 
   @override
@@ -64,6 +71,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
     _mapController.dispose();
     _pulseController.dispose();
     _refreshController.dispose();
+    _flowController.dispose();
     super.dispose();
   }
 
@@ -72,7 +80,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
   }
 
   void _doRefresh() {
-    setState(() => _refreshing = true);
+    setState(() {
+      _refreshing = true;
+      _eta = _eta > 2 ? _eta - 1 : 4;
+    });
     _refreshController.forward(from: 0.0);
     _recenterMap();
     Future.delayed(const Duration(milliseconds: 900), () {
@@ -84,8 +95,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: tokens.bg,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
@@ -102,7 +115,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                     }
                   },
                   behavior: HitTestBehavior.opaque,
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 36,
                     height: 36,
                     child: Align(
@@ -110,18 +123,18 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                       child: Icon(
                         Icons.arrow_back_rounded,
                         size: 19,
-                        color: AppColors.ink,
+                        color: tokens.ink,
                       ),
                     ),
                   ),
                 ),
-                const Text(
+                Text(
                   'Live tracking',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: -0.16,
-                    color: AppColors.ink,
+                    color: tokens.ink,
                   ),
                 ),
                 GestureDetector(
@@ -141,10 +154,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                             child: child,
                           );
                         },
-                        child: const Icon(
+                        child: Icon(
                           Icons.refresh_rounded,
                           size: 18,
-                          color: AppColors.ink,
+                          color: tokens.ink,
                         ),
                       ),
                     ),
@@ -157,7 +170,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
               Container(
                 height: 3,
                 decoration: BoxDecoration(
-                  color: AppColors.line,
+                  color: tokens.line,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -172,10 +185,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                       child: child,
                     );
                   },
-                  child: const Icon(
+                  child: Icon(
                     Icons.directions_bus_rounded,
                     size: 14,
-                    color: AppColors.primary,
+                    color: tokens.primary,
                   ),
                 ),
               ),
@@ -189,8 +202,8 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.line),
+                  borderRadius: BorderRadius.circular(AppRadius.sheet),
+                  border: Border.all(color: tokens.line),
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Stack(
@@ -215,7 +228,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                             Polyline(
                               points: _routePoints,
                               strokeWidth: 4.0,
-                              color: AppColors.primary,
+                              color: tokens.primary,
                             ),
                           ],
                         ),
@@ -226,10 +239,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                               width: 38,
                               height: 38,
                               child: Container(
-                                decoration: const BoxDecoration(
-                                  color: AppColors.primary,
+                                decoration: BoxDecoration(
+                                  color: tokens.primary,
                                   shape: BoxShape.circle,
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       color: Color(0x662B57FF),
                                       blurRadius: 10,
@@ -249,6 +262,11 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                       ],
                     ),
                     Positioned(
+                      top: 12,
+                      left: 12,
+                      child: PulseDot(color: tokens.primary, size: 8),
+                    ),
+                    Positioned(
                       bottom: 10,
                       right: 10,
                       child: GestureDetector(
@@ -261,16 +279,16 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.line),
+                            color: tokens.surface.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(AppRadius.chip),
+                            border: Border.all(color: tokens.line),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Placeholder view',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.sub,
+                              color: tokens.sub,
                             ),
                           ),
                         ),
@@ -302,41 +320,56 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                       children: [
                         Text(
                           'To ${widget.destination}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.ink,
+                            color: tokens.ink,
                           ),
                         ),
                         const SizedBox(height: 2),
-                        const Text(
+                        Text(
                           'via Kadappakada Rd',
                           style: TextStyle(
                             fontSize: 12.5,
-                            color: AppColors.sub,
+                            color: tokens.sub,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      '4 min',
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, anim) => FadeTransition(
+                        opacity: anim,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.0, -0.2),
+                            end: Offset.zero,
+                          ).animate(anim),
+                          child: child,
+                        ),
+                      ),
+                      child: Text(
+                        '$_eta min',
+                        key: ValueKey<int>(_eta),
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                          color: tokens.primary,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
                       ),
                     ),
-                    SizedBox(height: 1),
+                    const SizedBox(height: 1),
                     Text(
                       '1.2 km away',
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: AppColors.faint,
+                        color: tokens.faint,
                       ),
                     ),
                   ],
@@ -345,33 +378,33 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
             ),
             const SizedBox(height: 20),
 
-            // 4. Unified CrowdGauge Row (v3)
-            const Row(
+            // 4. Unified CrowdGauge Row (v4)
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Crowd level',
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.sub,
+                    color: tokens.sub,
                   ),
                 ),
                 CrowdGauge(
                   level: 'Low',
-                  color: AppColors.success,
+                  color: tokens.success,
                   size: CrowdGaugeSize.md,
                 ),
               ],
             ),
             const SizedBox(height: 26),
 
-            // 5. Route Stops Section
-            const Text(
+            // 5. Route Stops Section with Flowing Dashed Line (v4)
+            Text(
               'Route stops',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.ink,
+                color: tokens.ink,
               ),
             ),
             const SizedBox(height: 16),
@@ -390,13 +423,13 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                 Border? dotBorder;
 
                 if (state == 'upcoming') {
-                  dotBg = Colors.white;
-                  dotBorder = Border.all(color: AppColors.primary, width: 2);
+                  dotBg = tokens.surface;
+                  dotBorder = Border.all(color: tokens.primary, width: 2);
                 } else if (state == 'current') {
-                  dotBg = AppColors.primary;
-                  dotBorder = Border.all(color: AppColors.primary, width: 2);
+                  dotBg = tokens.primary;
+                  dotBorder = Border.all(color: tokens.primary, width: 2);
                 } else {
-                  dotBg = AppColors.primary;
+                  dotBg = tokens.primary;
                   dotBorder = null;
                 }
 
@@ -416,12 +449,36 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                           ),
                         ),
                         if (!isLast)
-                          Container(
-                            width: 1,
-                            height: 44,
-                            color: AppColors.line,
-                            margin: const EdgeInsets.only(top: 3),
-                          ),
+                          state == 'current'
+                              ? AnimatedBuilder(
+                                  animation: _flowController,
+                                  builder: (context, child) {
+                                    return Container(
+                                      width: 2,
+                                      height: 44,
+                                      margin: const EdgeInsets.only(top: 3),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment(
+                                              0, -1.0 + (_flowController.value * 2.0)),
+                                          end: Alignment(
+                                              0, 1.0 + (_flowController.value * 2.0)),
+                                          colors: [
+                                            tokens.primary,
+                                            tokens.line,
+                                            tokens.primary,
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  width: 1,
+                                  height: 44,
+                                  color: tokens.line,
+                                  margin: const EdgeInsets.only(top: 3),
+                                ),
                       ],
                     ),
                     const SizedBox(width: 14),
@@ -434,18 +491,18 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen>
                         children: [
                           Text(
                             s['name']!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.ink,
+                              color: tokens.ink,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             s['meta']!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.faint,
+                              color: tokens.faint,
                             ),
                           ),
                         ],

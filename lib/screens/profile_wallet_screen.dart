@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../config/theme.dart';
+import '../services/theme_service.dart';
 import 'onboarding_screen.dart';
 
 class ProfileWalletScreen extends StatelessWidget {
@@ -17,8 +19,10 @@ class ProfileWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = AppThemeTokens.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: tokens.bg,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(22, 20, 22, 100),
@@ -28,13 +32,13 @@ class ProfileWalletScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Profile',
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.w600,
                     letterSpacing: -0.46,
-                    color: AppColors.ink,
+                    color: tokens.ink,
                   ),
                 ),
                 GestureDetector(
@@ -44,14 +48,14 @@ class ProfileWalletScreen extends StatelessWidget {
                     );
                   },
                   behavior: HitTestBehavior.opaque,
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 36,
                     height: 36,
                     child: Center(
                       child: Icon(
                         Icons.settings_outlined,
                         size: 18,
-                        color: AppColors.ink,
+                        color: tokens.ink,
                       ),
                     ),
                   ),
@@ -67,17 +71,17 @@ class ProfileWalletScreen extends StatelessWidget {
                 Container(
                   width: 52,
                   height: 52,
-                  decoration: const BoxDecoration(
-                    color: AppColors.ink,
+                  decoration: BoxDecoration(
+                    color: tokens.ink,
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'J',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: tokens.bg,
                       ),
                     ),
                   ),
@@ -85,7 +89,7 @@ class ProfileWalletScreen extends StatelessWidget {
                 const SizedBox(width: 16),
 
                 // Name & Phone
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -94,15 +98,15 @@ class ProfileWalletScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.ink,
+                          color: tokens.ink,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
                         '+91 98•••••210',
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.sub,
+                          color: tokens.sub,
                         ),
                       ),
                     ],
@@ -116,12 +120,12 @@ class ProfileWalletScreen extends StatelessWidget {
                       const SnackBar(content: Text('Edit profile')),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'Edit',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
+                      color: tokens.primary,
                     ),
                   ),
                 ),
@@ -129,12 +133,12 @@ class ProfileWalletScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
 
-            // 3. Wallet Card with Ambient Accent Circle (v3)
+            // 3. Wallet Card with Ambient Accent Circle (v4)
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: AppColors.line),
-                color: Colors.white,
+                borderRadius: BorderRadius.circular(AppRadius.card),
+                border: Border.all(color: tokens.line),
+                color: tokens.surface,
               ),
               clipBehavior: Clip.antiAlias,
               child: Stack(
@@ -148,7 +152,7 @@ class ProfileWalletScreen extends StatelessWidget {
                       height: 96,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.tint.withOpacity(0.7),
+                        color: tokens.tint.withOpacity(0.7),
                       ),
                     ),
                   ),
@@ -160,16 +164,16 @@ class ProfileWalletScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 Icon(Icons.credit_card_rounded,
-                                    size: 16, color: AppColors.sub),
-                                SizedBox(width: 8),
+                                    size: 16, color: tokens.sub),
+                                const SizedBox(width: 8),
                                 Text(
                                   'Wallet',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: AppColors.sub,
+                                    color: tokens.sub,
                                   ),
                                 ),
                               ],
@@ -180,11 +184,11 @@ class ProfileWalletScreen extends StatelessWidget {
                                   const SnackBar(content: Text('Wallet history')),
                                 );
                               },
-                              child: const Text(
+                              child: Text(
                                 'History →',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.primary,
+                                  color: tokens.primary,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -192,14 +196,14 @@ class ProfileWalletScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        const Text(
+                        Text(
                           '₹245.50',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -0.28,
-                            color: AppColors.ink,
-                            fontFeatures: [FontFeature.tabularFigures()],
+                            color: tokens.ink,
+                            fontFeatures: const [FontFeature.tabularFigures()],
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -211,12 +215,12 @@ class ProfileWalletScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             '+ Add money',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
+                              color: tokens.primary,
                             ),
                           ),
                         ),
@@ -227,40 +231,40 @@ class ProfileWalletScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Illustration spot (optional) — tiny line-art coin or houseboat motif could sit inside the soft circle behind the balance, top-right of the wallet card',
               style: TextStyle(
                 fontSize: 10.5,
-                color: AppColors.faint,
+                color: tokens.faint,
                 height: 1.3,
               ),
             ),
             const SizedBox(height: 18),
 
-            // 4. CO₂ Carbon Savings Impact Pill (v3)
+            // 4. CO₂ Carbon Savings Impact Pill (v4)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: AppColors.successBg,
-                borderRadius: BorderRadius.circular(14),
+                color: tokens.successBg,
+                borderRadius: BorderRadius.circular(AppRadius.card),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(
                     Icons.eco_rounded,
                     size: 16,
-                    color: AppColors.success,
+                    color: tokens.success,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text.rich(
                       TextSpan(
                         text: "You've saved ",
                         style: TextStyle(
                           fontSize: 12.5,
-                          color: AppColors.ink,
+                          color: tokens.ink,
                         ),
-                        children: [
+                        children: const [
                           TextSpan(
                             text: '~4.2 kg',
                             style: TextStyle(
@@ -281,66 +285,96 @@ class ProfileWalletScreen extends StatelessWidget {
             const SizedBox(height: 22),
 
             // 5. Saved Places Section
-            const Text(
+            Text(
               'Saved places',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.ink,
+                color: tokens.ink,
               ),
             ),
             const SizedBox(height: 4),
             _buildSettingsRow(
               icon: Icons.home_outlined,
               label: 'Home',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.work_outline_rounded,
               label: 'Work',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.add_rounded,
               label: 'Add new place',
               isLast: true,
+              tokens: tokens,
               onTap: () {},
             ),
             const SizedBox(height: 22),
 
-            // 5. Settings Section
-            const Text(
+            // 6. Settings Section (including Dark Theme Switch)
+            Text(
               'Settings',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.ink,
+                color: tokens.ink,
               ),
             ),
             const SizedBox(height: 4),
             _buildSettingsRow(
+              icon: Icons.dark_mode_outlined,
+              label: 'Dark theme',
+              tokens: tokens,
+              right: Transform.scale(
+                scale: 0.8,
+                child: Switch.adaptive(
+                  value: tokens.isDark,
+                  activeColor: tokens.primary,
+                  onChanged: (val) {
+                    try {
+                      context.read<ThemeProvider>().toggleTheme();
+                    } catch (_) {}
+                  },
+                ),
+              ),
+              onTap: () {
+                try {
+                  context.read<ThemeProvider>().toggleTheme();
+                } catch (_) {}
+              },
+            ),
+            _buildSettingsRow(
               icon: Icons.credit_card_rounded,
               label: 'Payment methods',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.notifications_none_rounded,
               label: 'Notifications',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.language_rounded,
               label: 'Language',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.help_outline_rounded,
               label: 'Help & support',
+              tokens: tokens,
               onTap: () {},
             ),
             _buildSettingsRow(
               icon: Icons.auto_stories_outlined,
               label: 'Onboarding walkthrough',
+              tokens: tokens,
               onTap: () => _openOnboarding(context),
             ),
             _buildSettingsRow(
@@ -348,6 +382,7 @@ class ProfileWalletScreen extends StatelessWidget {
               label: 'Log out',
               isDanger: true,
               isLast: true,
+              tokens: tokens,
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Logging out...')),
@@ -363,8 +398,10 @@ class ProfileWalletScreen extends StatelessWidget {
   Widget _buildSettingsRow({
     required IconData icon,
     required String label,
+    required AppThemeTokens tokens,
     bool isDanger = false,
     bool isLast = false,
+    Widget? right,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -375,19 +412,22 @@ class ProfileWalletScreen extends StatelessWidget {
         decoration: BoxDecoration(
           border: isLast
               ? null
-              : const Border(
+              : Border(
                   bottom: BorderSide(
-                    color: AppColors.line,
+                    color: tokens.line,
                     width: 1.0,
                   ),
                 ),
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isDanger ? AppColors.danger : AppColors.ink,
+            Padding(
+              padding: const EdgeInsets.only(top: 0.5),
+              child: Icon(
+                icon,
+                size: 18,
+                color: isDanger ? tokens.danger : tokens.ink,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -396,18 +436,20 @@ class ProfileWalletScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: isDanger ? AppColors.danger : AppColors.ink,
+                  color: isDanger ? tokens.danger : tokens.ink,
                 ),
               ),
             ),
-            if (!isDanger)
-              const Text(
-                '›',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.faint,
-                ),
-              ),
+            right ??
+                (!isDanger
+                    ? Text(
+                        '›',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: tokens.faint,
+                        ),
+                      )
+                    : const SizedBox.shrink()),
           ],
         ),
       ),
